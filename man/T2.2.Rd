@@ -1,0 +1,39 @@
+\name{T2.2}
+\alias{T2.2}
+%- Also NEED an '\alias' for EACH other topic documented here.
+\title{ Hotelling T2 Statistic for Phase II. }
+\description{
+  Calculate the Hotelling T2 statistic for multivariate observations at phase II , to be used to build the corresponding control chart.
+}
+\usage{
+T2.2(datum2, estat, n)
+}
+%- maybe also 'usage' for other objects documented here.
+\arguments{
+  \item{datum2}{ The data set for the phase II. Shoul be a vector. }
+  \item{estat}{ The values of the auxiliary statistics. Should be a list with a matrix with the means, mean of the means and mean of the standard deviation. }
+  \item{n}{ The size of each sample used previously in data.2. If they are individual observations, use n = 1. }
+}
+\details{
+Before using this function it is necessary to execute the function "stats"(that calculate the auxiliary statistics involved in the T2 formula) and the function "data.2" (or other way to supply the data).
+}
+\value{
+  Return a vector with the Hotelling T2 statistics.
+}
+\references{ Montgomery, D.C.,(2008)."Introduction to Statistical Quality Control". Chapter 11. Wiley. }
+\author{ Daniela R. Recchia, Emanuel P. Barbosa }
+\seealso{ \link{T2.1},\link{stats}, \link{data.2}, \link{cchart.T2.2} }
+\examples{
+mu <- c(5.682, 88.22)
+Sigma <- symMatrix(c(3.770, -5.495, 13.53), 2)
+#Example with individual observations
+datum <- data.1(50, 1, mu, Sigma)
+estat <- stats(datum, 50, 1, 2)
+datum2 <- data.2(estat, 1, p = 2)
+T2II <- T2.2(datum2, estat, 1)
+#Example with subgroup observations
+datum <- data.1(20, 10, mu, Sigma)
+estat <- stats(datum, 20, 10, 2)
+datum2 <- data.2(estat, 10, p = 2)
+T2II <- T2.2(datum2, estat, 10)
+}
