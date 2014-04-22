@@ -6,7 +6,8 @@
   This function builds a u-chart for the Poisson-based count data statistic.
 }
 \usage{
-cchart.u(x1 = NULL, n1 = NULL, type = "norm", u1 = NULL, x2 = NULL, n2 = NULL, lambda = NULL, u2 = NULL)
+cchart.u(x1 = NULL, n1 = NULL, type = "norm", u1 = NULL, x2 = NULL, 
+n2 = NULL, lambda = NULL, u2 = NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
