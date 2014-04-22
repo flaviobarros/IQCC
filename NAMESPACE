@@ -24,3 +24,4 @@ export(add.data,
 import(qcc)
 import(micEcon)
 import(MASS)
+importFrom(miscTools)
