@@ -2,8 +2,10 @@ Package: IQCC
 Title: Improved Quality Control Charts
 Version: 0.5
 Date: 2010-03-10
-Author: Daniela R. Recchia <daniela_recchia@yahoo.com.br>, Emanuel P.
-        Barbosa, Elias de Jesus Goncalves <eliasjg@gmail.com>
+Author: Daniela R. Recchia <daniela_recchia@yahoo.com.br>, 
+Emanuel P. Barbosa <emanuel@ime.unicamp.br>, 
+Elias de Jesus Goncalves <eliasjg@gmail.com>, 
+Flavio M. M. Barros <flaviomargarito@gmail.com>
 Maintainer: Emanuel P. Barbosa <emanuel@ime.unicamp.br>
 Description: Builds statistical control charts with exact limits for
         univariate and multivariate cases.
