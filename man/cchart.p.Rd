@@ -6,7 +6,8 @@
   This function builds p-charts.
 }
 \usage{
-cchart.p(x1 = NULL, n1 = NULL, type = "norm", p1 = NULL, x2 = NULL, n2 = NULL, phat = NULL, p2 = NULL)
+cchart.p(x1 = NULL, n1 = NULL, type = "norm", p1 = NULL, x2 = NULL, 
+n2 = NULL, phat = NULL, p2 = NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
