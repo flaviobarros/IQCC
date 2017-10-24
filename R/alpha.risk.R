@@ -1,3 +1,20 @@
+#' False Alarm probability for the 3-sigma R chart.
+#' 
+#' Used to calculate the real probability of false alarm in the 3-sigma R
+#' chart.
+#' 
+#' This alpha risk is calculated under the exact R statistics distribution and
+#' its values for small sample sizes will be much larger than the reference
+#' value 0,0027.
+#' 
+#' @param n The sample size.
+#' @return Return the value of the alpha risk for a given sample size n.
+#' @author Daniela R. Recchia, Emanuel P. Barbosa
+#' @seealso \link{d2},\link{d3},\link{c4}
+#' @examples
+#' 
+#' alpha.risk(15)
+#' 
 alpha.risk <- function(n)
 {
     D1 <- function(n)

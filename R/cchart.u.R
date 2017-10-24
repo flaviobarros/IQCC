@@ -1,3 +1,38 @@
+#' u-chart
+#' 
+#' This function builds a u-chart for the Poisson-based count data statistic.
+#' 
+#' For a phase I u-chart, n1 must be specified and either x1 or u1.  For a
+#' phase II u-chart, n2 must be specified, plus x2 or u2 and either phat, x1
+#' and n1, or u1 and n1.  It is important to note that the normal approximation
+#' used in the Shewhart u-chart is valid only for n*u large. For small n*p , it
+#' should be used an "improved u chart" (with non-normal correction) given by
+#' using the argument "CF".
+#' 
+#' @param x1 The phase I data that will be plotted (if it is a phase I chart).
+#' @param n1 A value or a vector of values specifying the sample sizes
+#' associated with each group for the phase I data.
+#' @param type The type of u-chart to be plotted. The options are "norm"
+#' (traditional Shewhart u-chart), "CF" (improved u-chart) and "std"
+#' (standardized u-chart). If not specified, a Shewhart u-chart will be
+#' plotted.
+#' @param u1 The sample ratios used to estimate the Poisson parameter (lambda).
+#' (x1 / n1).
+#' @param x2 The phase II data that will be plotted in a phase II chart.
+#' @param n2 A value or a vector of values specifying the sample sizes
+#' associated with each group for the phase II data.
+#' @param lambda The estimate of lambda.
+#' @param u2 The sample ratios of the phase II data (x2 / n2).
+#' @return Returns a u-chart.
+#' @author Daniela R. Recchia, Emanuel P. Barbosa
+#' @examples
+#' 
+#' data(moonroof)
+#' attach(moonroof)
+#' cchart.u(x1 = yi[1:17], n1 = ni[1:17])
+#' cchart.u(x1 = yi[1:17], n1 = ni[1:17], type = "CF", x2 = yi[18:34], n2 = ni[18:34])
+#' cchart.u(type = "std", u2 = ui[18:34], n2 = ni[18:34], lambda = 1.4)
+#' 
 cchart.u <- function(x1 = NULL, n1 = NULL, type = "norm", u1 = NULL, x2 = NULL, n2 = NULL, lambda = NULL, u2 = NULL)
 {
     if((!is.null(n1)) && (!is.null(x1) || !is.null(u1)))
