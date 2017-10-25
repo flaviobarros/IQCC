@@ -1,18 +1,14 @@
 Package: IQCC
 Title: Improved Quality Control Charts
 Version: 0.7
-Date: 2010-03-10
-Author: Flavio M. M. Barros <flaviomargarito@gmail.com>,
-        Emanuel P. Barbosa <emanuel@ime.unicamp.br>,
-        Elias de Jesus Goncalves <eliasjg@gmail.com>,
-        Daniela R. Recchia <daniela_recchia@yahoo.com.br>
-Maintainer: Flavio M. M. Barros <flaviomargarito@gmail.com>
+Authors@R: c(person("Flavio", "Barros", email = "flaviomargarito@gmail.com", role = c("aut", "cre")),
+           person("Emanuel", "Barbosa", role = "ctb"),
+           person("Elias", "Goncalves", role = "ctb"),
+           person("Daniela", "Recchia", role = "ctb"))
 Description: Builds statistical control charts with exact limits for
         univariate and multivariate cases.
+Depends: R (>= 3.4.2)
 License: GPL-2
-Depends: qcc, MASS, miscTools
-Packaged: 2017-10-25 02:32:24 UTC; flavio
-Repository: CRAN
-Date/Publication: 2014-04-22 11:20:00
+Encoding: UTF-8
+LazyData: true
 RoxygenNote: 6.0.1
-NeedsCompilation: no
