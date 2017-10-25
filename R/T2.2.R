@@ -13,6 +13,7 @@
 #' @param n The size of each sample used previously in data.2. If they are
 #' individual observations, use n = 1.
 #' @return Return a vector with the Hotelling T2 statistics.
+#' @export
 #' @author Daniela R. Recchia, Emanuel P. Barbosa
 #' @seealso \link{T2.1},\link{stats}, \link{data.2}, \link{cchart.T2.2}
 #' @references Montgomery, D.C.,(2008)."Introduction to Statistical Quality

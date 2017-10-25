@@ -8,6 +8,7 @@
 #' 
 #' @param n The maximum size.
 #' @return Return the values of these three constants.
+#' @export
 #' @author Daniela R. Recchia, Emanuel P. Barbosa
 #' @seealso \link{d2},\link{d3},\link{c4}
 #' @examples

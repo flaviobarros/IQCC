@@ -18,6 +18,7 @@
 #' @param T2 The Hotelling T2 statistic for multivariate observations at phase
 #' I created by the function T2.1.
 #' @return Return a control chart.
+#' @export
 #' @author Daniela R. Recchia, Emanuel P. Barbosa
 #' @seealso \link{cchart.T2.1}
 #' @references Montgomery, D.C.,(2008). "Introduction to Statistical Quality

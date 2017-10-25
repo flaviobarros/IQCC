@@ -10,8 +10,10 @@
 #' the same as the sample studentized range distribution (tukey distribution)
 #' with infinity d.f. in the denominator . It is considered 4 quantiles:
 #' alpha/2 , alpha , 1-alpha and 1-alpha/2, for different sample size values .
+#' @export
 #' @author Daniela R. Recchia, Emanuel P. Barbosa
 #' @seealso \link{table.const},\link{alpha.risk},\link{qtukey}
+#' @import stats
 #' @examples
 #' 
 #' table.qtukey(0.0027, 15)

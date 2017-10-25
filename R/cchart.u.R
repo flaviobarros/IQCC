@@ -24,6 +24,7 @@
 #' @param lambda The estimate of lambda.
 #' @param u2 The sample ratios of the phase II data (x2 / n2).
 #' @return Returns a u-chart.
+#' @export
 #' @author Daniela R. Recchia, Emanuel P. Barbosa
 #' @examples
 #' 

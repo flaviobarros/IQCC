@@ -6,6 +6,7 @@
 #' 
 #' @param n The sample size.
 #' @return Return the value of d3 for a given sample size n.
+#' @export
 #' @author Daniela R. Recchia, Emanuel P. Barbosa
 #' @seealso \link{d2},\link{c4}
 #' @examples

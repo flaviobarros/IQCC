@@ -12,10 +12,12 @@
 #' individual obsersations, then use n = 1.
 #' @param p The dimension used previously in function data.1.
 #' @return Return a control chart.
+#' @export
 #' @author Daniela R. Recchia, Emanuel P. Barbosa
 #' @seealso \link{cchart.T2.2}
 #' @references Montgomery, D.C.,(2008)."Introduction to Statistical Quality
 #' Control". Chapter 11. Wiley
+#' @import graphics 
 #' @examples
 #' 
 #' mu <- c(5.682, 88.22)

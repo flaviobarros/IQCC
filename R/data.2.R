@@ -13,6 +13,7 @@
 #' @param delta A value to be added on the vector of means.
 #' @param p The dimension.
 #' @return Return an array with the simulated data.
+#' @export
 #' @author Daniela R. Recchia, Emanuel P. Barbosa
 #' @seealso \link{data.1}
 #' @examples

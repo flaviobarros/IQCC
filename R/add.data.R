@@ -17,6 +17,7 @@
 #' set is show on the plot.
 #' @return Add the new observation to the current Hoteliing control chart for
 #' phase II.
+#' @export
 #' @author Daniela R. Recchia, Emanuel P. Barbosa
 #' @seealso \link{T2.2}
 #' @examples

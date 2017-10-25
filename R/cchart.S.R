@@ -13,7 +13,9 @@
 #' @param m The sample sizes. Only necessary in the control chart with exact
 #' (probability) limits.
 #' @return Return a S control chart.
+#' @export
 #' @author Daniela R. Recchia, Emanuel P. Barbosa
+#' @import qcc
 #' @examples
 #' 
 #' data(softdrink)

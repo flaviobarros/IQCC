@@ -7,6 +7,7 @@
 #' @param datum The data set. Should be an array.
 #' @param i The index in the matrix of the data to be removed.
 #' @return Return the new data set without the observation that was removed.
+#' @export
 #' @author Daniela R. Recchia, Emanuel P. Barbosa
 #' @examples
 #' 

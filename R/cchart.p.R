@@ -21,6 +21,7 @@
 #' @param phat The estimate of p.
 #' @param p2 The values corresponding to x2 / n2.
 #' @return Return a p-chart.
+#' @export
 #' @author Daniela R. Recchia, Emanuel P. Barbosa
 #' @references Montgomery, D.C.,(2008)."Introduction to Statistical Quality
 #' Control". Chapter 11. Wiley

@@ -12,6 +12,8 @@
 #' @param m The number of samples generated previously in data.1.
 #' @param n The size of each samples used previously in data.1.
 #' @return Return a vector with the Hotelling T2 statistics.
+#' @importFrom miscTools symMatrix
+#' @export
 #' @author Daniela R. Recchia, Emanuel P. Barbosa
 #' @seealso \link{stats}, \link{data.1}, \link{cchart.T2.1}
 #' @references Montgomery, D.C.,(2008)."Introduction to Statistical Quality

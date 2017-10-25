@@ -11,8 +11,10 @@
 #' @param Sigma The vector with the variance-covariance matrix of the data to
 #' be generated.
 #' @return Return an array with the simulated data.
+#' @export
 #' @author Daniela R. Recchia, Emanuel P. Barbosa
 #' @seealso \link{data.2}
+#' @importFrom MASS mvrnorm
 #' @examples
 #' 
 #' mu <- c(5.682, 88.22)

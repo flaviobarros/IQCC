@@ -7,6 +7,7 @@
 #' @param sizes A value or a vector of values specifying the sample sizes
 #' associated with each group.
 #' @return Return the two control charts.
+#' @export
 #' @author Daniela R. Recchia, Emanuel P. Barbosa.
 #' @examples
 #' 

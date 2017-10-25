@@ -9,6 +9,7 @@
 #' @param sizes A value or a vector of values specifying the sample sizes
 #' associated with each group.
 #' @return Return a x-bar control chart for phase I.
+#' @export
 #' @author Daniela R. Recchia, Emanuel P. Barbosa
 #' @seealso \link{cchart.Xbar2}
 #' @examples
