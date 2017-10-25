@@ -2,15 +2,17 @@ Package: IQCC
 Title: Improved Quality Control Charts
 Version: 0.6
 Date: 2010-03-10
-Author: Emanuel P. Barbosa,
-        Flavio M. M. Barros <flaviomargarito@gmail.com>,
+Author: Flavio M. M. Barros <flaviomargarito@gmail.com>,
+        Emanuel P. Barbosa <emanuel@ime.unicamp.br>,
         Elias de Jesus Goncalves <eliasjg@gmail.com>,
         Daniela R. Recchia <daniela_recchia@yahoo.com.br>
-Maintainer: Emanuel P. Barbosa <emanuel@ime.unicamp.br> 
+Maintainer: Flavio M. M. Barros <flaviomargarito@gmail.com>
 Description: Builds statistical control charts with exact limits for
         univariate and multivariate cases.
 License: GPL-2
-Depends: qcc, MASS, micEcon, miscTools
-Packaged: 2014-04-22 11:20:00 UTC; emanuel
+Depends: qcc, MASS, miscTools
+Packaged: 2017-10-25 02:32:24 UTC; flavio
 Repository: CRAN
 Date/Publication: 2014-04-22 11:20:00
+RoxygenNote: 6.0.1
+NeedsCompilation: no
