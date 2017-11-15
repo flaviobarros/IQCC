@@ -5,6 +5,8 @@ output:
     html_preview: false
 ---
 
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/IQCC)](https://cran.r-project.org/package=IQCC)
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```

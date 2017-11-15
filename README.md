@@ -1,6 +1,8 @@
 IQCC
 ================
 
+[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/IQCC)](https://cran.r-project.org/package=IQCC)
+
 Builds statistical control charts with exact limits for univariate and
 multivariate cases.
 
