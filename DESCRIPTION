@@ -10,7 +10,7 @@ Description: Builds statistical control charts with exact limits for
 Depends: R (>= 3.4.2),
     miscTools
 License: GPL-2 + file LICENSE
-URL: https://github.com/flaviobarros/IQCC
+URL: https://flaviobarros.github.io/IQCC/
 BugReports: https://github.com/flaviobarros/IQCC/issues
 Encoding: UTF-8
 LazyData: true
