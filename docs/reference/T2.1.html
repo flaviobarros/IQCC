@@ -63,12 +63,7 @@
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
-        <li>
-  <a href="https://github.com/flaviobarros/IQCC">
-    <span class="fa fa-github fa-lg"></span>
-     
-  </a>
-</li>
+        
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -125,7 +120,7 @@ Control". Chapter 11. Wiley.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p>stats, data.1, cchart.T2.1</p>
+    <p><a href='stats.html'>stats</a>, <a href='data.1.html'>data.1</a>, <a href='cchart.T2.1.html'>cchart.T2.1</a></p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -133,8 +128,8 @@ Control". Chapter 11. Wiley.</p>
 <span class='no'>mu</span> <span class='kw'>&lt;-</span> <span class='fu'>c</span>(<span class='fl'>5.682</span>, <span class='fl'>88.22</span>)
 <span class='no'>Sigma</span> <span class='kw'>&lt;-</span> <span class='fu'>symMatrix</span>(<span class='fu'>c</span>(<span class='fl'>3.770</span>, -<span class='fl'>5.495</span>, <span class='fl'>13.53</span>), <span class='fl'>2</span>)
 <span class='co'>#Example with individual observations</span>
-<span class='no'>datum</span> <span class='kw'>&lt;-</span> <span class='fu'>data.1</span>(<span class='fl'>50</span>, <span class='fl'>1</span>, <span class='no'>mu</span>, <span class='no'>Sigma</span>)
-<span class='no'>estat</span> <span class='kw'>&lt;-</span> <span class='fu'>stats</span>(<span class='no'>datum</span>, <span class='fl'>50</span>, <span class='fl'>1</span>, <span class='fl'>2</span>)
+<span class='no'>datum</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='data.1.html'>data.1</a></span>(<span class='fl'>50</span>, <span class='fl'>1</span>, <span class='no'>mu</span>, <span class='no'>Sigma</span>)
+<span class='no'>estat</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='stats.html'>stats</a></span>(<span class='no'>datum</span>, <span class='fl'>50</span>, <span class='fl'>1</span>, <span class='fl'>2</span>)
 <span class='fu'>T2.1</span>(<span class='no'>estat</span>, <span class='fl'>50</span>, <span class='fl'>1</span>)</div><div class='output co'>#&gt;  [1] 1.70393616 1.52603545 4.57424631 2.57167580 1.45946116 2.04823327
 #&gt;  [7] 2.07626184 0.96368073 0.14469419 9.09865562 0.95385386 1.80933984
 #&gt; [13] 0.84601182 0.57352583 0.56879522 6.78878839 2.93346288 3.49626961
@@ -144,8 +139,8 @@ Control". Chapter 11. Wiley.</p>
 #&gt; [37] 4.45329732 1.18773117 3.39876837 0.67088358 0.70556054 5.55012695
 #&gt; [43] 3.05520524 2.06204127 0.65397581 2.01775536 1.16778982 1.08142986
 #&gt; [49] 0.35547845 0.51986641</div><div class='input'><span class='co'>#Example with sub group observations</span>
-<span class='no'>datum</span> <span class='kw'>&lt;-</span> <span class='fu'>data.1</span>(<span class='fl'>20</span>, <span class='fl'>10</span>, <span class='no'>mu</span>, <span class='no'>Sigma</span>)
-<span class='no'>estat</span> <span class='kw'>&lt;-</span> <span class='fu'>stats</span>(<span class='no'>datum</span>, <span class='fl'>20</span>, <span class='fl'>10</span>, <span class='fl'>2</span>)
+<span class='no'>datum</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='data.1.html'>data.1</a></span>(<span class='fl'>20</span>, <span class='fl'>10</span>, <span class='no'>mu</span>, <span class='no'>Sigma</span>)
+<span class='no'>estat</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='stats.html'>stats</a></span>(<span class='no'>datum</span>, <span class='fl'>20</span>, <span class='fl'>10</span>, <span class='fl'>2</span>)
 <span class='fu'>T2.1</span>(<span class='no'>estat</span>, <span class='fl'>20</span>, <span class='fl'>10</span>)</div><div class='output co'>#&gt;  [1] 0.708320560 0.915680366 1.539475141 1.734386418 1.711439513 0.379427775
 #&gt;  [7] 0.086175376 2.339775303 0.597399552 0.949059906 4.556532587 1.894171365
 #&gt; [13] 0.444928010 3.586527522 1.354118921 1.446144483 0.254988883 0.184741689

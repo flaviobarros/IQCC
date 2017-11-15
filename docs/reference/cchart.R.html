@@ -63,12 +63,7 @@
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
-        <li>
-  <a href="https://github.com/flaviobarros/IQCC">
-    <span class="fa fa-github fa-lg"></span>
-     
-  </a>
-</li>
+        
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -127,15 +122,8 @@ of the relative range (W=R/sigma) distribution.</p>
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
 <span class='fu'>data</span>(<span class='no'>pistonrings</span>)
-<span class='fu'>attach</span>(<span class='no'>pistonrings</span>)</div><div class='output co'>#&gt; <span class='message'>The following objects are masked from pistonrings (pos = 5):</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    V1, V2, V3, V4, V5</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from pistonrings (pos = 7):</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    V1, V2, V3, V4, V5</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from pistonrings (pos = 9):</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    V1, V2, V3, V4, V5</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from pistonrings (pos = 11):</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    V1, V2, V3, V4, V5</span></div><div class='input'><span class='fu'>cchart.R</span>(<span class='no'>pistonrings</span>[<span class='fl'>1</span>:<span class='fl'>25</span>,], <span class='fl'>5</span>)</div><div class='img'><img src='cchart.R-5.png' alt='' width='700' height='432.632880098887' /></div><div class='input'><span class='fu'>cchart.R</span>(<span class='no'>pistonrings</span>[<span class='fl'>26</span>:<span class='fl'>40</span>, ], <span class='fl'>5</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"tukey"</span>, <span class='no'>pistonrings</span>[<span class='fl'>1</span>:<span class='fl'>25</span>, ])</div><div class='img'><img src='cchart.R-6.png' alt='' width='700' height='432.632880098887' /></div><div class='output co'>#&gt; List of 11
+<span class='fu'>attach</span>(<span class='no'>pistonrings</span>)
+<span class='fu'>cchart.R</span>(<span class='no'>pistonrings</span>[<span class='fl'>1</span>:<span class='fl'>25</span>,], <span class='fl'>5</span>)</div><div class='img'><img src='cchart.R-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'><span class='fu'>cchart.R</span>(<span class='no'>pistonrings</span>[<span class='fl'>26</span>:<span class='fl'>40</span>, ], <span class='fl'>5</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"tukey"</span>, <span class='no'>pistonrings</span>[<span class='fl'>1</span>:<span class='fl'>25</span>, ])</div><div class='img'><img src='cchart.R-2.png' alt='' width='700' height='432.632880098887' /></div><div class='output co'>#&gt; List of 11
 #&gt;  $ call      : language qcc(data = x, type = "R", limits = c(qtukey(0.00135, n, Inf) * sd.R(y),      qtukey(0.99865, n, Inf) * sd.R(y)))
 #&gt;  $ type      : chr "R"
 #&gt;  $ data.name : chr "x"

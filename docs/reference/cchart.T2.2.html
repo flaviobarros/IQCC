@@ -63,12 +63,7 @@
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
-        <li>
-  <a href="https://github.com/flaviobarros/IQCC">
-    <span class="fa fa-github fa-lg"></span>
-     
-  </a>
-</li>
+        
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -149,28 +144,28 @@ Control". Chapter 11. Wiley</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p>cchart.T2.1</p>
+    <p><a href='cchart.T2.1.html'>cchart.T2.1</a></p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
 <span class='no'>mu</span> <span class='kw'>&lt;-</span> <span class='fu'>c</span>(<span class='fl'>5.682</span>, <span class='fl'>88.22</span>)
 <span class='no'>Sigma</span> <span class='kw'>&lt;-</span> <span class='fu'>symMatrix</span>(<span class='fu'>c</span>(<span class='fl'>3.770</span>, -<span class='fl'>5.495</span>, <span class='fl'>13.53</span>), <span class='fl'>2</span>)
-<span class='no'>datum</span> <span class='kw'>&lt;-</span> <span class='fu'>data.1</span>(<span class='fl'>20</span>, <span class='fl'>10</span>, <span class='no'>mu</span>, <span class='no'>Sigma</span>)
-<span class='no'>estat</span> <span class='kw'>&lt;-</span> <span class='fu'>stats</span>(<span class='no'>datum</span>, <span class='fl'>20</span>, <span class='fl'>10</span>, <span class='fl'>2</span>)
-<span class='no'>datum2</span> <span class='kw'>&lt;-</span> <span class='fu'>data.2</span>(<span class='no'>estat</span>, <span class='fl'>10</span>, <span class='kw'>p</span> <span class='kw'>=</span> <span class='fl'>2</span>)
-<span class='no'>T2II</span> <span class='kw'>&lt;-</span> <span class='fu'>T2.2</span>(<span class='no'>datum2</span>, <span class='no'>estat</span>, <span class='fl'>10</span>)
+<span class='no'>datum</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='data.1.html'>data.1</a></span>(<span class='fl'>20</span>, <span class='fl'>10</span>, <span class='no'>mu</span>, <span class='no'>Sigma</span>)
+<span class='no'>estat</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='stats.html'>stats</a></span>(<span class='no'>datum</span>, <span class='fl'>20</span>, <span class='fl'>10</span>, <span class='fl'>2</span>)
+<span class='no'>datum2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='data.2.html'>data.2</a></span>(<span class='no'>estat</span>, <span class='fl'>10</span>, <span class='kw'>p</span> <span class='kw'>=</span> <span class='fl'>2</span>)
+<span class='no'>T2II</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='T2.2.html'>T2.2</a></span>(<span class='no'>datum2</span>, <span class='no'>estat</span>, <span class='fl'>10</span>)
 <span class='co'># For the first sample j = 1. T2II is a vector with the value of the firts T2 statistic.</span>
-<span class='fu'>cchart.T2.2</span>(<span class='no'>T2II</span>, <span class='fl'>20</span>, <span class='fl'>10</span>, <span class='fl'>1</span>, <span class='fl'>25</span>, <span class='fl'>2</span>)</div><div class='img'><img src='cchart.T2.2-9.png' alt='' width='700' height='432.632880098887' /></div><div class='input'><span class='co'># Same of the above, but now showing the phase I data set.</span>
-<span class='fu'>cchart.T2.2</span>(<span class='no'>T2II</span>, <span class='fl'>20</span>, <span class='fl'>10</span>, <span class='fl'>1</span>, <span class='fl'>25</span>, <span class='fl'>2</span>, <span class='kw'>datum</span> <span class='kw'>=</span> <span class='no'>datum</span>)</div><div class='img'><img src='cchart.T2.2-10.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+<span class='fu'>cchart.T2.2</span>(<span class='no'>T2II</span>, <span class='fl'>20</span>, <span class='fl'>10</span>, <span class='fl'>1</span>, <span class='fl'>25</span>, <span class='fl'>2</span>)</div><div class='img'><img src='cchart.T2.2-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'><span class='co'># Same of the above, but now showing the phase I data set.</span>
+<span class='fu'>cchart.T2.2</span>(<span class='no'>T2II</span>, <span class='fl'>20</span>, <span class='fl'>10</span>, <span class='fl'>1</span>, <span class='fl'>25</span>, <span class='fl'>2</span>, <span class='kw'>datum</span> <span class='kw'>=</span> <span class='no'>datum</span>)</div><div class='img'><img src='cchart.T2.2-2.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
 <span class='co'>#Example with individual observations</span>
-<span class='no'>datum</span> <span class='kw'>&lt;-</span> <span class='fu'>data.1</span>(<span class='fl'>50</span>, <span class='fl'>1</span>, <span class='no'>mu</span>, <span class='no'>Sigma</span>)
-<span class='no'>estat</span> <span class='kw'>&lt;-</span> <span class='fu'>stats</span>(<span class='no'>datum</span>, <span class='fl'>50</span>, <span class='fl'>1</span>, <span class='fl'>2</span>)
-<span class='no'>datum2</span> <span class='kw'>&lt;-</span> <span class='fu'>data.2</span>(<span class='no'>estat</span>, <span class='fl'>1</span>, <span class='kw'>p</span> <span class='kw'>=</span> <span class='fl'>2</span>)
-<span class='no'>T2II</span> <span class='kw'>&lt;-</span> <span class='fu'>T2.2</span>(<span class='no'>datum2</span>, <span class='no'>estat</span>, <span class='fl'>1</span>)
+<span class='no'>datum</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='data.1.html'>data.1</a></span>(<span class='fl'>50</span>, <span class='fl'>1</span>, <span class='no'>mu</span>, <span class='no'>Sigma</span>)
+<span class='no'>estat</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='stats.html'>stats</a></span>(<span class='no'>datum</span>, <span class='fl'>50</span>, <span class='fl'>1</span>, <span class='fl'>2</span>)
+<span class='no'>datum2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='data.2.html'>data.2</a></span>(<span class='no'>estat</span>, <span class='fl'>1</span>, <span class='kw'>p</span> <span class='kw'>=</span> <span class='fl'>2</span>)
+<span class='no'>T2II</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='T2.2.html'>T2.2</a></span>(<span class='no'>datum2</span>, <span class='no'>estat</span>, <span class='fl'>1</span>)
 <span class='co'># For the first sample j = 1. T2II is a vector with the value of the firts T2 statistic.</span>
-<span class='fu'>cchart.T2.2</span>(<span class='no'>T2II</span>, <span class='fl'>50</span>, <span class='fl'>1</span>, <span class='fl'>1</span>, <span class='fl'>25</span>, <span class='fl'>2</span>)</div><div class='img'><img src='cchart.T2.2-11.png' alt='' width='700' height='432.632880098887' /></div><div class='input'><span class='co'># Same of the above, but now showing the phase I data set.</span>
-<span class='fu'>cchart.T2.2</span>(<span class='no'>T2II</span>, <span class='fl'>50</span>, <span class='fl'>1</span>, <span class='fl'>1</span>, <span class='fl'>25</span>, <span class='fl'>2</span>, <span class='kw'>datum</span> <span class='kw'>=</span> <span class='no'>datum</span>)</div><div class='img'><img src='cchart.T2.2-12.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+<span class='fu'>cchart.T2.2</span>(<span class='no'>T2II</span>, <span class='fl'>50</span>, <span class='fl'>1</span>, <span class='fl'>1</span>, <span class='fl'>25</span>, <span class='fl'>2</span>)</div><div class='img'><img src='cchart.T2.2-3.png' alt='' width='700' height='432.632880098887' /></div><div class='input'><span class='co'># Same of the above, but now showing the phase I data set.</span>
+<span class='fu'>cchart.T2.2</span>(<span class='no'>T2II</span>, <span class='fl'>50</span>, <span class='fl'>1</span>, <span class='fl'>1</span>, <span class='fl'>25</span>, <span class='fl'>2</span>, <span class='kw'>datum</span> <span class='kw'>=</span> <span class='no'>datum</span>)</div><div class='img'><img src='cchart.T2.2-4.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
 
 </div></pre>
   </div>

@@ -63,12 +63,7 @@
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
-        <li>
-  <a href="https://github.com/flaviobarros/IQCC">
-    <span class="fa fa-github fa-lg"></span>
-     
-  </a>
-</li>
+        
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -126,7 +121,7 @@ Control". Chapter 11. Wiley.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p>T2.1,stats, data.2, cchart.T2.2</p>
+    <p><a href='T2.1.html'>T2.1</a>,<a href='stats.html'>stats</a>, <a href='data.2.html'>data.2</a>, <a href='cchart.T2.2.html'>cchart.T2.2</a></p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -134,14 +129,14 @@ Control". Chapter 11. Wiley.</p>
 <span class='no'>mu</span> <span class='kw'>&lt;-</span> <span class='fu'>c</span>(<span class='fl'>5.682</span>, <span class='fl'>88.22</span>)
 <span class='no'>Sigma</span> <span class='kw'>&lt;-</span> <span class='fu'>symMatrix</span>(<span class='fu'>c</span>(<span class='fl'>3.770</span>, -<span class='fl'>5.495</span>, <span class='fl'>13.53</span>), <span class='fl'>2</span>)
 <span class='co'>#Example with individual observations</span>
-<span class='no'>datum</span> <span class='kw'>&lt;-</span> <span class='fu'>data.1</span>(<span class='fl'>50</span>, <span class='fl'>1</span>, <span class='no'>mu</span>, <span class='no'>Sigma</span>)
-<span class='no'>estat</span> <span class='kw'>&lt;-</span> <span class='fu'>stats</span>(<span class='no'>datum</span>, <span class='fl'>50</span>, <span class='fl'>1</span>, <span class='fl'>2</span>)
-<span class='no'>datum2</span> <span class='kw'>&lt;-</span> <span class='fu'>data.2</span>(<span class='no'>estat</span>, <span class='fl'>1</span>, <span class='kw'>p</span> <span class='kw'>=</span> <span class='fl'>2</span>)
+<span class='no'>datum</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='data.1.html'>data.1</a></span>(<span class='fl'>50</span>, <span class='fl'>1</span>, <span class='no'>mu</span>, <span class='no'>Sigma</span>)
+<span class='no'>estat</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='stats.html'>stats</a></span>(<span class='no'>datum</span>, <span class='fl'>50</span>, <span class='fl'>1</span>, <span class='fl'>2</span>)
+<span class='no'>datum2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='data.2.html'>data.2</a></span>(<span class='no'>estat</span>, <span class='fl'>1</span>, <span class='kw'>p</span> <span class='kw'>=</span> <span class='fl'>2</span>)
 <span class='no'>T2II</span> <span class='kw'>&lt;-</span> <span class='fu'>T2.2</span>(<span class='no'>datum2</span>, <span class='no'>estat</span>, <span class='fl'>1</span>)
 <span class='co'>#Example with subgroup observations</span>
-<span class='no'>datum</span> <span class='kw'>&lt;-</span> <span class='fu'>data.1</span>(<span class='fl'>20</span>, <span class='fl'>10</span>, <span class='no'>mu</span>, <span class='no'>Sigma</span>)
-<span class='no'>estat</span> <span class='kw'>&lt;-</span> <span class='fu'>stats</span>(<span class='no'>datum</span>, <span class='fl'>20</span>, <span class='fl'>10</span>, <span class='fl'>2</span>)
-<span class='no'>datum2</span> <span class='kw'>&lt;-</span> <span class='fu'>data.2</span>(<span class='no'>estat</span>, <span class='fl'>10</span>, <span class='kw'>p</span> <span class='kw'>=</span> <span class='fl'>2</span>)
+<span class='no'>datum</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='data.1.html'>data.1</a></span>(<span class='fl'>20</span>, <span class='fl'>10</span>, <span class='no'>mu</span>, <span class='no'>Sigma</span>)
+<span class='no'>estat</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='stats.html'>stats</a></span>(<span class='no'>datum</span>, <span class='fl'>20</span>, <span class='fl'>10</span>, <span class='fl'>2</span>)
+<span class='no'>datum2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='data.2.html'>data.2</a></span>(<span class='no'>estat</span>, <span class='fl'>10</span>, <span class='kw'>p</span> <span class='kw'>=</span> <span class='fl'>2</span>)
 <span class='no'>T2II</span> <span class='kw'>&lt;-</span> <span class='fu'>T2.2</span>(<span class='no'>datum2</span>, <span class='no'>estat</span>, <span class='fl'>10</span>)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
