@@ -9,7 +9,7 @@ Description: Builds statistical control charts with exact limits for
         univariate and multivariate cases.
 Depends: R (>= 3.4.2),
     miscTools
-License: GPL-2 + file LICENSE
+License: GPL-2 | file LICENSE
 URL: https://flaviobarros.github.io/IQCC
 BugReports: https://github.com/flaviobarros/IQCC/issues
 Encoding: UTF-8
