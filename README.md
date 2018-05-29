@@ -6,6 +6,7 @@ IQCC
 [![minimal R
 version](https://img.shields.io/badge/R%3E%3D-3.4.2-6666ff.svg)](https://cran.r-project.org/)
 [![packageversion](https://img.shields.io/badge/Package%20version-0.7-orange.svg?style=flat-square)](commits/master)
+[![DOI](https://zenodo.org/badge/18469916.svg)](https://zenodo.org/badge/latestdoi/18469916)
 
 Builds statistical control charts with exact limits for univariate and
 multivariate cases.
