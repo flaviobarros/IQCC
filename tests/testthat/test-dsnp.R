@@ -93,6 +93,15 @@ test_that("dsnp_prob_accept errors when ucl2 <= wl", {
                "ucl2 must be greater than wl")
 })
 
+test_that("dsnp_prob_accept handles empty warning zone", {
+  # wl=1.5, ucl1=1.5001: wl_accept=1, ucl1_reject=2
+  # d1_lower=2, d1_upper=1 -> empty warning zone, pa2 must be 0
+  res <- dsnp_prob_accept(0.5, 10, 20, 1.5, 1.5001, 4.5)
+  expect_equal(res$pa2, 0)
+  expect_equal(res$pt, res$pa1)
+  expect_equal(res$p_second, 0)
+})
+
 # --- dsnp_arl tests ---
 
 test_that("dsnp_arl returns structured list", {

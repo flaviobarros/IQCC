@@ -66,14 +66,16 @@ dsnp_prob_accept <- function(p, n1, n2, wl, ucl1, ucl2)
 
     pa1 <- pbinom(wl_accept, n1, p)
 
-    d1_seq <- (wl_accept + 1):(ucl1_reject - 1)
+    d1_lower <- wl_accept + 1
+    d1_upper <- ucl1_reject - 1
 
-    if(length(d1_seq) == 0)
+    if(d1_lower > d1_upper)
     {
         pa2 <- rep(0, length(p))
     }
     else
     {
+        d1_seq <- d1_lower:d1_upper
         prob_d1 <- outer(p, d1_seq, function(pi, d) dbinom(d, n1, pi))
         cond_prob <- outer(p, d1_seq, function(pi, d) pbinom(ucl2_accept - d, n2, pi))
         pa2 <- rowSums(prob_d1 * cond_prob)
