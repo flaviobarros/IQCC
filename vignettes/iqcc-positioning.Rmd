@@ -1,0 +1,132 @@
+---
+title: "When to use IQCC: exact and corrected control charts"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{When to use IQCC: exact and corrected control charts}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 5
+)
+```
+
+## Purpose
+
+IQCC implements *Improved Quality Control Charts*: control charts with exact,
+corrected, or standardized limits for situations where classical Shewhart-type
+approximations may be poorly calibrated.
+
+The package is not intended to replace general-purpose statistical process
+control packages. Instead, it is useful when the monitoring statistic is
+bounded, discrete, skewed, non-normal, or based on small samples. In those
+settings, the usual three-sigma limits can produce a false alarm probability
+that is meaningfully different from the nominal value.
+
+## Positioning in the R ecosystem
+
+A practical way to position IQCC is:
+
+> IQCC is a specialized package for exact and corrected control-chart limits,
+> especially for small samples, rare defects, asymmetric statistics, and
+> selected multivariate monitoring problems.
+
+Use a general SPC package when the goal is a broad control-chart workflow. Use
+IQCC when the main concern is whether the classical limits are statistically
+well calibrated for the distribution and sample size at hand.
+
+## When IQCC is especially useful
+
+| Monitoring problem | Classical difficulty | IQCC direction |
+|---|---|---|
+| Range-based dispersion monitoring | Normal approximations can inflate the actual false alarm risk, especially for small subgroups. | Use exact range-chart limits based on the relative range distribution. |
+| Standard deviation monitoring | The distribution of the sample standard deviation is asymmetric for small samples. | Use exact limits derived from the chi-square distribution of the sample variance. |
+| Nonconforming proportion in high-quality processes | The binomial distribution is discrete, bounded, and strongly skewed when the nonconforming proportion is very small. | Use Cornish-Fisher corrected limits or DS-np methods under development. |
+| Multivariate process mean monitoring | Hotelling T² requires phase-specific calibration. | Use the implemented Phase I and Phase II Hotelling T² functions. |
+| Multivariate process variability | A single normal approximation for generalized variance may be poorly calibrated. | Candidate future extensions include generalized variance and auxiliary trace charts. |
+
+## Current implemented methods
+
+The current package includes several families of functions:
+
+- `cchart.R()` for range charts, including exact Tukey-based limits.
+- `cchart.S()` for standard deviation charts, including exact chi-square-based limits.
+- `cchart.p()` for nonconforming proportion charts, including Cornish-Fisher
+  corrected limits.
+- `cchart.u()` for nonconformities per unit.
+- `T2.1()`, `T2.2()`, `cchart.T2.1()`, and `cchart.T2.2()` for Hotelling T²
+  monitoring.
+- `alpha.risk()` for studying the actual false alarm risk of classical range
+  charts.
+- `dsnp_prob_accept()`, `dsnp_arl()`, and `dsnp_ass()` for the numerical core of
+  double-sampling np charts.
+
+## Example: using a corrected p chart
+
+The example below uses the package's binomial data and constructs a p chart with
+Cornish-Fisher corrected limits. It is intentionally short; the purpose is to
+show where IQCC fits into the usual control-chart workflow.
+
+```{r p-chart-example, eval = FALSE}
+library(IQCC)
+
+data(binomdata)
+
+cchart.p(
+  x1 = binomdata$Di[1:12],
+  n1 = binomdata$ni[1:12],
+  type = "CF",
+  x2 = binomdata$Di[13:25],
+  n2 = binomdata$ni[13:25]
+)
+```
+
+## Example: inspecting the DS-np numerical core
+
+The DS-np plotting interface is still under development, but the numerical core
+can already be used to inspect the acceptance probability, average run length,
+and average sample size for a proposed plan.
+
+```{r dsnp-core-example, eval = FALSE}
+library(IQCC)
+
+plan <- list(n1 = 34, n2 = 162, wl = 1.5, ucl1 = 2.5, ucl2 = 4.5)
+
+dsnp_prob_accept(0.005, plan$n1, plan$n2, plan$wl, plan$ucl1, plan$ucl2)
+dsnp_arl(0.005, plan$n1, plan$n2, plan$wl, plan$ucl1, plan$ucl2)
+dsnp_ass(0.005, plan$n1, plan$n2, plan$wl, plan$ucl1)
+```
+
+## Development principles
+
+Future extensions should follow three principles.
+
+First, numerical calculations should be separated from plotting functions. A
+limit, probability, average run length, or false alarm risk shown in a chart
+should be reproducible by a small numerical function.
+
+Second, new methods should be validated against published tables or examples
+when possible. This is particularly important for charts based on exact or
+corrected distributional calculations.
+
+Third, IQCC should remain complementary to the broader R SPC ecosystem. Its
+strongest role is to provide statistically calibrated alternatives for cases
+where classical approximations are simple but inaccurate.
+
+## Related roadmap items
+
+The main planned extensions are:
+
+- automatic limit search and plotting for double-sampling np charts;
+- generalized variance charts for multivariate process variability;
+- Cornish-Fisher corrected generalized variance limits;
+- auxiliary trace charts for complementary multivariate variability monitoring;
+- validation fixtures reproducing numerical values from the underlying papers.
+
+These items are tracked in the GitHub issue roadmap and should be implemented in
+small, reviewable pull requests.
