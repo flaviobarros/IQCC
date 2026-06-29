@@ -8,14 +8,15 @@
 #' @param x The data to be plotted.
 #' @param sizes A value or a vector of values specifying the sample sizes
 #' associated with each group.
-#' @return Return a x-bar control chart for phase I.
+#' @return Returns a list with the mean of means (x2bar) and the standard
+#' deviation (sigma), invisibly. Also plots the control chart as a side effect.
 #' @export
 #' @author Daniela R. Recchia, Emanuel P. Barbosa
 #' @seealso \link{cchart.Xbar2}
 #' @examples
 #' 
 #' data(pistonrings)
-#' cchart.Xbar1(pistonrings[1:25, ])
+#' cchart.Xbar1(pistonrings[1:25, ], 5)
 #' 
 cchart.Xbar1 <- function(x, sizes)
 {
@@ -23,6 +24,6 @@ cchart.Xbar1 <- function(x, sizes)
     x2bar <- mean(a)
     sigma <- sd.xbar(x)
     qcc(x, type = "xbar", sizes)
-	stat <- list(c(x2bar, sigma))
-    return(stat)
+    stat <- list(c(x2bar, sigma))
+    invisible(stat)
 }

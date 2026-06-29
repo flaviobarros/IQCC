@@ -13,11 +13,11 @@
 #' 
 #' data(pistonrings)
 #' attach(pistonrings)
-#' cchart.Xbar_R(pistonrings[1:25, ])
+#' cchart.Xbar_R(pistonrings[1:25, ], 5)
 #' 
 cchart.Xbar_R <- function(x, sizes)
 {
     par(mfrow = c(1, 2))                 # setup 1 row and 2 columns for plotting
-    qcc(x, type = "xbar", add.stats = F)
-    qcc(x, type = "R", add.stat = F)
+    qcc(x, type = "xbar", add.stats = FALSE)
+    qcc(x, type = "R", add.stats = FALSE)
 }

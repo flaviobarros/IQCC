@@ -31,10 +31,10 @@ stats <- function(datum, m, n, p)
     if(n == 1)
     {
         g <- array(dim = c(1, p, m - 1))
-        media <- colMeans(datum)             # média das colunas dos dados
-        m1 <- matrix(media, m, p, byrow = T) # matriz com as 20 médias
-        w <- datum - m1                      # array com a diferença de X - Xbarra
-        for(i in 1:m-1)
+        media <- colMeans(datum)             # mean of each column of the data
+        m1 <- matrix(media, m, p, byrow = TRUE) # matrix with the 20 means
+        w <- datum - m1                      # array with the difference X - Xbar
+        for(i in 1:(m-1))
         {
             v <- matrix(datum[i + 1, ] - datum[i, ], nrow = 1, ncol = p)
             g[, , i] <- v
@@ -49,11 +49,11 @@ stats <- function(datum, m, n, p)
         w <- array(dim = c(n, p, m))
         M2 <- array(dim = c(n, p, m))
         media <- colMeans(datum)                    # mean of each face of the array, must be a matrix with 20 rows and 2 columns
-        m1 <- matrix(media, m, p, byrow = T)        # matrix with the 20 means
+        m1 <- matrix(media, m, p, byrow = TRUE)        # matrix with the 20 means
         mm <- colMeans(m1)                          # mean of means
         for(i in 1:m)
         {
-            M1 <- matrix(m1[i, ], n, p, byrow = T)  # repeating each mean of matrix m1 to build an array of means and subtract from the data
+            M1 <- matrix(m1[i, ], n, p, byrow = TRUE)  # repeating each mean of matrix m1 to build an array of means and subtract from the data
             M2[, , i] <- M1                         # keep the repetitions in an array
         }
         w <- datum - M2                             # array with X - Xbarra

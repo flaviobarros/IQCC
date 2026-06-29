@@ -10,7 +10,7 @@
 #' @param type A character string specifying the type of S control chart to be
 #' plotted where "n" plots a S chart with normalized probability limits and "e"
 #' plots a S chart with exact limits.
-#' @param m The sample sizes. Only necessary in the control chart with exact
+#' @param m The sample size. Only necessary in the control chart with exact
 #' (probability) limits.
 #' @return Return a S control chart.
 #' @export
@@ -30,12 +30,12 @@ cchart.S <- function(x, type = "n", m = NULL)
         qcc(x, type = "S")
     else
     {
-        if(type == "c" && !is.null(m))
-            qcc(x, type = "S", limits = c((sqrt(qchisq(0.00135, m - 1) / (m - 1))) * sd.S(x),(sqrt(qchisq(0.99865, m - 1) / (m - 1))) * sd.S(x)))
+        if(type == "e" && !is.null(m))
+            qcc(x, type = "S", limits = c((sqrt(qchisq(Q_LOWER, m - 1) / (m - 1))) * sd.S(x),(sqrt(qchisq(Q_UPPER, m - 1) / (m - 1))) * sd.S(x)))
         else
-            if(type == "c" && is.null(m))
+            if(type == "e" && is.null(m))
             {
-                sprintf("WARNING: The sample size m wasn't specified, so a S ??? control chart was plotted instead.")
+                warning("The sample size m wasn't specified, so a S control chart was plotted instead.")
                 qcc(x, type = "S")
             }
     }

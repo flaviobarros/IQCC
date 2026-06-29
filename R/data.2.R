@@ -6,8 +6,9 @@
 #' To use this function it is necessary to have the information about the phase
 #' I given by the functions data.1 and stats.
 #' 
-#' @param estat The values of the auxiliary statistics. Should be a list with a
-#' matrix with the means, mean of the means and mean of the standard deviation.
+#' @param estat The values of the auxiliary statistics. Should be a list with
+#' the mean of means, the average variance-covariance matrix, and a matrix
+#' with the means of each sample.
 #' @param n The size of each sample. If they are individual observations, use n
 #' = 1.
 #' @param delta A value to be added on the vector of means.

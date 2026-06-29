@@ -17,6 +17,8 @@
 #' 
 c4 <- function(n)
 {
+    if(any(n < 2))
+        stop("n must be >= 2")
     c <- (sqrt(2 / (n-1))) * (gamma(n/2) / gamma((n-1) / 2))
     return(c)
 }

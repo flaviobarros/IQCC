@@ -14,6 +14,7 @@
 #' (traditional Shewhart R chart) and "tukey" (exact R chart). If not
 #' specified, a Shewhart R chart will be plotted.
 #' @param y The data used in phase I to estimate the standard deviation.
+#' Required when type = "tukey".
 #' @return Return a R control chart.
 #' @export
 #' @author Daniela R. Recchia, Emanuel P. Barbosa
@@ -36,6 +37,6 @@ cchart.R <- function(x, n, type = "norm", y = NULL)
     }
     if(type == "tukey")
     {
-        qcc(x, type = "R", limits = c(qtukey(0.00135, n, Inf) * sd.R(y), qtukey(0.99865, n, Inf) * sd.R(y)))
+        qcc(x, type = "R", limits = c(qtukey(Q_LOWER, n, Inf) * sd.R(y), qtukey(Q_UPPER, n, Inf) * sd.R(y)))
     }
 }

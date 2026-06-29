@@ -7,7 +7,7 @@
 #' 
 #' @param x The data to be plotted.
 #' @param x2bar The mean of means.
-#' @param sigma The standar deviation of the data.
+#' @param sigma The standard deviation of the data.
 #' @param sizes A value or a vector of values specifying the sample sizes
 #' associated with each group.
 #' @return Return a x-bar control chart for phase II.
@@ -17,8 +17,8 @@
 #' @examples
 #' 
 #' data(pistonrings)
-#' stat <- cchart.Xbar1(pistonrings[1:25, ])
-#' cchart.Xbar2(pistonrings[26:40, ], stat[[1]][1], stat[[1]][2])
+#' stat <- cchart.Xbar1(pistonrings[1:25, ], 5)
+#' cchart.Xbar2(pistonrings[26:40, ], stat[[1]][1], stat[[1]][2], 5)
 #' 
 cchart.Xbar2 <- function(x, x2bar, sigma, sizes)
 {

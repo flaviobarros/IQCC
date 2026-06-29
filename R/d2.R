@@ -15,11 +15,13 @@
 #' 
 d2 <- function(n)
 {
-    d <- vector()
-    for(i in 1:length(n))
+    if(any(n < 2))
+        stop("n must be >= 2")
+    d <- numeric(length(n))
+    for(i in seq_along(n))
     {
         int <- integrate(function(w) {1 - ptukey(w, n[i], Inf)}, 0, Inf)
-        d <- append(d, int[[1]])
+        d[i] <- int[[1]]
     }
     return(d)
 }

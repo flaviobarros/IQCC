@@ -15,7 +15,7 @@
 #' \item{x5}{The fifth measure.} 
 #' \item{x6}{The sixth measure.}
 #' \item{x7}{The seventh measure.} 
-#' \item{x8}{The eigth measure.} 
+#' \item{x8}{The eighth measure.} 
 #' \item{x9}{The ninth measure.} 
 #' \item{x10}{The tenth
 #' measure.} }

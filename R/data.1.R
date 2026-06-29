@@ -1,6 +1,6 @@
 #' Hotelling Control Chart Phase I simulated data.
 #' 
-#' This function simulate a normal data set to be used in the phase I Hoteliing
+#' This function simulates a normal data set to be used in the phase I Hotelling
 #' control charts.
 #' 
 #' 
@@ -8,7 +8,7 @@
 #' @param n The size of each sample. If they are individual observations, then
 #' use n = 1.
 #' @param mu The vector with the means of the data to be generated.
-#' @param Sigma The vector with the variance-covariance matrix of the data to
+#' @param Sigma The variance-covariance matrix of the data to
 #' be generated.
 #' @return Return an array with the simulated data.
 #' @export

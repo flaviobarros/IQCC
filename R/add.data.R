@@ -6,7 +6,7 @@
 #' To use this function it is necessary to have the output given by the
 #' function T2.2. At every step you should entry with the new data set.
 #' 
-#' @param datum2 The data set for the phase II. Shoul be a vector.
+#' @param datum2 The data set for the phase II. Should be a matrix.
 #' @param estat The values of the auxiliary statistics. Should be a list with a
 #' vector with the mean of the mean vectors, a matrix with the average of the
 #' variance-covariance matrices and a matrix with the means.
@@ -15,8 +15,8 @@
 #' @param j The index of the current sample.
 #' @param m The number of samples in phase I. Only needed if the phase I data
 #' set is show on the plot.
-#' @return Add the new observation to the current Hoteliing control chart for
-#' phase II.
+#' @return Add the new observation to the current Hotelling control chart for
+#' phase II. Returns the new T2 statistic invisibly.
 #' @export
 #' @author Daniela R. Recchia, Emanuel P. Barbosa
 #' @seealso \link{T2.2}
@@ -54,11 +54,11 @@
 add.data <- function(datum2, estat, T2II, n, j, m = NULL)
 {
     b <- T2.2(datum2, estat, n)
-    if(is.null(m) == FALSE)
+    if(!is.null(m))
         j <- j + m + 1
     points(j, b[1], pch = 16)
     c <- c(j, j - 1)
     d <- c(b[1], T2II[1])
     lines(c, d)
-    T2II <<- b
+invisible(b)
 }
