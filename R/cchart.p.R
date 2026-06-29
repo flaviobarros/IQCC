@@ -25,6 +25,7 @@
 #' @author Daniela R. Recchia, Emanuel P. Barbosa
 #' @references Montgomery, D.C.,(2008)."Introduction to Statistical Quality
 #' Control". Chapter 11. Wiley
+#' @importFrom qcc qcc
 #' @examples
 #' 
 #' data(binomdata)

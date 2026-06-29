@@ -30,7 +30,7 @@ samples / samples of size n > 1), used retrospective / validation analysis
 \examples{
 
 mu <- c(5.682, 88.22)
-Sigma <- symMatrix(c(3.770, -5.495, 13.53), 2)
+Sigma <- miscTools::symMatrix(c(3.770, -5.495, 13.53), 2)
 datum <- data.1(20, 10, mu, Sigma)
 estat <- stats(datum, 20, 10, 2)
 T2 <- T2.1(estat, 20, 10)

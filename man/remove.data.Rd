@@ -21,7 +21,7 @@ you data set. It is used at Hotelling T2 control charts for phase I.
 \examples{
 
 mu <- c(5.682, 88.22)
-Sigma <- symMatrix(c(3.770, -5.495, 13.53), 2)
+Sigma <- miscTools::symMatrix(c(3.770, -5.495, 13.53), 2)
 datum <- data.1(20, 10, mu, Sigma)
 # Removing the observatiob 13 from the data set "datum" and updating it:
 datum <- remove.data(datum, 13)

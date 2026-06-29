@@ -9,6 +9,7 @@
 #' @export
 #' @author Daniela R. Recchia, Emanuel P. Barbosa
 #' @seealso \link{d2},\link{c4}
+#' @importFrom stats ptukey
 #' @examples
 #' 
 #' d3(7)

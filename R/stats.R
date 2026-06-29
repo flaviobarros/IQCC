@@ -18,7 +18,7 @@
 #' @examples
 #' 
 #' mu <- c(5.682, 88.22)
-#' Sigma <- symMatrix(c(3.770, -5.495, 13.53), 2)
+#' Sigma <- miscTools::symMatrix(c(3.770, -5.495, 13.53), 2)
 #' #Example with individual observations
 #' datum <- data.1(50, 1, mu, Sigma)
 #' estat <- stats(datum, 50, 1, 2)

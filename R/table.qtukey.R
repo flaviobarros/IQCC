@@ -11,7 +11,7 @@
 #' @export
 #' @author Daniela R. Recchia, Emanuel P. Barbosa
 #' @seealso \link{table.const},\link{alpha.risk},\link{qtukey}
-#' @import stats
+#' @importFrom stats qtukey
 #' @examples
 #' 
 #' table.qtukey(0.0027, 15)

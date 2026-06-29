@@ -13,6 +13,7 @@
 #' @export
 #' @author Daniela R. Recchia, Emanuel P. Barbosa
 #' @seealso \link{cchart.Xbar2}
+#' @importFrom qcc qcc sd.xbar
 #' @examples
 #' 
 #' data(pistonrings)

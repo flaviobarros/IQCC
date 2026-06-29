@@ -12,6 +12,7 @@
 #' @export
 #' @author Daniela R. Recchia, Emanuel P. Barbosa
 #' @seealso \link{d2},\link{d3},\link{c4}
+#' @importFrom stats ptukey
 #' @examples
 #' 
 #' alpha.risk(15)

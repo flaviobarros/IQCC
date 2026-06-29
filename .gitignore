@@ -2,3 +2,6 @@
 .Rhistory
 .RData
 *.gfm-ascii*
+Rplots.pdf
+docs/
+.mimocode/

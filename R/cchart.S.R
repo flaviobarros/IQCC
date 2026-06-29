@@ -15,7 +15,8 @@
 #' @return Return a S control chart.
 #' @export
 #' @author Daniela R. Recchia, Emanuel P. Barbosa
-#' @import qcc
+#' @importFrom qcc qcc sd.S
+#' @importFrom stats qchisq
 #' @examples
 #' 
 #' data(softdrink)

@@ -26,6 +26,7 @@
 #' @return Returns a u-chart.
 #' @export
 #' @author Daniela R. Recchia, Emanuel P. Barbosa
+#' @importFrom qcc qcc
 #' @examples
 #' 
 #' data(moonroof)

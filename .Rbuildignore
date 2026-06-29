@@ -3,8 +3,9 @@
 ^docs$
 ^README\.Rmd$
 ^README-.*\.png$
-^\.travis\.yml$
 ^CHANGELOG\.md$
 ^badgecreatr4.jpg$
 ^cran-comments\.md$
 ^\.mimocode$
+^Rplots\.pdf$
+^tests/testthat/Rplots\.pdf$

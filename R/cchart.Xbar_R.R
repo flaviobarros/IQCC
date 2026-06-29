@@ -9,6 +9,8 @@
 #' @return Return the two control charts.
 #' @export
 #' @author Daniela R. Recchia, Emanuel P. Barbosa.
+#' @importFrom graphics par
+#' @importFrom qcc qcc
 #' @examples
 #' 
 #' data(pistonrings)

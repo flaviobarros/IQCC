@@ -18,7 +18,9 @@
 #' @return Return a R control chart.
 #' @export
 #' @author Daniela R. Recchia, Emanuel P. Barbosa
-#' @import qcc 
+#' @importFrom qcc qcc sd.R
+#' @importFrom stats qtukey
+#' @importFrom graphics mtext
 #' @examples
 #' 
 #' data(pistonrings)
