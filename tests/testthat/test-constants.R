@@ -76,3 +76,53 @@ test_that("table.qtukey returns matrix with 4 columns", {
   expect_equal(ncol(result), 4)
   expect_equal(colnames(result), c("alpha/2", "alpha", "1-alpha", "1-alpha/2"))
 })
+
+test_that("c4 works with vector input", {
+  result <- c4(2:5)
+  expect_length(result, 4)
+  expect_equal(result[1], c4(2))
+  expect_equal(result[2], c4(3))
+  expect_equal(result[3], c4(4))
+  expect_equal(result[4], c4(5))
+})
+
+test_that("alpha.risk with n=2 returns correct value", {
+  result <- alpha.risk(2)
+  expect_true(is.numeric(result))
+  expect_true(result > 0)
+  expect_true(result > 0.0027)
+})
+
+test_that("table.const with n=2 returns single row", {
+  result <- table.const(2)
+  expect_equal(nrow(result), 1)
+  expect_equal(rownames(result), "2")
+})
+
+test_that("d3 with n=2 returns correct value", {
+  expect_equal(d3(2), 0.8525025, tolerance = 1e-5)
+})
+
+test_that("d2 reference values match Montgomery Table VI", {
+  expect_equal(d2(2), 1.128, tolerance = 1e-3)
+  expect_equal(d2(3), 1.693, tolerance = 1e-3)
+  expect_equal(d2(4), 2.059, tolerance = 1e-3)
+  expect_equal(d2(5), 2.326, tolerance = 1e-3)
+  expect_equal(d2(6), 2.534, tolerance = 1e-3)
+  expect_equal(d2(7), 2.704, tolerance = 1e-3)
+  expect_equal(d2(8), 2.847, tolerance = 1e-3)
+})
+
+test_that("d3 reference values match Montgomery Table VI", {
+  expect_equal(d3(2), 0.853, tolerance = 1e-3)
+  expect_equal(d3(3), 0.888, tolerance = 1e-3)
+  expect_equal(d3(4), 0.880, tolerance = 1e-3)
+  expect_equal(d3(5), 0.864, tolerance = 1e-3)
+})
+
+test_that("c4 reference values match Montgomery Table VI", {
+  expect_equal(c4(2), 0.798, tolerance = 1e-3)
+  expect_equal(c4(3), 0.886, tolerance = 1e-3)
+  expect_equal(c4(4), 0.921, tolerance = 1e-3)
+  expect_equal(c4(5), 0.940, tolerance = 1e-3)
+})
