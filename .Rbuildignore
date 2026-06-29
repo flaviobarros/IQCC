@@ -7,5 +7,6 @@
 ^badgecreatr4.jpg$
 ^cran-comments\.md$
 ^\.mimocode$
+^\.github$
 ^Rplots\.pdf$
 ^tests/testthat/Rplots\.pdf$
