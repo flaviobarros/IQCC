@@ -36,8 +36,7 @@ cchart.T2.1 <- function(T2, m, n, p)
     }
     if(n == 1)
     {
-        Q <- (2 * (m - 1) ^ 2) / (3 * m - 4)
-        UCL <- (((m - 1) ^ 2) / m) * qbeta(1 - ALPHA, p / 2, (Q - p - 1) / 2) 
+        UCL <- (((m - 1) ^ 2) / m) * qbeta(1 - ALPHA, p / 2, (m - p - 1) / 2)
         plot(1:m, T2, main = "Hotelling T2: Individual Observations - Phase I", ylim = c(0, UCL + 1), ylab = "T2")
     }
     if(n > 1)
