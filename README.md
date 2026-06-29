@@ -80,11 +80,15 @@ cchart.T2.1(T2, 20, 10, 2)
 
 ## Learning more
 
-The package includes a vignette that explains when IQCC is a better fit than a classical normal-approximation chart and how it complements broader SPC packages:
+The package includes vignettes that explain where IQCC fits and how to approach selected monitoring problems:
 
 ```r
 vignette("iqcc-positioning", package = "IQCC")
+vignette("high-quality-processes", package = "IQCC")
 ```
+
+- `iqcc-positioning` explains when IQCC is a better fit than a classical normal-approximation chart and how it complements broader SPC packages.
+- `high-quality-processes` focuses on rare nonconformities, Cornish-Fisher p charts, and the DS-np numerical core.
 
 ## Research background
 
