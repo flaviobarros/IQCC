@@ -176,10 +176,10 @@ processes to the case of small samples.</p>
 <span class="r-in"><span><span class="co"># Small example for fast execution</span></span></span>
 <span class="r-in"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">dsnp_limits</span><span class="op">(</span>p0 <span class="op">=</span> <span class="fl">0.05</span>, n1 <span class="op">=</span> <span class="fl">5</span>, n2 <span class="op">=</span> <span class="fl">10</span>, alpha <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">res</span><span class="op">$</span><span class="va">best</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    wl ucl1 ucl2 wl_accept ucl1_reject ucl2_accept       pt0   p_signal0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 1.5  2.5  2.5         1           3           2 0.9902411 0.009758948</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       arl0     ass0 feasible</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 102.4701 5.214344     TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    wl ucl1 ucl2 wl_accept ucl1_reject ucl2_accept       pt0  p_signal0     arl0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.5  1.5  2.5         0           2           2 0.9598674 0.04013256 24.91743</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       ass0 feasible</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 7.036266     TRUE</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">candidates</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 20</span>
 <span class="r-in"><span></span></span>
@@ -187,8 +187,8 @@ processes to the case of small samples.</p>
 <span class="r-in"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">dsnp_limits</span><span class="op">(</span>p0 <span class="op">=</span> <span class="fl">0.05</span>, n1 <span class="op">=</span> <span class="fl">5</span>, n2 <span class="op">=</span> <span class="fl">10</span>, alpha <span class="op">=</span> <span class="fl">0.05</span>,</span></span>
 <span class="r-in"><span>                   p1 <span class="op">=</span> <span class="fl">0.10</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">res</span><span class="op">$</span><span class="va">best</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"wl"</span>, <span class="st">"ucl1"</span>, <span class="st">"ucl2"</span>, <span class="st">"arl0"</span>, <span class="st">"arl1"</span>, <span class="st">"ass0"</span><span class="op">)</span><span class="op">]</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    wl ucl1 ucl2     arl0     arl1     ass0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 1.5  2.5  2.5 102.4701 17.84397 5.214344</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    wl ucl1 ucl2 arl0        arl1     ass0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.5  5.5 15.5  Inf -4.5036e+15 7.262191</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
