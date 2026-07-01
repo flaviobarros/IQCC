@@ -1,0 +1,145 @@
+---
+title: "Monitoring process variability with exact limits"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Monitoring process variability with exact limits}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 5
+)
+```
+
+## Purpose
+
+Process monitoring often starts with the mean, but changes in variability can be
+just as important. A process may keep approximately the same center while its
+spread increases, decreases, or changes structure. In such cases, a variability
+chart can detect deterioration that an X-bar chart may miss.
+
+IQCC includes improved tools for univariate variability monitoring. The package
+focuses on cases where familiar Shewhart-type limits are easy to draw but not
+well calibrated for the actual sampling distribution of the statistic.
+
+## Why exact limits matter
+
+Range and standard deviation charts are based on statistics with asymmetric
+sampling distributions, especially for small subgroups. Normal-style symmetric
+limits can therefore produce a false alarm probability different from the
+nominal value. IQCC addresses this by providing probability limits based on the
+sampling distribution of the statistic whenever possible.
+
+The two central univariate variability charts are:
+
+- `cchart.R()` for range monitoring;
+- `cchart.S()` for standard deviation monitoring.
+
+## Range charts
+
+The classical R chart monitors subgroup ranges. IQCC supports the ordinary
+Shewhart-style R chart and an exact R chart based on the distribution of the
+relative range. The exact chart is requested with `type = "tukey"`.
+
+```{r r-chart-example, eval = FALSE}
+library(IQCC)
+
+data(pistonrings)
+
+# Classical R chart for Phase I data
+cchart.R(pistonrings[1:25, ], n = 5)
+
+# Exact R chart for prospective data, using Phase I data to estimate sigma
+cchart.R(
+  x = pistonrings[26:40, ],
+  n = 5,
+  type = "tukey",
+  y = pistonrings[1:25, ]
+)
+```
+
+A useful diagnostic companion is `alpha.risk()`, which computes the actual false
+alarm probability for the classical three-sigma R chart for a given subgroup
+size.
+
+```{r alpha-risk-example}
+library(IQCC)
+
+alpha.risk(5)
+```
+
+This is useful when deciding whether the ordinary R chart is sufficiently well
+calibrated for a particular subgroup size.
+
+## S charts
+
+The S chart monitors subgroup standard deviations. IQCC supports a normalized S
+chart and an exact S chart. The exact limits use the relationship between the
+sample variance and the chi-square distribution.
+
+```{r s-chart-example, eval = FALSE}
+library(IQCC)
+
+data(softdrink)
+
+# Normalized S chart
+cchart.S(softdrink, type = "n")
+
+# Exact S chart; m is the subgroup size
+cchart.S(softdrink, type = "e", m = 10)
+```
+
+Use the exact option when subgroup sizes are small enough that the asymmetry of
+the sampling distribution matters for the control limits.
+
+## Choosing between R and S charts
+
+The R chart is simple and historically common. It is often attractive for small
+subgroups because the range is easy to compute and explain. The S chart uses
+more information from the subgroup and is generally more directly connected to
+variance estimation.
+
+A practical rule is:
+
+- use `cchart.R(type = "tukey")` when the workflow is range-based and the goal is
+  to keep the R-chart interpretation while improving limit calibration;
+- use `cchart.S(type = "e")` when subgroup standard deviations are the natural
+  statistic and exact probability limits are desired.
+
+## Relation to multivariate variability
+
+Univariate variability monitoring tracks the spread of one quality
+characteristic. Multivariate variability monitoring is harder because changes may
+occur in individual variances, covariances, or both.
+
+The current development roadmap includes generalized variance charts based on
+`|S|` and auxiliary trace charts based on `tr(V)`. These future methods are meant
+to extend the same principle used by IQCC's univariate variability charts: prefer
+probability-calibrated limits when the usual approximations are not reliable.
+
+## Practical workflow
+
+A typical IQCC workflow for variability monitoring is:
+
+1. Start with the standard chart that matches the statistic used in the process
+   history: R for ranges, S for subgroup standard deviations.
+2. Use the exact IQCC option when the subgroup size is small or the false alarm
+   risk of the classical chart is a concern.
+3. Use `alpha.risk()` to quantify how different the classical R-chart false
+   alarm probability is from the nominal value.
+4. For multivariate variability, treat the current IQCC implementation as a
+   roadmap: generalized variance and trace-based charts are planned extensions,
+   not yet part of the stable user-facing API.
+
+## Summary
+
+IQCC is most useful for variability monitoring when the question is not merely
+"can I draw an R or S chart?", but rather "are the limits on this chart
+calibrated for the actual distribution and subgroup size?" The exact R and S
+chart options provide a more statistically faithful alternative while preserving
+the familiar control-chart workflow.
