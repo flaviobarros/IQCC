@@ -28,7 +28,7 @@ The package is motivated by a recurring practical problem in classical Shewhart-
 | Range / process dispersion | `cchart.R()` | Shewhart R chart; exact Tukey-based R chart | The exact chart uses the relative range distribution through the Tukey distribution. |
 | Standard deviation | `cchart.S()` | Normalized S chart; exact chi-square-based S chart | Exact limits are based on the chi-square distribution of the sample variance. |
 | Nonconforming proportion | `cchart.p()` | Shewhart p chart; Cornish-Fisher p chart; standardized p chart | The Cornish-Fisher option is designed for low nonconforming proportions where normal approximation is poor. |
-| Double-sampling nonconforming count | `dsnp_prob_accept()`, `dsnp_arl()`, `dsnp_ass()` | Numerical core for DS-np charts | Limit search and plotting are under development. |
+| Double-sampling nonconforming count | `dsnp_prob_accept()`, `dsnp_arl()`, `dsnp_ass()`, `dsnp_limits()` | Numerical core and discrete limit search for DS-np charts | Plotting wrapper is under development. |
 | Nonconformities per unit | `cchart.u()` | Shewhart u chart; standardized u chart | Attribute chart for counts per inspection unit. |
 | Multivariate mean vector | `T2.1()`, `T2.2()`, `cchart.T2.1()`, `cchart.T2.2()` | Hotelling T² charts for Phase I and Phase II | Supports individual and subgroup observations. |
 | Relative range constants | `d2()`, `d3()` | Numerical integration using Tukey distribution functions | Used by exact R-chart calculations and false alarm diagnostics. |
@@ -85,10 +85,12 @@ The package includes vignettes that explain where IQCC fits and how to approach 
 ```r
 vignette("iqcc-positioning", package = "IQCC")
 vignette("high-quality-processes", package = "IQCC")
+vignette("variability-monitoring", package = "IQCC")
 ```
 
 - `iqcc-positioning` explains when IQCC is a better fit than a classical normal-approximation chart and how it complements broader SPC packages.
-- `high-quality-processes` focuses on rare nonconformities, Cornish-Fisher p charts, and the DS-np numerical core.
+- `high-quality-processes` focuses on rare nonconformities, Cornish-Fisher p charts, and DS-np operating characteristics.
+- `variability-monitoring` focuses on R and S charts with exact probability limits for process dispersion.
 
 ## Research background
 
@@ -107,7 +109,7 @@ The package currently implements several core ideas from the research program, b
 
 | Candidate extension | Statistical target | Possible function names | Status |
 |---|---|---|---|
-| Double-sampling np chart | Nonconforming proportion in high-quality processes with small samples | `dsnp_limits()`, `cchart.DSnp()` | Numerical core implemented; limit search and plotting planned |
+| Double-sampling np chart | Nonconforming proportion in high-quality processes with small samples | `cchart.DSnp()` | Numerical core and limit search implemented; plotting planned |
 | Generalized variance chart | Multivariate process variability using `|S|` | `gv_limits()`, `cchart.GV()` | Planned |
 | Cornish-Fisher corrected generalized variance chart | Corrected limits for `|S|` under non-normal sampling distribution | `gv_cf_limits()` | Planned |
 | Auxiliary trace chart | Complementary monitoring using `tr(V)` | `trv_limits()`, `cchart.trV()` | Planned |
