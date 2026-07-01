@@ -153,3 +153,78 @@ test_that("dsnp_limits published example is compatible with numeric core", {
   expect_equal(arl1$arl, 193.22, tolerance = 0.01)
   expect_equal(ass0$ass, 35.94, tolerance = 0.01)
 })
+
+# --- ucl2 evaluation consistency tests ---
+
+test_that("dsnp_limits candidates with same (wl,ucl1) but different ucl2 differ in p_signal", {
+  res <- dsnp_limits(p0 = 0.05, n1 = 5, n2 = 10, alpha = 0.10,
+                     allow_empty_warning = FALSE, max_results = 200)
+  cand <- res$candidates
+  # Pick a (wl_accept, ucl1_reject) pair that has multiple ucl2 values
+  ab_pairs <- unique(cand[, c("wl_accept", "ucl1_reject")])
+  found_divergence <- FALSE
+  for(i in seq_len(nrow(ab_pairs)))
+  {
+    a_val <- ab_pairs$wl_accept[i]
+    b_val <- ab_pairs$ucl1_reject[i]
+    subset <- cand[cand$wl_accept == a_val & cand$ucl1_reject == b_val, ]
+    if(nrow(subset) >= 2)
+    {
+      expect_true(length(unique(subset$p_signal0)) > 1,
+                  info = paste("For wl_accept=", a_val, "ucl1_reject=", b_val,
+                               "all p_signal0 are identical despite different ucl2"))
+      found_divergence <- TRUE
+      break
+    }
+  }
+  expect_true(found_divergence, info = "No (wl,ucl1) pair had multiple ucl2 candidates to test")
+})
+
+test_that("dsnp_limits every candidate is consistent with direct numeric core call", {
+  res <- dsnp_limits(p0 = 0.05, n1 = 5, n2 = 10, alpha = 0.10,
+                     allow_empty_warning = FALSE, max_results = 50)
+  cand <- res$candidates
+  for(i in seq_len(nrow(cand)))
+  {
+    row <- cand[i, ]
+    pa  <- dsnp_prob_accept(res$p0, res$n1, res$n2,
+                            row$wl, row$ucl1, row$ucl2)
+    arl <- dsnp_arl(res$p0, res$n1, res$n2,
+                    row$wl, row$ucl1, row$ucl2)
+    expect_equal(row$p_signal0, pa$p_signal,
+                 tolerance = 1e-10,
+                 info = paste("Candidate", i, "p_signal0 mismatch"))
+    expect_equal(row$arl0, arl$arl,
+                 tolerance = 1e-10,
+                 info = paste("Candidate", i, "arl0 mismatch"))
+  }
+})
+
+test_that("dsnp_limits ucl2 column matches c+0.5 for every candidate", {
+  res <- dsnp_limits(p0 = 0.05, n1 = 5, n2 = 10, alpha = 0.10,
+                     allow_empty_warning = FALSE, max_results = 50)
+  cand <- res$candidates
+  # ucl2 should equal ucl2_accept + 0.5
+  expect_equal(cand$ucl2, cand$ucl2_accept + 0.5)
+})
+
+test_that("dsnp_limits larger ucl2 gives lower p_signal (more accepting)", {
+  res <- dsnp_limits(p0 = 0.05, n1 = 5, n2 = 10, alpha = 0.10,
+                     allow_empty_warning = FALSE, max_results = 200)
+  cand <- res$candidates
+  # For fixed (wl_accept, ucl1_reject), p_signal should be non-increasing in ucl2
+  ab_pairs <- unique(cand[, c("wl_accept", "ucl1_reject")])
+  for(i in seq_len(nrow(ab_pairs)))
+  {
+    a_val <- ab_pairs$wl_accept[i]
+    b_val <- ab_pairs$ucl1_reject[i]
+    subset <- cand[cand$wl_accept == a_val & cand$ucl1_reject == b_val, ]
+    subset <- subset[order(subset$ucl2_accept), ]
+    if(nrow(subset) >= 2)
+    {
+      expect_true(!is.unsorted(-subset$p_signal0),
+                  info = paste("p_signal0 not non-increasing with ucl2 for",
+                               "wl_accept=", a_val, "ucl1_reject=", b_val))
+    }
+  }
+})

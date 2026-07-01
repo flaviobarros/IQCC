@@ -81,7 +81,7 @@ dsnp_limits <- function(p0, n1, n2, alpha = 0.0027,
 
     has_p1 <- !is.null(p1)
 
-    eval_candidate <- function(p, n1, n2, a, b, empty_zone)
+    eval_candidate <- function(p, n1, n2, a, b, c, empty_zone)
     {
         if(empty_zone)
         {
@@ -96,7 +96,7 @@ dsnp_limits <- function(p0, n1, n2, alpha = 0.0027,
         {
             wl   <- a + 0.5
             ucl1 <- b - 0.5
-            ucl2 <- a + 1.5
+            ucl2 <- c + 0.5
 
             pa   <- dsnp_prob_accept(p, n1, n2, wl, ucl1, ucl2)
             arl_r <- dsnp_arl(p, n1, n2, wl, ucl1, ucl2)
@@ -130,7 +130,7 @@ dsnp_limits <- function(p0, n1, n2, alpha = 0.0027,
                 ucl1 <- b - 0.5
                 ucl2 <- c + 0.5
 
-                ev0 <- eval_candidate(p0, n1, n2, a, b, empty_zone)
+                ev0 <- eval_candidate(p0, n1, n2, a, b, c, empty_zone)
 
                 row <- data.frame(
                     wl            = wl,
@@ -149,7 +149,7 @@ dsnp_limits <- function(p0, n1, n2, alpha = 0.0027,
 
                 if(has_p1)
                 {
-                    ev1 <- eval_candidate(p1, n1, n2, a, b, empty_zone)
+                    ev1 <- eval_candidate(p1, n1, n2, a, b, c, empty_zone)
 
                     row$pt1       <- ev1$pt
                     row$p_signal1 <- ev1$p_signal
