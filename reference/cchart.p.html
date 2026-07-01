@@ -66,8 +66,16 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">cchart.p</span><span class="op">(</span>x1 <span class="op">=</span> <span class="cn">NULL</span>, n1 <span class="op">=</span> <span class="cn">NULL</span>, type <span class="op">=</span> <span class="st">"norm"</span>, p1 <span class="op">=</span> <span class="cn">NULL</span>, x2 <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  n2 <span class="op">=</span> <span class="cn">NULL</span>, phat <span class="op">=</span> <span class="cn">NULL</span>, p2 <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">cchart.p</span><span class="op">(</span></span>
+<span>  x1 <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  n1 <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  type <span class="op">=</span> <span class="st">"norm"</span>,</span>
+<span>  p1 <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  x2 <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  n2 <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  phat <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  p2 <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -119,7 +127,7 @@ associated with each group for the phase II data.</p></dd>
     <h2>Details</h2>
     <p>For a phase I p-chart, n1 must be specified and either x1 or p1.  For a
 phase II p-chart, n2 must be specified, plus x2 or p2 and either phat, x1
-and n1, or p1 and n1.  The Shewhart is based on normal-aprroximation and
+and n1, or p1 and n1.  The Shewhart is based on normal-approximation and
 should be used only for large values of np or n*p (n*p &gt; 6).</p>
     </div>
     <div id="references">

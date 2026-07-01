@@ -6,12 +6,14 @@
 <url><loc>/authors.html</loc></url>
 <url><loc>/index.html</loc></url>
 <url><loc>/news/index.html</loc></url>
+<url><loc>/reference/IQCC-package.html</loc></url>
 <url><loc>/reference/T2.1.html</loc></url>
 <url><loc>/reference/T2.2.html</loc></url>
 <url><loc>/reference/add.data.html</loc></url>
 <url><loc>/reference/alpha.risk.html</loc></url>
 <url><loc>/reference/binomdata.html</loc></url>
 <url><loc>/reference/c4.html</loc></url>
+<url><loc>/reference/cchart.DSnp.html</loc></url>
 <url><loc>/reference/cchart.R.html</loc></url>
 <url><loc>/reference/cchart.S.html</loc></url>
 <url><loc>/reference/cchart.T2.1.html</loc></url>
@@ -33,6 +35,7 @@
 <url><loc>/reference/index.html</loc></url>
 <url><loc>/reference/moonroof.html</loc></url>
 <url><loc>/reference/pistonrings.html</loc></url>
+<url><loc>/reference/plot.cchart.DSnp.html</loc></url>
 <url><loc>/reference/remove.data.html</loc></url>
 <url><loc>/reference/softdrink.html</loc></url>
 <url><loc>/reference/stats.html</loc></url>

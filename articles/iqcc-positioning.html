@@ -152,8 +152,8 @@ sample variance.</td>
 <td>Nonconforming proportion in high-quality processes</td>
 <td>The binomial distribution is discrete, bounded, and strongly skewed
 when the nonconforming proportion is very small.</td>
-<td>Use Cornish-Fisher corrected limits or DS-np methods under
-development.</td>
+<td>Use Cornish-Fisher corrected limits or the double-sampling np
+chart.</td>
 </tr>
 <tr class="even">
 <td>Multivariate process mean monitoring</td>
@@ -195,9 +195,9 @@ T² monitoring.</li>
 <code><a href="../reference/alpha.risk.html">alpha.risk()</a></code> for studying the actual false alarm risk
 of classical range charts.</li>
 <li>
-<code><a href="../reference/dsnp_prob_accept.html">dsnp_prob_accept()</a></code>, <code><a href="../reference/dsnp_arl.html">dsnp_arl()</a></code>, and
-<code><a href="../reference/dsnp_ass.html">dsnp_ass()</a></code> for the numerical core of double-sampling np
-charts.</li>
+<code><a href="../reference/dsnp_prob_accept.html">dsnp_prob_accept()</a></code>, <code><a href="../reference/dsnp_arl.html">dsnp_arl()</a></code>,
+<code><a href="../reference/dsnp_ass.html">dsnp_ass()</a></code>, <code><a href="../reference/dsnp_limits.html">dsnp_limits()</a></code>, and
+<code><a href="../reference/cchart.DSnp.html">cchart.DSnp()</a></code> for double-sampling np charts.</li>
 </ul>
 </div>
 <div class="section level2">
@@ -221,20 +221,27 @@ workflow.</p>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="example-inspecting-the-ds-np-numerical-core">Example: inspecting the DS-np numerical core<a class="anchor" aria-label="anchor" href="#example-inspecting-the-ds-np-numerical-core"></a>
+<h2 id="example-ds-np-chart-with-automatic-limit-search">Example: DS-np chart with automatic limit search<a class="anchor" aria-label="anchor" href="#example-ds-np-chart-with-automatic-limit-search"></a>
 </h2>
-<p>The DS-np plotting interface is still under development, but the
-numerical core can already be used to inspect the acceptance
-probability, average run length, and average sample size for a proposed
-plan.</p>
+<p>The double-sampling np chart uses two sampling stages to monitor the
+nonconforming proportion in high-quality processes.
+<code><a href="../reference/dsnp_limits.html">dsnp_limits()</a></code> searches for feasible fractional control
+limits, and <code><a href="../reference/cchart.DSnp.html">cchart.DSnp()</a></code> builds and plots the chart.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/flaviobarros/IQCC" class="external-link">IQCC</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">plan</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>n1 <span class="op">=</span> <span class="fl">34</span>, n2 <span class="op">=</span> <span class="fl">162</span>, wl <span class="op">=</span> <span class="fl">1.5</span>, ucl1 <span class="op">=</span> <span class="fl">2.5</span>, ucl2 <span class="op">=</span> <span class="fl">4.5</span><span class="op">)</span></span>
+<span><span class="co"># Find limits for a given in-control proportion</span></span>
+<span><span class="va">lim</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dsnp_limits.html">dsnp_limits</a></span><span class="op">(</span>p0 <span class="op">=</span> <span class="fl">0.005</span>, n1 <span class="op">=</span> <span class="fl">34</span>, n2 <span class="op">=</span> <span class="fl">162</span>, alpha <span class="op">=</span> <span class="fl">0.0027</span>,</span>
+<span>                   p1 <span class="op">=</span> <span class="fl">0.0075</span><span class="op">)</span></span>
+<span><span class="va">lim</span><span class="op">$</span><span class="va">best</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"wl"</span>, <span class="st">"ucl1"</span>, <span class="st">"ucl2"</span>, <span class="st">"arl0"</span>, <span class="st">"arl1"</span>, <span class="st">"ass0"</span><span class="op">)</span><span class="op">]</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/dsnp_prob_accept.html">dsnp_prob_accept</a></span><span class="op">(</span><span class="fl">0.005</span>, <span class="va">plan</span><span class="op">$</span><span class="va">n1</span>, <span class="va">plan</span><span class="op">$</span><span class="va">n2</span>, <span class="va">plan</span><span class="op">$</span><span class="va">wl</span>, <span class="va">plan</span><span class="op">$</span><span class="va">ucl1</span>, <span class="va">plan</span><span class="op">$</span><span class="va">ucl2</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/dsnp_arl.html">dsnp_arl</a></span><span class="op">(</span><span class="fl">0.005</span>, <span class="va">plan</span><span class="op">$</span><span class="va">n1</span>, <span class="va">plan</span><span class="op">$</span><span class="va">n2</span>, <span class="va">plan</span><span class="op">$</span><span class="va">wl</span>, <span class="va">plan</span><span class="op">$</span><span class="va">ucl1</span>, <span class="va">plan</span><span class="op">$</span><span class="va">ucl2</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/dsnp_ass.html">dsnp_ass</a></span><span class="op">(</span><span class="fl">0.005</span>, <span class="va">plan</span><span class="op">$</span><span class="va">n1</span>, <span class="va">plan</span><span class="op">$</span><span class="va">n2</span>, <span class="va">plan</span><span class="op">$</span><span class="va">wl</span>, <span class="va">plan</span><span class="op">$</span><span class="va">ucl1</span><span class="op">)</span></span></code></pre></div>
+<span><span class="co"># Build the chart from observed data</span></span>
+<span><span class="va">x1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">2</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span></span>
+<span><span class="va">x2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="cn">NA</span>, <span class="cn">NA</span>, <span class="cn">NA</span>, <span class="cn">NA</span>, <span class="cn">NA</span>, <span class="cn">NA</span>, <span class="cn">NA</span>, <span class="cn">NA</span>, <span class="fl">1</span>, <span class="cn">NA</span>, <span class="cn">NA</span>, <span class="cn">NA</span>, <span class="cn">NA</span>, <span class="cn">NA</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">chart</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cchart.DSnp.html">cchart.DSnp</a></span><span class="op">(</span><span class="va">x1</span>, n1 <span class="op">=</span> <span class="fl">34</span>, n2 <span class="op">=</span> <span class="fl">162</span>, p0 <span class="op">=</span> <span class="fl">0.005</span>,</span>
+<span>                     x2 <span class="op">=</span> <span class="va">x2</span>, limits <span class="op">=</span> <span class="va">lim</span><span class="op">)</span></span>
+<span><span class="va">chart</span><span class="op">$</span><span class="va">performance</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="development-principles">Development principles<a class="anchor" aria-label="anchor" href="#development-principles"></a>
@@ -257,8 +264,6 @@ inaccurate.</p>
 </h2>
 <p>The main planned extensions are:</p>
 <ul>
-<li>automatic limit search and plotting for double-sampling np
-charts;</li>
 <li>generalized variance charts for multivariate process
 variability;</li>
 <li>Cornish-Fisher corrected generalized variance limits;</li>

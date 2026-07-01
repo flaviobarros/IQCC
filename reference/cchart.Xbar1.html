@@ -84,7 +84,8 @@ associated with each group.</p></dd>
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>Return a x-bar control chart for phase I.</p>
+    <p>Returns a list with the mean of means (x2bar) and the standard
+deviation (sigma), invisibly. Also plots the control chart as a side effect.</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -104,7 +105,7 @@ normal by the central limit theorem.</p>
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">pistonrings</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu">cchart.Xbar1</span><span class="op">(</span><span class="va">pistonrings</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">25</span>, <span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">cchart.Xbar1</span><span class="op">(</span><span class="va">pistonrings</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">25</span>, <span class="op">]</span>, <span class="fl">5</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="cchart.Xbar1-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
