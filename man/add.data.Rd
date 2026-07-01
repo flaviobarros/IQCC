@@ -7,7 +7,7 @@
 add.data(datum2, estat, T2II, n, j, m = NULL)
 }
 \arguments{
-\item{datum2}{The data set for the phase II. Shoul be a vector.}
+\item{datum2}{The data set for the phase II. Should be a matrix.}
 
 \item{estat}{The values of the auxiliary statistics. Should be a list with a
 vector with the mean of the mean vectors, a matrix with the average of the
@@ -23,8 +23,8 @@ variance-covariance matrices and a matrix with the means.}
 set is show on the plot.}
 }
 \value{
-Add the new observation to the current Hoteliing control chart for
-phase II.
+Add the new observation to the current Hotelling control chart for
+phase II. Returns the new T2 statistic invisibly.
 }
 \description{
 This function is used to update the phase II control chart with new

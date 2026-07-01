@@ -28,7 +28,7 @@ The package is motivated by a recurring practical problem in classical Shewhart-
 | Range / process dispersion | `cchart.R()` | Shewhart R chart; exact Tukey-based R chart | The exact chart uses the relative range distribution through the Tukey distribution. |
 | Standard deviation | `cchart.S()` | Normalized S chart; exact chi-square-based S chart | Exact limits are based on the chi-square distribution of the sample variance. |
 | Nonconforming proportion | `cchart.p()` | Shewhart p chart; Cornish-Fisher p chart; standardized p chart | The Cornish-Fisher option is designed for low nonconforming proportions where normal approximation is poor. |
-| Double-sampling nonconforming count | `dsnp_prob_accept()`, `dsnp_arl()`, `dsnp_ass()` | Numerical core for DS-np charts | Limit search and plotting are under development. |
+| Double-sampling np chart | `dsnp_prob_accept()`, `dsnp_arl()`, `dsnp_ass()`, `dsnp_limits()`, `cchart.DSnp()` | DS-np numerical core, limit search, and control chart | Two-stage sampling for high-quality processes with small samples. |
 | Nonconformities per unit | `cchart.u()` | Shewhart u chart; standardized u chart | Attribute chart for counts per inspection unit. |
 | Multivariate mean vector | `T2.1()`, `T2.2()`, `cchart.T2.1()`, `cchart.T2.2()` | Hotelling T² charts for Phase I and Phase II | Supports individual and subgroup observations. |
 | Relative range constants | `d2()`, `d3()` | Numerical integration using Tukey distribution functions | Used by exact R-chart calculations and false alarm diagnostics. |
@@ -107,7 +107,7 @@ The package currently implements several core ideas from the research program, b
 
 | Candidate extension | Statistical target | Possible function names | Status |
 |---|---|---|---|
-| Double-sampling np chart | Nonconforming proportion in high-quality processes with small samples | `dsnp_limits()`, `cchart.DSnp()` | Numerical core implemented; limit search and plotting planned |
+| Double-sampling np chart | Nonconforming proportion in high-quality processes with small samples | `dsnp_limits()`, `cchart.DSnp()` | Implemented |
 | Generalized variance chart | Multivariate process variability using `|S|` | `gv_limits()`, `cchart.GV()` | Planned |
 | Cornish-Fisher corrected generalized variance chart | Corrected limits for `|S|` under non-normal sampling distribution | `gv_cf_limits()` | Planned |
 | Auxiliary trace chart | Complementary monitoring using `tr(V)` | `trv_limits()`, `cchart.trV()` | Planned |

@@ -11,7 +11,7 @@ cchart.Xbar2(x, x2bar, sigma, sizes)
 
 \item{x2bar}{The mean of means.}
 
-\item{sigma}{The standar deviation of the data.}
+\item{sigma}{The standard deviation of the data.}
 
 \item{sizes}{A value or a vector of values specifying the sample sizes
 associated with each group.}
@@ -29,8 +29,8 @@ function XbarI.
 \examples{
 
 data(pistonrings)
-stat <- cchart.Xbar1(pistonrings[1:25, ])
-cchart.Xbar2(pistonrings[26:40, ], stat[[1]][1], stat[[1]][2])
+stat <- cchart.Xbar1(pistonrings[1:25, ], 5)
+cchart.Xbar2(pistonrings[26:40, ], stat[[1]][1], stat[[1]][2], 5)
 
 }
 \seealso{

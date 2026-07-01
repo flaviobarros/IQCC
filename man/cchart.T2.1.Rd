@@ -7,12 +7,12 @@
 cchart.T2.1(T2, m, n, p)
 }
 \arguments{
-\item{T2}{The values of the T2 statistic. Shoul be a matrix.}
+\item{T2}{The values of the T2 statistic. Should be a numeric vector.}
 
 \item{m}{The number of samples generated previously in data.1.}
 
 \item{n}{The size of each sample used previously in data.1. If they are
-individual obsersations, then use n = 1.}
+individual observations, then use n = 1.}
 
 \item{p}{The dimension used previously in function data.1.}
 }

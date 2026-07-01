@@ -15,7 +15,8 @@ cchart.R(x, n, type = "norm", y = NULL)
 (traditional Shewhart R chart) and "tukey" (exact R chart). If not
 specified, a Shewhart R chart will be plotted.}
 
-\item{y}{The data used in phase I to estimate the standard deviation.}
+\item{y}{The data used in phase I to estimate the standard deviation.
+Required when type = "tukey".}
 }
 \value{
 Return a R control chart.

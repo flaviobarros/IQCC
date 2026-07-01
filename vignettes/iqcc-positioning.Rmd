@@ -46,7 +46,7 @@ well calibrated for the distribution and sample size at hand.
 |---|---|---|
 | Range-based dispersion monitoring | Normal approximations can inflate the actual false alarm risk, especially for small subgroups. | Use exact range-chart limits based on the relative range distribution. |
 | Standard deviation monitoring | The distribution of the sample standard deviation is asymmetric for small samples. | Use exact limits derived from the chi-square distribution of the sample variance. |
-| Nonconforming proportion in high-quality processes | The binomial distribution is discrete, bounded, and strongly skewed when the nonconforming proportion is very small. | Use Cornish-Fisher corrected limits or DS-np methods under development. |
+| Nonconforming proportion in high-quality processes | The binomial distribution is discrete, bounded, and strongly skewed when the nonconforming proportion is very small. | Use Cornish-Fisher corrected limits or the double-sampling np chart. |
 | Multivariate process mean monitoring | Hotelling T² requires phase-specific calibration. | Use the implemented Phase I and Phase II Hotelling T² functions. |
 | Multivariate process variability | A single normal approximation for generalized variance may be poorly calibrated. | Candidate future extensions include generalized variance and auxiliary trace charts. |
 
@@ -63,8 +63,8 @@ The current package includes several families of functions:
   monitoring.
 - `alpha.risk()` for studying the actual false alarm risk of classical range
   charts.
-- `dsnp_prob_accept()`, `dsnp_arl()`, and `dsnp_ass()` for the numerical core of
-  double-sampling np charts.
+- `dsnp_prob_accept()`, `dsnp_arl()`, `dsnp_ass()`, `dsnp_limits()`, and
+  `cchart.DSnp()` for double-sampling np charts.
 
 ## Example: using a corrected p chart
 
@@ -86,20 +86,28 @@ cchart.p(
 )
 ```
 
-## Example: inspecting the DS-np numerical core
+## Example: DS-np chart with automatic limit search
 
-The DS-np plotting interface is still under development, but the numerical core
-can already be used to inspect the acceptance probability, average run length,
-and average sample size for a proposed plan.
+The double-sampling np chart uses two sampling stages to monitor the
+nonconforming proportion in high-quality processes. `dsnp_limits()` searches
+for feasible fractional control limits, and `cchart.DSnp()` builds and plots
+the chart.
 
-```{r dsnp-core-example, eval = FALSE}
+```{r dsnp-example, eval = FALSE}
 library(IQCC)
 
-plan <- list(n1 = 34, n2 = 162, wl = 1.5, ucl1 = 2.5, ucl2 = 4.5)
+# Find limits for a given in-control proportion
+lim <- dsnp_limits(p0 = 0.005, n1 = 34, n2 = 162, alpha = 0.0027,
+                   p1 = 0.0075)
+lim$best[, c("wl", "ucl1", "ucl2", "arl0", "arl1", "ass0")]
 
-dsnp_prob_accept(0.005, plan$n1, plan$n2, plan$wl, plan$ucl1, plan$ucl2)
-dsnp_arl(0.005, plan$n1, plan$n2, plan$wl, plan$ucl1, plan$ucl2)
-dsnp_ass(0.005, plan$n1, plan$n2, plan$wl, plan$ucl1)
+# Build the chart from observed data
+x1 <- c(0, 0, 1, 0, 0, 1, 0, 0, 0, 2, 0, 0, 1, 0, 0)
+x2 <- c(NA, NA, NA, NA, NA, NA, NA, NA, NA, 1, NA, NA, NA, NA, NA)
+
+chart <- cchart.DSnp(x1, n1 = 34, n2 = 162, p0 = 0.005,
+                     x2 = x2, limits = lim)
+chart$performance
 ```
 
 ## Development principles
@@ -122,7 +130,6 @@ where classical approximations are simple but inaccurate.
 
 The main planned extensions are:
 
-- automatic limit search and plotting for double-sampling np charts;
 - generalized variance charts for multivariate process variability;
 - Cornish-Fisher corrected generalized variance limits;
 - auxiliary trace charts for complementary multivariate variability monitoring;

@@ -4,8 +4,16 @@
 \alias{cchart.p}
 \title{p-chart}
 \usage{
-cchart.p(x1 = NULL, n1 = NULL, type = "norm", p1 = NULL, x2 = NULL,
-  n2 = NULL, phat = NULL, p2 = NULL)
+cchart.p(
+  x1 = NULL,
+  n1 = NULL,
+  type = "norm",
+  p1 = NULL,
+  x2 = NULL,
+  n2 = NULL,
+  phat = NULL,
+  p2 = NULL
+)
 }
 \arguments{
 \item{x1}{The phase I data that will be plotted (if it is a phase I chart).}
@@ -38,7 +46,7 @@ This function builds p-charts.
 \details{
 For a phase I p-chart, n1 must be specified and either x1 or p1.  For a
 phase II p-chart, n2 must be specified, plus x2 or p2 and either phat, x1
-and n1, or p1 and n1.  The Shewhart is based on normal-aprroximation and
+and n1, or p1 and n1.  The Shewhart is based on normal-approximation and
 should be used only for large values of np or n*p (n*p > 6).
 }
 \examples{

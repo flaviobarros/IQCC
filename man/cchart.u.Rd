@@ -4,8 +4,16 @@
 \alias{cchart.u}
 \title{u-chart}
 \usage{
-cchart.u(x1 = NULL, n1 = NULL, type = "norm", u1 = NULL, x2 = NULL,
-  n2 = NULL, lambda = NULL, u2 = NULL)
+cchart.u(
+  x1 = NULL,
+  n1 = NULL,
+  type = "norm",
+  u1 = NULL,
+  x2 = NULL,
+  n2 = NULL,
+  lambda = NULL,
+  u2 = NULL
+)
 }
 \arguments{
 \item{x1}{The phase I data that will be plotted (if it is a phase I chart).}

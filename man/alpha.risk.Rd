@@ -7,10 +7,10 @@
 alpha.risk(n)
 }
 \arguments{
-\item{n}{The sample size.}
+\item{n}{The sample size. Can be a vector for multiple sample sizes.}
 }
 \value{
-Return the value of the alpha risk for a given sample size n.
+Return a vector of alpha risk values for the given sample sizes.
 }
 \description{
 Used to calculate the real probability of false alarm in the 3-sigma R

@@ -4,13 +4,15 @@
 \name{pistonrings}
 \alias{pistonrings}
 \title{Piston Rings Data Set.}
-\format{A data frame with 40 observations on the following 5 variables.
+\format{
+A data frame with 40 observations on the following 5 variables.
 \describe{ 
-\item{V1}{The fisrt measure.} 
+\item{V1}{The first measure.} 
 \item{V2}{The second measure.} 
 \item{V3}{The third measure.} 
-\item{V4}{The fouth measure.} 
-\item{V5}{The fifth measure.} }}
+\item{V4}{The fourth measure.} 
+\item{V5}{The fifth measure.} }
+}
 \source{
 Montgomery, D.C.,(2008)."Introduction to Statistical Quality
 Control".4th Ed. Wiley
