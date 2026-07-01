@@ -13,10 +13,8 @@ to 1 minus the confidence level.}
 \item{n}{The maximum sample size.}
 }
 \value{
-It is used the fact that the sample relative range distribution is
-the same as the sample studentized range distribution (tukey distribution)
-with infinity d.f. in the denominator . It is considered 4 quantiles:
-alpha/2 , alpha , 1-alpha and 1-alpha/2, for different sample size values .
+Returns a matrix with 4 columns containing the quantiles, printed to
+the console and returned invisibly.
 }
 \description{
 Builds a table with quantiles of the sample relative range distribution.

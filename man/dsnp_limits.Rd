@@ -64,6 +64,10 @@ The function enumerates all valid combinations of integer thresholds
 limits compatible with \code{dsnp_prob_accept}, and evaluates each
 candidate's performance at the in-control proportion p0. When p1 is
 supplied, out-of-control metrics are also computed and used for ranking.
+
+When the warning zone is empty (ucl1_reject = wl_accept + 1), the
+chart degenerates to a single-sample scheme and probabilities are
+computed directly via \code{pbinom} without calling the core functions.
 }
 \examples{
 

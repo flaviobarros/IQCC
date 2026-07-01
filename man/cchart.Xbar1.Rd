@@ -13,7 +13,8 @@ cchart.Xbar1(x, sizes)
 associated with each group.}
 }
 \value{
-Return a x-bar control chart for phase I.
+Returns a list with the mean of means (x2bar) and the standard
+deviation (sigma), invisibly. Also plots the control chart as a side effect.
 }
 \description{
 Builds the x-bar control chart for phase I.
@@ -25,7 +26,7 @@ normal by the central limit theorem.
 \examples{
 
 data(pistonrings)
-cchart.Xbar1(pistonrings[1:25, ])
+cchart.Xbar1(pistonrings[1:25, ], 5)
 
 }
 \seealso{

@@ -4,16 +4,28 @@
 \alias{cchart.Xbar}
 \title{X-bar Control Chart for phase I and II.}
 \usage{
-cchart.Xbar(x1 = NULL, n1 = NULL, x2 = NULL, n2 = NULL, x2bars = NULL, sigma = NULL)
+cchart.Xbar(
+  x1 = NULL,
+  n1 = NULL,
+  x2 = NULL,
+  n2 = NULL,
+  x2bars = NULL,
+  sigma = NULL
+)
 }
 \arguments{
 \item{x1}{The phase I data to be plotted.}
+
 \item{n1}{A value or a vector of values specifying the sample sizes
 associated with each group for the phase I data.}
+
 \item{x2}{The phase II data to be plotted.}
+
 \item{n2}{A value or a vector of values specifying the sample sizes
 associated with each group for the phase II data.}
+
 \item{x2bars}{The mean of means from phase I.}
+
 \item{sigma}{The standard deviation from phase I.}
 }
 \value{

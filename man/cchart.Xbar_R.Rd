@@ -22,7 +22,7 @@ This function builds the X-bar and R control charts in the same window.
 
 data(pistonrings)
 attach(pistonrings)
-cchart.Xbar_R(pistonrings[1:25, ])
+cchart.Xbar_R(pistonrings[1:25, ], 5)
 
 }
 \author{

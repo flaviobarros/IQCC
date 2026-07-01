@@ -14,14 +14,14 @@ use n = 1.}
 
 \item{mu}{The vector with the means of the data to be generated.}
 
-\item{Sigma}{The vector with the variance-covariance matrix of the data to
+\item{Sigma}{The variance-covariance matrix of the data to
 be generated.}
 }
 \value{
 Return an array with the simulated data.
 }
 \description{
-This function simulate a normal data set to be used in the phase I Hoteliing
+This function simulates a normal data set to be used in the phase I Hotelling
 control charts.
 }
 \examples{

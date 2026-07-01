@@ -13,7 +13,7 @@ cchart.S(x, type = "n", m = NULL)
 plotted where "n" plots a S chart with normalized probability limits and "e"
 plots a S chart with exact limits.}
 
-\item{m}{The sample sizes. Only necessary in the control chart with exact
+\item{m}{The sample size. Only necessary in the control chart with exact
 (probability) limits.}
 }
 \value{
