@@ -4,63 +4,27 @@
 \alias{cchart.u}
 \title{u-chart}
 \usage{
-cchart.u(
-  x1 = NULL,
-  n1 = NULL,
-  type = "norm",
-  u1 = NULL,
-  x2 = NULL,
-  n2 = NULL,
-  lambda = NULL,
-  u2 = NULL
-)
+cchart.u(x1 = NULL, n1 = NULL, type = "norm", u1 = NULL,
+  x2 = NULL, n2 = NULL, lambda = NULL, u2 = NULL,
+  alpha = ALPHA)
 }
 \arguments{
-\item{x1}{The phase I data that will be plotted (if it is a phase I chart).}
-
-\item{n1}{A value or a vector of values specifying the sample sizes
-associated with each group for the phase I data.}
-
-\item{type}{The type of u-chart to be plotted. The options are "norm"
-(traditional Shewhart u-chart), "CF" (improved u-chart) and "std"
-(standardized u-chart). If not specified, a Shewhart u-chart will be
-plotted.}
-
-\item{u1}{The sample ratios used to estimate the Poisson parameter (lambda).
-(x1 / n1).}
-
-\item{x2}{The phase II data that will be plotted in a phase II chart.}
-
-\item{n2}{A value or a vector of values specifying the sample sizes
-associated with each group for the phase II data.}
-
-\item{lambda}{The estimate of lambda.}
-
-\item{u2}{The sample ratios of the phase II data (x2 / n2).}
+\item{x1}{Phase I defect counts.}
+\item{n1}{Phase I inspection size or vector of sizes.}
+\item{type}{Chart type: \code{"normal"}, \code{"cf1"}, \code{"cf2"}, or \code{"standardized"}. Legacy aliases \code{"norm"}, \code{"CF"}, and \code{"std"} remain supported; \code{"CF"} maps to \code{"cf2"}.}
+\item{u1}{Phase I rates, used instead of \code{x1}.}
+\item{x2}{Phase II defect counts.}
+\item{n2}{Phase II inspection size or vector of sizes.}
+\item{lambda}{Known or estimated in-control defect rate.}
+\item{u2}{Phase II rates, used instead of \code{x2}.}
+\item{alpha}{Nominal two-sided false-alarm probability.}
 }
-\value{
-Returns a u-chart.
-}
-\description{
-This function builds a u-chart for the Poisson-based count data statistic.
-}
-\details{
-For a phase I u-chart, n1 must be specified and either x1 or u1.  For a
-phase II u-chart, n2 must be specified, plus x2 or u2 and either phat, x1
-and n1, or u1 and n1.  It is important to note that the normal approximation
-used in the Shewhart u-chart is valid only for n*u large. For small n*p , it
-should be used an "improved u chart" (with non-normal correction) given by
-using the argument "CF".
-}
+\value{Invisibly returns the \code{qcc} object used to draw the chart.}
+\description{Build normal, Cornish-Fisher corrected, or standardized u charts.}
+\details{For Phase I, supply \code{n1} and exactly one of \code{x1} or \code{u1}. For Phase II, supply \code{n2} and exactly one of \code{x2} or \code{u2}, together with Phase I information or a known \code{lambda}. When inspection sizes vary, the in-control rate is estimated by the pooled Poisson estimator \eqn{sum(x_i)/sum(n_i)}.}
 \examples{
-
 data(moonroof)
-attach(moonroof)
-cchart.u(x1 = yi[1:17], n1 = ni[1:17])
-cchart.u(x1 = yi[1:17], n1 = ni[1:17], type = "CF", x2 = yi[18:34], n2 = ni[18:34])
-cchart.u(type = "std", u2 = ui[18:34], n2 = ni[18:34], lambda = 1.4)
-
-}
-\author{
-Daniela R. Recchia, Emanuel P. Barbosa
+cchart.u(x1 = moonroof$yi[1:17], n1 = moonroof$ni[1:17])
+cchart.u(x1 = moonroof$yi[1:17], n1 = moonroof$ni[1:17], type = "CF", x2 = moonroof$yi[18:34], n2 = moonroof$ni[18:34])
+cchart.u(type = "std", u2 = moonroof$ui[18:34], n2 = moonroof$ni[18:34], lambda = 1.4)
 }
