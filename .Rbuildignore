@@ -1,7 +1,6 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^docs$
-^README\.Rmd$
 ^README-.*\.png$
 ^CHANGELOG\.md$
 ^badgecreatr4.jpg$
