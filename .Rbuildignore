@@ -8,5 +8,6 @@
 ^cran-comments\.md$
 ^\.mimocode$
 ^\.github$
+^paper$
 ^Rplots\.pdf$
 ^tests/testthat/Rplots\.pdf$
