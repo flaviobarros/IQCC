@@ -55,8 +55,7 @@ metrics at \code{p1} are included in the returned object.}
 \item{plot}{Logical. If \code{TRUE} (default), draws the control chart.
 If \code{FALSE}, only returns the result object.}
 
-\item{...}{Additional arguments passed to \code{plot()} (currently
-unused).}
+\item{...}{Additional arguments passed to \code{plot()}.}
 }
 \value{
 An object of class \code{"cchart.DSnp"}, which is a list with the
