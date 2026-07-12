@@ -98,15 +98,15 @@ charts</h1>
 <h2 id="purpose">Purpose<a class="anchor" aria-label="anchor" href="#purpose"></a>
 </h2>
 <p>IQCC implements <em>Improved Quality Control Charts</em>: control
-charts with exact, corrected, or standardized limits for situations
-where classical Shewhart-type approximations may be poorly
-calibrated.</p>
+charts with exact, corrected, standardized, or simulation-based limits
+for situations where classical Shewhart-type approximations may be
+poorly calibrated.</p>
 <p>The package is not intended to replace general-purpose statistical
 process control packages. Instead, it is useful when the monitoring
-statistic is bounded, discrete, skewed, non-normal, or based on small
-samples. In those settings, the usual three-sigma limits can produce a
-false alarm probability that is meaningfully different from the nominal
-value.</p>
+statistic is bounded, discrete, skewed, strongly non-normal, or based on
+small samples. In those settings, the usual three-sigma limits can
+produce a false-alarm probability that differs meaningfully from the
+nominal value.</p>
 </div>
 <div class="section level2">
 <h2 id="positioning-in-the-r-ecosystem">Positioning in the R ecosystem<a class="anchor" aria-label="anchor" href="#positioning-in-the-r-ecosystem"></a>
@@ -114,13 +114,13 @@ value.</p>
 <p>A practical way to position IQCC is:</p>
 <blockquote>
 <p>IQCC is a specialized package for exact and corrected control-chart
-limits, especially for small samples, rare defects, asymmetric
+limits, especially for small samples, rare nonconformities, asymmetric
 statistics, and selected multivariate monitoring problems.</p>
 </blockquote>
 <p>Use a general SPC package when the goal is a broad control-chart
-workflow. Use IQCC when the main concern is whether the classical limits
-are statistically well calibrated for the distribution and sample size
-at hand.</p>
+workflow. Use IQCC when the main concern is whether classical limits are
+statistically well calibrated for the distribution and sample size at
+hand.</p>
 </div>
 <div class="section level2">
 <h2 id="when-iqcc-is-especially-useful">When IQCC is especially useful<a class="anchor" aria-label="anchor" href="#when-iqcc-is-especially-useful"></a>
@@ -139,7 +139,7 @@ at hand.</p>
 <tbody>
 <tr class="odd">
 <td>Range-based dispersion monitoring</td>
-<td>Normal approximations can inflate the actual false alarm risk,
+<td>Normal approximations can inflate the actual false-alarm risk,
 especially for small subgroups.</td>
 <td>Use exact range-chart limits based on the relative range
 distribution.</td>
@@ -155,21 +155,27 @@ sample variance.</td>
 <td>Nonconforming proportion in high-quality processes</td>
 <td>The binomial distribution is discrete, bounded, and strongly skewed
 when the nonconforming proportion is very small.</td>
-<td>Use Cornish-Fisher corrected limits or the double-sampling np
-chart.</td>
+<td>Use CF1 or CF2 limits, exact binomial risk evaluation, or a
+double-sampling np chart.</td>
 </tr>
 <tr class="even">
-<td>Multivariate process mean monitoring</td>
-<td>Hotelling T² requires phase-specific calibration.</td>
-<td>Use the implemented Phase I and Phase II Hotelling T²
-functions.</td>
+<td>Nonconformities per unit</td>
+<td>Poisson counts are discrete and skewed when the expected count is
+small.</td>
+<td>Use CF1 or CF2 limits and exact Poisson risk evaluation.</td>
 </tr>
 <tr class="odd">
+<td>Multivariate process mean monitoring</td>
+<td>Hotelling T-squared requires phase-specific calibration.</td>
+<td>Use the implemented Phase I and Phase II Hotelling T-squared
+functions.</td>
+</tr>
+<tr class="even">
 <td>Multivariate process variability</td>
-<td>A single normal approximation for generalized variance may be poorly
+<td>A normal approximation for generalized variance may be poorly
 calibrated.</td>
-<td>Candidate future extensions include generalized variance and
-auxiliary trace charts.</td>
+<td>Use normal, Cornish-Fisher, selected exact, or simulation-based
+generalized variance limits.</td>
 </tr>
 </tbody>
 </table>
@@ -186,30 +192,36 @@ Tukey-based limits.</li>
 <code><a href="../reference/cchart.S.html">cchart.S()</a></code> for standard deviation charts, including
 exact chi-square-based limits.</li>
 <li>
-<code><a href="../reference/cchart.p.html">cchart.p()</a></code> for nonconforming proportion charts,
-including Cornish-Fisher corrected limits.</li>
+<code><a href="../reference/pchart_limits.html">pchart_limits()</a></code>, <code><a href="../reference/pchart_alpha_risk.html">pchart_alpha_risk()</a></code>, and
+<code><a href="../reference/cchart.p.html">cchart.p()</a></code> for normal, CF1, CF2, and standardized p
+charts.</li>
 <li>
-<code><a href="../reference/cchart.u.html">cchart.u()</a></code> for nonconformities per unit.</li>
-<li>
-<code><a href="../reference/T2.1.html">T2.1()</a></code>, <code><a href="../reference/T2.2.html">T2.2()</a></code>,
-<code><a href="../reference/cchart.T2.1.html">cchart.T2.1()</a></code>, and <code><a href="../reference/cchart.T2.2.html">cchart.T2.2()</a></code> for Hotelling
-T² monitoring.</li>
-<li>
-<code><a href="../reference/alpha.risk.html">alpha.risk()</a></code> for studying the actual false alarm risk
-of classical range charts.</li>
+<code><a href="../reference/uchart_limits.html">uchart_limits()</a></code>, <code><a href="../reference/uchart_alpha_risk.html">uchart_alpha_risk()</a></code>, and
+<code><a href="../reference/cchart.u.html">cchart.u()</a></code> for normal, CF1, CF2, and standardized u
+charts.</li>
 <li>
 <code><a href="../reference/dsnp_prob_accept.html">dsnp_prob_accept()</a></code>, <code><a href="../reference/dsnp_arl.html">dsnp_arl()</a></code>,
 <code><a href="../reference/dsnp_ass.html">dsnp_ass()</a></code>, <code><a href="../reference/dsnp_limits.html">dsnp_limits()</a></code>, and
-<code><a href="../reference/cchart.DSnp.html">cchart.DSnp()</a></code> for double-sampling np charts.</li>
+<code><a href="../reference/cchart.DSnp.html">cchart.DSnp()</a></code> for double-sampling np design and
+monitoring.</li>
+<li>
+<code><a href="../reference/T2.1.html">T2.1()</a></code>, <code><a href="../reference/T2.2.html">T2.2()</a></code>,
+<code><a href="../reference/cchart.T2.1.html">cchart.T2.1()</a></code>, and <code><a href="../reference/cchart.T2.2.html">cchart.T2.2()</a></code> for Hotelling
+T-squared monitoring.</li>
+<li>
+<code><a href="../reference/gv_stat.html">gv_stat()</a></code>, <code><a href="../reference/gv_limits.html">gv_limits()</a></code>,
+<code><a href="../reference/gv_alpha_risk.html">gv_alpha_risk()</a></code>, and <code><a href="../reference/cchart.GV.html">cchart.GV()</a></code> for
+generalized variance monitoring.</li>
+<li>
+<code><a href="../reference/alpha.risk.html">alpha.risk()</a></code> for studying the actual false-alarm risk
+of classical range charts.</li>
 </ul>
 </div>
 <div class="section level2">
 <h2 id="example-using-a-corrected-p-chart">Example: using a corrected p chart<a class="anchor" aria-label="anchor" href="#example-using-a-corrected-p-chart"></a>
 </h2>
-<p>The example below uses the package’s binomial data and constructs a p
-chart with Cornish-Fisher corrected limits. It is intentionally short;
-the purpose is to show where IQCC fits into the usual control-chart
-workflow.</p>
+<p>The example below constructs a p chart using the explicit
+two-adjustment Cornish-Fisher method.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/flaviobarros/IQCC" class="external-link">IQCC</a></span><span class="op">)</span></span>
 <span></span>
@@ -218,40 +230,68 @@ workflow.</p>
 <span><span class="fu"><a href="../reference/cchart.p.html">cchart.p</a></span><span class="op">(</span></span>
 <span>  x1 <span class="op">=</span> <span class="va">binomdata</span><span class="op">$</span><span class="va">Di</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">12</span><span class="op">]</span>,</span>
 <span>  n1 <span class="op">=</span> <span class="va">binomdata</span><span class="op">$</span><span class="va">ni</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">12</span><span class="op">]</span>,</span>
-<span>  type <span class="op">=</span> <span class="st">"CF"</span>,</span>
+<span>  type <span class="op">=</span> <span class="st">"cf2"</span>,</span>
 <span>  x2 <span class="op">=</span> <span class="va">binomdata</span><span class="op">$</span><span class="va">Di</span><span class="op">[</span><span class="fl">13</span><span class="op">:</span><span class="fl">25</span><span class="op">]</span>,</span>
 <span>  n2 <span class="op">=</span> <span class="va">binomdata</span><span class="op">$</span><span class="va">ni</span><span class="op">[</span><span class="fl">13</span><span class="op">:</span><span class="fl">25</span><span class="op">]</span></span>
 <span><span class="op">)</span></span></code></pre></div>
+<p>Use the explicit names <code>"cf1"</code> and <code>"cf2"</code> in
+new code. The historical alias <code>"CF"</code> is retained for
+compatibility, but it maps to <code>"cf1"</code> in
+<code><a href="../reference/cchart.p.html">cchart.p()</a></code> and to <code>"cf2"</code> in
+<code><a href="../reference/cchart.u.html">cchart.u()</a></code>.</p>
 </div>
 <div class="section level2">
 <h2 id="example-ds-np-chart-with-automatic-limit-search">Example: DS-np chart with automatic limit search<a class="anchor" aria-label="anchor" href="#example-ds-np-chart-with-automatic-limit-search"></a>
 </h2>
 <p>The double-sampling np chart uses two sampling stages to monitor the
 nonconforming proportion in high-quality processes.
-<code><a href="../reference/dsnp_limits.html">dsnp_limits()</a></code> searches for feasible fractional control
-limits, and <code><a href="../reference/cchart.DSnp.html">cchart.DSnp()</a></code> builds and plots the chart.</p>
+<code><a href="../reference/dsnp_limits.html">dsnp_limits()</a></code> searches for feasible fractional limits, and
+<code><a href="../reference/cchart.DSnp.html">cchart.DSnp()</a></code> builds and plots the chart.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/flaviobarros/IQCC" class="external-link">IQCC</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Find limits for a given in-control proportion</span></span>
-<span><span class="va">lim</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dsnp_limits.html">dsnp_limits</a></span><span class="op">(</span>p0 <span class="op">=</span> <span class="fl">0.005</span>, n1 <span class="op">=</span> <span class="fl">34</span>, n2 <span class="op">=</span> <span class="fl">162</span>, alpha <span class="op">=</span> <span class="fl">0.0027</span>,</span>
-<span>                   p1 <span class="op">=</span> <span class="fl">0.0075</span><span class="op">)</span></span>
+<span><span class="va">lim</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dsnp_limits.html">dsnp_limits</a></span><span class="op">(</span></span>
+<span>  p0 <span class="op">=</span> <span class="fl">0.005</span>,</span>
+<span>  n1 <span class="op">=</span> <span class="fl">34</span>,</span>
+<span>  n2 <span class="op">=</span> <span class="fl">162</span>,</span>
+<span>  alpha <span class="op">=</span> <span class="fl">0.0027</span>,</span>
+<span>  p1 <span class="op">=</span> <span class="fl">0.0075</span></span>
+<span><span class="op">)</span></span>
 <span><span class="va">lim</span><span class="op">$</span><span class="va">best</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"wl"</span>, <span class="st">"ucl1"</span>, <span class="st">"ucl2"</span>, <span class="st">"arl0"</span>, <span class="st">"arl1"</span>, <span class="st">"ass0"</span><span class="op">)</span><span class="op">]</span></span>
 <span></span>
-<span><span class="co"># Build the chart from observed data</span></span>
 <span><span class="va">x1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">2</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="va">x2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="cn">NA</span>, <span class="cn">NA</span>, <span class="cn">NA</span>, <span class="cn">NA</span>, <span class="cn">NA</span>, <span class="cn">NA</span>, <span class="cn">NA</span>, <span class="cn">NA</span>, <span class="fl">1</span>, <span class="cn">NA</span>, <span class="cn">NA</span>, <span class="cn">NA</span>, <span class="cn">NA</span>, <span class="cn">NA</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">chart</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cchart.DSnp.html">cchart.DSnp</a></span><span class="op">(</span><span class="va">x1</span>, n1 <span class="op">=</span> <span class="fl">34</span>, n2 <span class="op">=</span> <span class="fl">162</span>, p0 <span class="op">=</span> <span class="fl">0.005</span>,</span>
-<span>                     x2 <span class="op">=</span> <span class="va">x2</span>, limits <span class="op">=</span> <span class="va">lim</span><span class="op">)</span></span>
+<span><span class="va">chart</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cchart.DSnp.html">cchart.DSnp</a></span><span class="op">(</span></span>
+<span>  <span class="va">x1</span>,</span>
+<span>  n1 <span class="op">=</span> <span class="fl">34</span>,</span>
+<span>  n2 <span class="op">=</span> <span class="fl">162</span>,</span>
+<span>  p0 <span class="op">=</span> <span class="fl">0.005</span>,</span>
+<span>  x2 <span class="op">=</span> <span class="va">x2</span>,</span>
+<span>  limits <span class="op">=</span> <span class="va">lim</span></span>
+<span><span class="op">)</span></span>
 <span><span class="va">chart</span><span class="op">$</span><span class="va">performance</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="example-generalized-variance-limits">Example: generalized variance limits<a class="anchor" aria-label="anchor" href="#example-generalized-variance-limits"></a>
+</h2>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/gv_limits.html">gv_limits</a></span><span class="op">(</span></span>
+<span>  n <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  p <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  det_sigma <span class="op">=</span> <span class="fl">0.5320</span>,</span>
+<span>  type <span class="op">=</span> <span class="st">"exact"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>Exact limits are available for dimension two and for selected
+published upper-limit cases in dimension three. Simulation is available
+for more general higher-dimensional cases.</p>
 </div>
 <div class="section level2">
 <h2 id="development-principles">Development principles<a class="anchor" aria-label="anchor" href="#development-principles"></a>
 </h2>
 <p>Future extensions should follow three principles.</p>
 <p>First, numerical calculations should be separated from plotting
-functions. A limit, probability, average run length, or false alarm risk
+functions. A limit, probability, average run length, or false-alarm risk
 shown in a chart should be reproducible by a small numerical
 function.</p>
 <p>Second, new methods should be validated against published tables or
@@ -265,15 +305,17 @@ inaccurate.</p>
 <div class="section level2">
 <h2 id="related-roadmap-items">Related roadmap items<a class="anchor" aria-label="anchor" href="#related-roadmap-items"></a>
 </h2>
-<p>The main planned extensions are:</p>
+<p>The principal remaining research and documentation extensions
+are:</p>
 <ul>
-<li>generalized variance charts for multivariate process
-variability;</li>
-<li>Cornish-Fisher corrected generalized variance limits;</li>
-<li>auxiliary trace charts for complementary multivariate variability
+<li>an auxiliary trace chart for complementary multivariate variability
 monitoring;</li>
-<li>validation fixtures reproducing numerical values from the underlying
-papers.</li>
+<li>full DS-np joint optimization over sample sizes and limits;</li>
+<li>generic exact generalized variance quantiles beyond the explicitly
+supported cases;</li>
+<li>a centralized catalogue of published validation fixtures;</li>
+<li>expanded executable vignettes and replication materials for a future
+article.</li>
 </ul>
 <p>These items are tracked in the GitHub issue roadmap and should be
 implemented in small, reviewable pull requests.</p>
