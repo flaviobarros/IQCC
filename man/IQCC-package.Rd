@@ -4,18 +4,30 @@
 \name{IQCC-package}
 \alias{IQCC}
 \alias{IQCC-package}
-\title{Package constants for control chart computations.}
+\title{IQCC: Improved Quality Control Charts}
 \description{
-Builds statistical control charts with exact limits for univariate and multivariate cases.
+IQCC implements statistical process control charts with exact,
+Cornish-Fisher corrected, standardized, or simulation-based probability
+limits. The package covers univariate variable and attribute charts,
+double-sampling np charts for rare nonconformities, Hotelling T-squared
+charts, and generalized variance charts for multivariate variability.
+
+Numerical functions for limits, false-alarm risk, average run length, and
+average sample size are exposed separately from plotting functions so that
+calculations can be inspected, tested, and reused in simulation studies.
 }
 \seealso{
+\code{\link{pchart_limits}}, \code{\link{uchart_limits}},
+\code{\link{dsnp_limits}}, \code{\link{gv_limits}},
+\code{\link{cchart.R}}, \code{\link{cchart.DSnp}},
+\code{\link{cchart.GV}}
+
 Useful links:
 \itemize{
   \item \url{https://github.com/flaviobarros/IQCC}
   \item \url{https://flaviobarros.github.io/IQCC/}
   \item Report bugs at \url{https://github.com/flaviobarros/IQCC/issues}
 }
-
 }
 \author{
 \strong{Maintainer}: Flavio Barros \email{flaviomargarito@gmail.com}
@@ -26,6 +38,4 @@ Other contributors:
   \item Elias Goncalves [contributor]
   \item Daniela Recchia [contributor]
 }
-
 }
-\keyword{internal}
