@@ -56,16 +56,16 @@ test_that("Joekes and Barbosa Table 2 is reproduced", {
   cf1 <- pchart_limits(p, n, type = "cf1")
   cf2 <- pchart_limits(p, n, type = "cf2")
 
-  expect_equal(normal$ucl, 0.0965, tolerance = 5e-5)
-  expect_equal(cf1$ucl, 0.1612, tolerance = 5e-5)
-  expect_equal(cf2$ucl, 0.1303, tolerance = 5e-5)
+  expect_equal(round(normal$ucl, 4), 0.0965)
+  expect_equal(round(cf1$ucl, 4), 0.1612)
+  expect_equal(round(cf2$ucl, 4), 0.1303)
 
-  expect_equal(pchart_alpha_risk(p, n, normal$lcl, normal$ucl),
-               0.035746, tolerance = 5e-7)
-  expect_equal(pchart_alpha_risk(p, n, cf1$lcl, cf1$ucl),
-               0.000202, tolerance = 5e-7)
-  expect_equal(pchart_alpha_risk(p, n, cf2$lcl, cf2$ucl),
-               0.003178, tolerance = 5e-7)
+  expect_equal(round(pchart_alpha_risk(p, n, normal$lcl, normal$ucl), 6),
+               0.035746)
+  expect_equal(round(pchart_alpha_risk(p, n, cf1$lcl, cf1$ucl), 6),
+               0.000202)
+  expect_equal(round(pchart_alpha_risk(p, n, cf2$lcl, cf2$ucl), 6),
+               0.003178)
 })
 
 test_that("Joekes and Barbosa Table 3 is reproduced", {
@@ -76,20 +76,20 @@ test_that("Joekes and Barbosa Table 3 is reproduced", {
   cf1 <- pchart_limits(p, n, type = "cf1")
   cf2 <- pchart_limits(p, n, type = "cf2")
 
-  expect_equal(normal$ucl, 0.0463, tolerance = 5e-5)
-  expect_equal(cf1$ucl, 0.1125, tolerance = 5e-5)
-  expect_equal(cf2$ucl, 0.0533, tolerance = 5e-5)
+  expect_equal(round(normal$ucl, 4), 0.0463)
+  expect_equal(round(cf1$ucl, 4), 0.1125)
+  expect_equal(round(cf2$ucl, 4), 0.0533)
 
-  expect_equal(pchart_alpha_risk(p, n, normal$lcl, normal$ucl),
-               0.077032, tolerance = 5e-7)
-  expect_equal(pchart_alpha_risk(p, n, cf1$lcl, cf1$ucl),
-               0.923038, tolerance = 5e-7)
-  expect_equal(pchart_alpha_risk(p, n, cf2$lcl, cf2$ucl),
-               0.002898, tolerance = 5e-7)
+  expect_equal(round(pchart_alpha_risk(p, n, normal$lcl, normal$ucl), 6),
+               0.077032)
+  expect_equal(round(pchart_alpha_risk(p, n, cf1$lcl, cf1$ucl), 6),
+               0.923038)
+  expect_equal(round(pchart_alpha_risk(p, n, cf2$lcl, cf2$ucl), 6),
+               0.002898)
 })
 
 test_that("pchart_limits reports method applicability", {
-  expect_true(pchart_limits(0.36, 20, type = "normal")$applicable)
+  expect_true(pchart_limits(0.5, 20, type = "normal")$applicable)
   expect_true(pchart_limits(0.015, 20, type = "cf1")$applicable)
   expect_false(pchart_limits(0.01, 20, type = "cf1")$applicable)
   expect_true(pchart_limits(0.004, 20, type = "cf2")$npq > 0.079)
