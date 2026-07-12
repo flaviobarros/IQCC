@@ -1,6 +1,14 @@
-# Two-panel implementation of the existing plot.cchart.DSnp S3 method.
-# The first panel shows x1 with WL and UCL1. The second panel shows x1 + x2
-# only for observations that reached stage two, with UCL2 on the correct scale.
+#' Plot a DS-np Control Chart
+#'
+#' Plot first-stage and second-stage DS-np decisions on separate panels so
+#' that the first-stage count and combined count are shown on their proper
+#' scales.
+#'
+#' @param x An object of class \code{"cchart.DSnp"}.
+#' @param ... Additional graphical parameters passed to the first panel.
+#' @return Invisible \code{x}.
+#' @export
+#' @method plot cchart.DSnp
 plot.cchart.DSnp <- function(x, ...)
 {
     d <- x$data

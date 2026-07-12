@@ -27,8 +27,16 @@ cchart.GV <- function(x1, size = NULL, x2 = NULL, Sigma = NULL,
     {
         covariances <- lapply(groups1, stats::cov)
         Sbar <- Reduce(`+`, covariances) / length(covariances)
+        if(any(!is.finite(Sbar)) ||
+           inherits(try(chol(Sbar), silent = TRUE), "try-error"))
+            stop("The Phase I average covariance matrix must be positive definite")
+
+        det_sbar <- determinant(Sbar, logarithm = FALSE)
+        if(det_sbar$sign <= 0 || !is.finite(as.numeric(det_sbar$modulus)))
+            stop("The Phase I average covariance matrix must have a positive finite determinant")
+
         b3 <- .gv_b3(length(groups1), n, p)
-        det_sigma <- as.numeric(determinant(Sbar, logarithm = FALSE)$modulus) / b3
+        det_sigma <- as.numeric(det_sbar$modulus) / b3
         Sigma_used <- NULL
     }
     else
@@ -38,10 +46,14 @@ cchart.GV <- function(x1, size = NULL, x2 = NULL, Sigma = NULL,
            nrow(Sigma) != p || ncol(Sigma) != p ||
            max(abs(Sigma - t(Sigma))) > 1e-8)
             stop("Sigma must be a finite symmetric p by p matrix")
-        det_sigma <- determinant(Sigma, logarithm = FALSE)
-        if(det_sigma$sign <= 0)
+        if(inherits(try(chol(Sigma), silent = TRUE), "try-error"))
             stop("Sigma must be positive definite")
-        det_sigma <- as.numeric(det_sigma$modulus)
+
+        det_sigma_obj <- determinant(Sigma, logarithm = FALSE)
+        if(det_sigma_obj$sign <= 0 ||
+           !is.finite(as.numeric(det_sigma_obj$modulus)))
+            stop("Sigma must be positive definite")
+        det_sigma <- as.numeric(det_sigma_obj$modulus)
         Sigma_used <- Sigma
         b3 <- NA_real_
         Sbar <- NULL

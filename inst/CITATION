@@ -11,10 +11,11 @@ bibentry(
   ),
   year = "2026",
   note = "R package version 0.8.0",
-  url = "https://github.com/flaviobarros/IQCC",
+  doi = "10.32614/CRAN.package.IQCC",
+  url = "https://CRAN.R-project.org/package=IQCC",
   textVersion = paste(
     "Barros F, Barbosa E, Goncalves E, Recchia D (2026).",
     "IQCC: Improved Quality Control Charts. R package version 0.8.0.",
-    "https://github.com/flaviobarros/IQCC"
+    "doi:10.32614/CRAN.package.IQCC"
   )
 )
