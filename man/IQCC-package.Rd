@@ -12,7 +12,7 @@ Builds statistical control charts with exact limits for univariate and multivari
 Useful links:
 \itemize{
   \item \url{https://github.com/flaviobarros/IQCC}
-  \item \url{https://flaviobarros.github.io/IQCC}
+  \item \url{https://flaviobarros.github.io/IQCC/}
   \item Report bugs at \url{https://github.com/flaviobarros/IQCC/issues}
 }
 
