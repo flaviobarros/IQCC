@@ -2,14 +2,15 @@
 #'
 #' Build normal, Cornish-Fisher corrected, or standardized p charts.
 #'
-#' For a Phase I chart, \code{n1} and either \code{x1} or \code{p1} must be
-#' supplied. For a Phase II chart, \code{n2} and either \code{x2} or \code{p2}
-#' must be supplied, together with Phase I information or a known
-#' \code{phat}.
+#' For a Phase I chart, \code{n1} and exactly one of \code{x1} or \code{p1}
+#' must be supplied. For a Phase II chart, \code{n2} and exactly one of
+#' \code{x2} or \code{p2} must be supplied, together with Phase I information
+#' or a known \code{phat}.
 #'
 #' When sample sizes vary, the process proportion is estimated by the pooled
 #' binomial estimator, \eqn{sum(x_i) / sum(n_i)}, rather than by the unweighted
-#' mean of subgroup proportions.
+#' mean of subgroup proportions. The plotting wrapper uses two-sided limits;
+#' use \code{pchart_limits()} directly for one-sided upper limits.
 #'
 #' @param x1 Phase I nonconforming counts.
 #' @param n1 Phase I sample size or vector of sample sizes.
@@ -17,12 +18,12 @@
 #'   \code{"cf2"}, and \code{"standardized"}. The legacy aliases
 #'   \code{"norm"}, \code{"CF"}, and \code{"std"} remain supported;
 #'   \code{"CF"} maps to \code{"cf1"}.
-#' @param p1 Phase I subgroup proportions. Used when \code{x1} is not supplied.
+#' @param p1 Phase I subgroup proportions. Used instead of \code{x1}.
 #' @param x2 Phase II nonconforming counts.
 #' @param n2 Phase II sample size or vector of sample sizes.
 #' @param phat Known or previously estimated in-control proportion.
-#' @param p2 Phase II subgroup proportions. Used when \code{x2} is not supplied.
-#' @param alpha Nominal false alarm probability. Defaults to 0.0027.
+#' @param p2 Phase II subgroup proportions. Used instead of \code{x2}.
+#' @param alpha Nominal two-sided false alarm probability. Defaults to 0.0027.
 #'
 #' @return Invisibly returns the \code{qcc} object used to draw the chart.
 #' @export
@@ -34,6 +35,7 @@
 #' Joekes, S. and Barbosa, E. P. (2013). An improved attribute control chart
 #' for monitoring non-conforming proportion in high quality processes.
 #' \emph{Control Engineering Practice}, 21, 407--412.
+#' \doi{10.1016/j.conengprac.2012.12.005}.
 #' @importFrom qcc qcc
 #' @examples
 #'
@@ -70,7 +72,13 @@
 
 .pchart_prepare_data <- function(x, p, n, x_name, p_name, n_name)
 {
+    if(!is.null(x) && !is.null(p))
+        stop(paste0("supply exactly one of ", x_name, " or ", p_name))
+
     m <- if(!is.null(x)) length(x) else length(p)
+    if(m < 1)
+        stop(paste0("the ", if(!is.null(x)) x_name else p_name,
+                    " data must not be empty"))
 
     if(!is.numeric(n) || length(n) < 1 || any(!is.finite(n)) ||
        any(n < 1) || any(n != floor(n)))
@@ -116,7 +124,6 @@
             z,
             type = "xbar.one",
             center = 0,
-            std.dev = 1,
             limits = c(-z_limit, z_limit),
             title = paste0("Standardized p-chart (phase ", phase, ")")
         ))
@@ -150,6 +157,11 @@ cchart.p <- function(x1 = NULL, n1 = NULL, type = "norm", p1 = NULL,
        alpha <= 0 || alpha >= 1)
         stop("alpha must be a finite scalar between 0 and 1")
 
+    if(!is.null(x1) && !is.null(p1))
+        stop("supply exactly one of x1 or p1")
+    if(!is.null(x2) && !is.null(p2))
+        stop("supply exactly one of x2 or p2")
+
     ok1 <- !is.null(n1) && (!is.null(x1) || !is.null(p1))
     ok2 <- !is.null(n2) && (!is.null(x2) || !is.null(p2)) &&
         (ok1 || !is.null(phat))
@@ -180,16 +192,12 @@ cchart.p <- function(x1 = NULL, n1 = NULL, type = "norm", p1 = NULL,
         phat_phase1 <- sum(phase1$x) / sum(phase1$n)
     }
 
-    if(!is.null(phat))
-    {
-        if(!is.numeric(phat) || length(phat) != 1 || !is.finite(phat) ||
-           phat <= 0 || phat >= 1)
-            stop("phat must be a finite scalar strictly between 0 and 1")
-    }
-    else if(ok1)
-    {
+    if(is.null(phat) && ok1)
         phat <- phat_phase1
-    }
+
+    if(!is.numeric(phat) || length(phat) != 1 || !is.finite(phat) ||
+       phat <= 0 || phat >= 1)
+        stop("phat must be a finite scalar strictly between 0 and 1")
 
     if(!ok2)
         return(invisible(.pchart_draw(phase1, phat, type, alpha, "I")))
