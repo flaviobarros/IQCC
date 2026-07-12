@@ -12,55 +12,65 @@ cchart.p(
   x2 = NULL,
   n2 = NULL,
   phat = NULL,
-  p2 = NULL
+  p2 = NULL,
+  alpha = ALPHA
 )
 }
 \arguments{
-\item{x1}{The phase I data that will be plotted (if it is a phase I chart).}
+\item{x1}{Phase I nonconforming counts.}
 
-\item{n1}{A value or a vector of values specifying the sample sizes
-associated with each group for the phase I data.}
+\item{n1}{Phase I sample size or vector of sample sizes.}
 
-\item{type}{The type of p-chart to be plotted. The options are "norm"
-(traditional Shewhart p-chart), "CF" (Cornish Fisher p-chart) and "std"
-(standardized p-chart). If not specified, a Shewhart p-chart will be
-plotted.}
+\item{type}{Chart type. Accepted values are \code{"normal"}, \code{"cf1"},
+\code{"cf2"}, and \code{"standardized"}. The legacy aliases
+\code{"norm"}, \code{"CF"}, and \code{"std"} remain supported;
+\code{"CF"} maps to \code{"cf1"}.}
 
-\item{p1}{The data used to estimate the phat (x1 / n1).}
+\item{p1}{Phase I subgroup proportions. Used when \code{x1} is not supplied.}
 
-\item{x2}{The phase II data that will be plotted in a phase II chart.}
+\item{x2}{Phase II nonconforming counts.}
 
-\item{n2}{A value or a vector of values specifying the sample sizes
-associated with each group for the phase II data.}
+\item{n2}{Phase II sample size or vector of sample sizes.}
 
-\item{phat}{The estimate of p.}
+\item{phat}{Known or previously estimated in-control proportion.}
 
-\item{p2}{The values corresponding to x2 / n2.}
+\item{p2}{Phase II subgroup proportions. Used when \code{x2} is not supplied.}
+
+\item{alpha}{Nominal false alarm probability. Defaults to 0.0027.}
 }
 \value{
-Return a p-chart.
+Invisibly returns the \code{qcc} object used to draw the chart.
 }
 \description{
-This function builds p-charts.
+Build normal, Cornish-Fisher corrected, or standardized p charts.
 }
 \details{
-For a phase I p-chart, n1 must be specified and either x1 or p1.  For a
-phase II p-chart, n2 must be specified, plus x2 or p2 and either phat, x1
-and n1, or p1 and n1.  The Shewhart is based on normal-approximation and
-should be used only for large values of np or n*p (n*p > 6).
+For a Phase I chart, \code{n1} and either \code{x1} or \code{p1} must be
+supplied. For a Phase II chart, \code{n2} and either \code{x2} or \code{p2}
+must be supplied, together with Phase I information or a known
+\code{phat}.
+
+When sample sizes vary, the process proportion is estimated by the pooled
+binomial estimator, \eqn{sum(x_i) / sum(n_i)}, rather than by the unweighted
+mean of subgroup proportions.
 }
 \examples{
-
 data(binomdata)
-attach(binomdata)
-cchart.p(x1 = Di[1:12], n1 = ni[1:12])
-cchart.p(x1 = Di[1:12], n1 = ni[1:12], type = "CF", x2 = Di[13:25], n2 = ni[13:25])
-cchart.p(type = "std", p2 = Di[13:25], n2 = ni[13:25], phat = 0.1115833)
-
+cchart.p(x1 = binomdata$Di[1:12], n1 = binomdata$ni[1:12])
+cchart.p(x1 = binomdata$Di[1:12], n1 = binomdata$ni[1:12],
+         type = "cf2", x2 = binomdata$Di[13:25],
+         n2 = binomdata$ni[13:25])
+cchart.p(type = "standardized", p2 = binomdata$Di[13:25] /
+         binomdata$ni[13:25], n2 = binomdata$ni[13:25],
+         phat = 0.1115833)
 }
 \references{
-Montgomery, D.C.,(2008)."Introduction to Statistical Quality
-Control". Chapter 11. Wiley
+Montgomery, D. C. (2008). \emph{Introduction to Statistical Quality
+Control}. Wiley.
+
+Joekes, S. and Barbosa, E. P. (2013). An improved attribute control chart
+for monitoring non-conforming proportion in high quality processes.
+\emph{Control Engineering Practice}, 21, 407--412.
 }
 \author{
 Daniela R. Recchia, Emanuel P. Barbosa
