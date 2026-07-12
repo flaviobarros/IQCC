@@ -2,11 +2,20 @@
 
 .dsnp_validate_probability <- function(p, name = "p", scalar = FALSE)
 {
-    if(!is.numeric(p) || length(p) < 1 || any(!is.finite(p)) ||
-       any(p < 0 | p > 1))
-        stop(paste0(name, " must contain finite values between 0 and 1"))
-    if(scalar && length(p) != 1)
-        stop(paste0(name, " must be a finite scalar between 0 and 1"))
+    if(scalar)
+    {
+        if(!is.numeric(p) || length(p) != 1 || !is.finite(p) ||
+           p < 0 || p > 1)
+            stop(paste0(name,
+                        " must be between 0 and 1 and be a finite scalar"))
+    }
+    else
+    {
+        if(!is.numeric(p) || length(p) < 1 || any(!is.finite(p)) ||
+           any(p < 0 | p > 1))
+            stop(paste0(name,
+                        " must be between 0 and 1 and contain finite values"))
+    }
     p
 }
 
