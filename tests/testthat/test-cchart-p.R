@@ -1,23 +1,22 @@
 test_that("cchart.p Phase I Shewhart runs without error", {
   data(binomdata, package = "IQCC")
-  attach(binomdata)
-  expect_no_error(cchart.p(x1 = Di[1:12], n1 = ni[1:12]))
-  detach(binomdata)
+  expect_no_error(cchart.p(x1 = binomdata$Di[1:12],
+                           n1 = binomdata$ni[1:12]))
 })
 
 test_that("cchart.p Phase I Cornish-Fisher runs without error", {
   data(binomdata, package = "IQCC")
-  attach(binomdata)
-  expect_no_error(cchart.p(x1 = Di[1:12], n1 = ni[1:12], type = "CF",
-                           x2 = Di[13:25], n2 = ni[13:25]))
-  detach(binomdata)
+  expect_no_error(cchart.p(x1 = binomdata$Di[1:12],
+                           n1 = binomdata$ni[1:12], type = "CF",
+                           x2 = binomdata$Di[13:25],
+                           n2 = binomdata$ni[13:25]))
 })
 
 test_that("cchart.p Phase II standardized runs without error", {
   data(binomdata, package = "IQCC")
-  attach(binomdata)
-  expect_no_error(suppressWarnings(cchart.p(type = "std", p2 = Di[13:25], n2 = ni[13:25], phat = 0.1115833)))
-  detach(binomdata)
+  expect_no_error(cchart.p(type = "std",
+                           p2 = binomdata$Di[13:25] / binomdata$ni[13:25],
+                           n2 = binomdata$ni[13:25], phat = 0.1115833))
 })
 
 test_that("cchart.p errors on missing Phase I data", {
@@ -36,18 +35,16 @@ test_that("cchart.p errors on missing Phase II sizes", {
 
 test_that("cchart.p with p1 input path runs without error", {
   data(binomdata, package = "IQCC")
-  attach(binomdata)
-  p1_vals <- Di[1:12] / ni[1:12]
-  expect_no_error(cchart.p(p1 = p1_vals, n1 = ni[1:12]))
-  detach(binomdata)
+  p1_vals <- binomdata$Di[1:12] / binomdata$ni[1:12]
+  expect_no_error(cchart.p(p1 = p1_vals, n1 = binomdata$ni[1:12]))
 })
 
 test_that("cchart.p Phase II with x2 runs without error", {
   data(binomdata, package = "IQCC")
-  attach(binomdata)
-  expect_no_error(cchart.p(x1 = Di[1:12], n1 = ni[1:12],
-                           x2 = Di[13:25], n2 = ni[13:25]))
-  detach(binomdata)
+  expect_no_error(cchart.p(x1 = binomdata$Di[1:12],
+                           n1 = binomdata$ni[1:12],
+                           x2 = binomdata$Di[13:25],
+                           n2 = binomdata$ni[13:25]))
 })
 
 test_that("cchart.p Phase II length mismatch errors", {
@@ -58,8 +55,8 @@ test_that("cchart.p Phase II length mismatch errors", {
 
 test_that("cchart.p Phase II with phat derived from Phase I", {
   data(binomdata, package = "IQCC")
-  attach(binomdata)
-  expect_no_error(cchart.p(x1 = Di[1:12], n1 = ni[1:12],
-                           x2 = Di[13:25], n2 = ni[13:25]))
-  detach(binomdata)
+  expect_no_error(cchart.p(x1 = binomdata$Di[1:12],
+                           n1 = binomdata$ni[1:12],
+                           x2 = binomdata$Di[13:25],
+                           n2 = binomdata$ni[13:25]))
 })
