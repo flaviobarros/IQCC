@@ -224,6 +224,108 @@
 <span><span class="va">T2</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/T2.1.html">T2.1</a></span><span class="op">(</span><span class="va">estat</span>, <span class="fl">20</span>, <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/cchart.T2.1.html">cchart.T2.1</a></span><span class="op">(</span><span class="va">T2</span>, <span class="fl">20</span>, <span class="fl">10</span>, <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
 </div>
+<div class="section level2">
+<h2 id="learning-more">Learning more<a class="anchor" aria-label="anchor" href="#learning-more"></a>
+</h2>
+<p>The package includes vignettes that explain where IQCC fits and how to approach selected monitoring problems:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/vignette.html" class="external-link">vignette</a></span><span class="op">(</span><span class="st">"iqcc-positioning"</span>, package <span class="op">=</span> <span class="st">"IQCC"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/vignette.html" class="external-link">vignette</a></span><span class="op">(</span><span class="st">"high-quality-processes"</span>, package <span class="op">=</span> <span class="st">"IQCC"</span><span class="op">)</span></span></code></pre></div>
+<ul>
+<li>
+<code>iqcc-positioning</code> explains when IQCC is a better fit than a classical normal-approximation chart and how it complements broader SPC packages.</li>
+<li>
+<code>high-quality-processes</code> focuses on rare nonconformities, Cornish-Fisher p charts, and the DS-np numerical core.</li>
+</ul>
+</div>
+<div class="section level2">
+<h2 id="research-background">Research background<a class="anchor" aria-label="anchor" href="#research-background"></a>
+</h2>
+<p>IQCC was developed from research on improved statistical quality control charts, especially work associated with Emanuel Pimentel Barbosa and collaborators. The package emphasizes cases where classical Shewhart-type limits are simple and familiar but statistically inaccurate.</p>
+<p>Important methodological themes include:</p>
+<ul>
+<li>
+<strong>Cornish-Fisher quantile correction</strong> for attribute charts in high-quality processes, where the nonconforming proportion is very small and the binomial distribution is highly skewed.</li>
+<li>
+<strong>Exact range-chart limits</strong> using the relative range distribution, implemented through the Tukey distribution, to avoid the false alarm inflation of normal-based R charts.</li>
+<li>
+<strong>Exact probability limits</strong> for S charts based on the chi-square distribution.</li>
+<li>
+<strong>Hotelling T² monitoring</strong> for multivariate process mean vectors.</li>
+</ul>
+</div>
+<div class="section level2">
+<h2 id="development-roadmap">Development roadmap<a class="anchor" aria-label="anchor" href="#development-roadmap"></a>
+</h2>
+<p>The package currently implements several core ideas from the research program, but some published methods are not yet implemented. Planned or candidate extensions include:</p>
+<table class="table">
+<colgroup>
+<col width="25%">
+<col width="25%">
+<col width="25%">
+<col width="25%">
+</colgroup>
+<thead><tr class="header">
+<th>Candidate extension</th>
+<th>Statistical target</th>
+<th>Possible function names</th>
+<th>Status</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>Double-sampling np chart</td>
+<td>Nonconforming proportion in high-quality processes with small samples</td>
+<td>
+<code><a href="reference/dsnp_limits.html">dsnp_limits()</a></code>, <code><a href="reference/cchart.DSnp.html">cchart.DSnp()</a></code>
+</td>
+<td>Implemented</td>
+</tr>
+<tr class="even">
+<td>Generalized variance chart</td>
+<td>Multivariate process variability using <code>|S|</code>
+</td>
+<td>
+<code>gv_limits()</code>, <code>cchart.GV()</code>
+</td>
+<td>Planned</td>
+</tr>
+<tr class="odd">
+<td>Cornish-Fisher corrected generalized variance chart</td>
+<td>Corrected limits for <code>|S|</code> under non-normal sampling distribution</td>
+<td><code>gv_cf_limits()</code></td>
+<td>Planned</td>
+</tr>
+<tr class="even">
+<td>Auxiliary trace chart</td>
+<td>Complementary monitoring using <code>tr(V)</code>
+</td>
+<td>
+<code>trv_limits()</code>, <code>cchart.trV()</code>
+</td>
+<td>Planned</td>
+</tr>
+<tr class="odd">
+<td>Numerical validation tables</td>
+<td>Reproduce selected values from the underlying papers</td>
+<td>
+<code>tests/testthat/</code> fixtures</td>
+<td>Planned</td>
+</tr>
+</tbody>
+</table>
+<p>These extensions should be implemented incrementally, with pure numerical functions separated from plotting functions and with validation against published examples whenever possible.</p>
+</div>
+<div class="section level2">
+<h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
+<ul>
+<li>Montgomery, D.C. (2008). <em>Introduction to Statistical Quality Control</em>. 6th ed. Wiley.</li>
+<li>Barros, F. et al. (2017). IQCC: An R Package for Improved Quality Control Charts. <em>Journal of Statistical Software</em>.</li>
+<li>Joekes, S. and Barbosa, E.P. (2013). An improved attribute control chart for monitoring non-conforming proportion in high quality processes. <em>Control Engineering Practice</em>.</li>
+<li>Barbosa, E.P., Gneri, M.A. and Meneguetti, A. (2013). Range Control Charts Revisited: Simpler Tippett-like Formulae, Its Practical Implementation, and the Study of False Alarm. <em>Communications in Statistics - Simulation and Computation</em>.</li>
+<li>Joekes, S., Smrekar, M. and Barbosa, E.P. (2015). Extending a double sampling control chart for non-conforming proportion in high quality processes to the case of small samples. <em>Statistical Methodology</em>.</li>
+</ul>
+</div>
 </div>
   </div>
 
