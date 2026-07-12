@@ -1,0 +1,20 @@
+citHeader("To cite IQCC in publications, use:")
+
+bibentry(
+  bibtype = "Manual",
+  title = "IQCC: Improved Quality Control Charts",
+  author = c(
+    person("Flavio", "Barros"),
+    person("Emanuel", "Barbosa"),
+    person("Elias", "Goncalves"),
+    person("Daniela", "Recchia")
+  ),
+  year = "2026",
+  note = "R package version 0.8.0",
+  url = "https://github.com/flaviobarros/IQCC",
+  textVersion = paste(
+    "Barros F, Barbosa E, Goncalves E, Recchia D (2026).",
+    "IQCC: Improved Quality Control Charts. R package version 0.8.0.",
+    "https://github.com/flaviobarros/IQCC"
+  )
+)
