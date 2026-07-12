@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="pkgdown.js"></script><meta property="og:title" content="Improved Quality Control Charts">
-<meta property="og:description" content="Builds statistical control charts with exact limits for univariate and multivariate cases.">
+<meta property="og:description" content="Implements improved statistical process control charts with exact, Cornish-Fisher corrected, standardized, and simulation-based probability limits. Methods include univariate attribute and variable charts, double-sampling charts for rare nonconformities, Hotelling T-squared charts, and generalized variance charts for multivariate process variability. Numerical functions for limits, false-alarm risk, average run length, and average sample size are separated from plotting interfaces to support reproducible statistical validation.">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">IQCC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.8.0</span>
       </span>
     </div>
 
@@ -86,9 +86,9 @@
 <div class="section level1">
 <div class="page-header"><h1 id="iqcc">IQCC<a class="anchor" aria-label="anchor" href="#iqcc"></a>
 </h1></div>
-<p><a href="https://cran.r-project.org/package=IQCC" class="external-link"><img src="https://www.r-pkg.org/badges/version/IQCC" alt="CRAN_Status_Badge"></a> <a href="https://app.codecov.io/gh/flaviobarros/IQCC" class="external-link"><img src="https://codecov.io/gh/flaviobarros/IQCC/branch/master/graph/badge.svg" alt="Codecov test coverage"></a> <a href="https://www.gnu.org/licenses/old-licenses/gpl-2.0.html" class="external-link"><img src="https://img.shields.io/badge/licence-GPL--2-blue.svg" alt="Licence"></a> <a href="https://cran.r-project.org/" class="external-link"><img src="https://img.shields.io/badge/R%3E%3D-3.5.0-6666ff.svg" alt="minimal R version"></a> <a href="commits/master"><img src="https://img.shields.io/badge/Package%20version-0.7-orange.svg?style=flat-square" alt="packageversion"></a> <a href="https://zenodo.org/badge/latestdoi/18469916" class="external-link"><img src="https://zenodo.org/badge/18469916.svg" alt="DOI"></a> <a href="https://cran.r-project.org/package=IQCC" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/IQCC"></a></p>
-<p><strong>IQCC</strong> implements <em>Improved Quality Control Charts</em>: statistical process control charts with exact, corrected, or standardized limits for univariate and multivariate monitoring.</p>
-<p>The package is motivated by a recurring practical problem in classical Shewhart-type control charts: when the statistic being monitored is discrete, skewed, bounded, or strongly non-normal, the usual normal-based three-sigma limits can be badly misplaced. In those cases, the nominal false alarm risk may be very different from the actual one. IQCC provides tools that keep the familiar control-chart workflow while using more appropriate probability limits whenever possible.</p>
+<p><a href="https://cran.r-project.org/package=IQCC" class="external-link"><img src="https://www.r-pkg.org/badges/version/IQCC" alt="CRAN_Status_Badge"></a> <a href="https://app.codecov.io/gh/flaviobarros/IQCC" class="external-link"><img src="https://codecov.io/gh/flaviobarros/IQCC/branch/master/graph/badge.svg" alt="Codecov test coverage"></a> <a href="https://www.gnu.org/licenses/old-licenses/gpl-2.0.html" class="external-link"><img src="https://img.shields.io/badge/licence-GPL--2-blue.svg" alt="Licence"></a> <a href="https://cran.r-project.org/" class="external-link"><img src="https://img.shields.io/badge/R%3E%3D-3.5.0-6666ff.svg" alt="minimal R version"></a> <a href="commits/master"><img src="https://img.shields.io/badge/Package%20version-0.8.0-orange.svg?style=flat-square" alt="packageversion"></a> <a href="https://zenodo.org/badge/latestdoi/18469916" class="external-link"><img src="https://zenodo.org/badge/18469916.svg" alt="DOI"></a> <a href="https://cran.r-project.org/package=IQCC" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/IQCC"></a></p>
+<p><strong>IQCC</strong> implements <em>Improved Quality Control Charts</em>: statistical process control charts with exact, corrected, standardized, or simulation-based limits for univariate and multivariate monitoring.</p>
+<p>The package is motivated by a recurring practical problem in classical Shewhart-type control charts: when the statistic being monitored is discrete, skewed, bounded, or strongly non-normal, usual normal-based three-sigma limits can be badly misplaced. In those cases, the nominal false-alarm risk may differ substantially from the actual one. IQCC keeps the familiar control-chart workflow while exposing numerical functions that make limits, risk, ARL, and sample-size calculations reproducible and testable.</p>
 <div class="section level2">
 <h2 id="main-features">Main features<a class="anchor" aria-label="anchor" href="#main-features"></a>
 </h2>
@@ -96,13 +96,17 @@
 <li>
 <strong>Univariate control charts</strong>: X-bar, R, S, p, and u charts.</li>
 <li>
-<strong>Improved probability limits</strong>: exact limits, Cornish-Fisher corrected limits, and standardized variants.</li>
+<strong>Improved probability limits</strong>: exact, Cornish-Fisher corrected, standardized, and simulation-based limits.</li>
 <li>
-<strong>Multivariate control charts</strong>: Hotelling T² charts for Phase I and Phase II monitoring.</li>
+<strong>High-quality processes</strong>: corrected p charts and double-sampling np charts for rare nonconformities.</li>
 <li>
-<strong>False alarm diagnostics</strong>: tools for evaluating the actual false alarm risk of selected classical charts.</li>
+<strong>Multivariate monitoring</strong>: Hotelling T² charts and generalized variance charts.</li>
 <li>
-<strong>Phase I and Phase II support</strong>: retrospective analysis and prospective process monitoring.</li>
+<strong>False-alarm diagnostics</strong>: exact binomial, Poisson, range-chart, and generalized variance risk calculations where available.</li>
+<li>
+<strong>Phase I and Phase II support</strong>: retrospective estimation and prospective monitoring.</li>
+<li>
+<strong>Research-oriented numerical layer</strong>: pure functions separated from plotting interfaces for validation and simulation studies.</li>
 </ul>
 </div>
 <div class="section level2">
@@ -128,39 +132,43 @@
 <code><a href="reference/cchart.Xbar.html">cchart.Xbar()</a></code>, <code><a href="reference/cchart.Xbar1.html">cchart.Xbar1()</a></code>, <code><a href="reference/cchart.Xbar2.html">cchart.Xbar2()</a></code>, <code><a href="reference/cchart.Xbar_R.html">cchart.Xbar_R()</a></code>
 </td>
 <td>Shewhart-type X-bar charts</td>
-<td>Includes support for X-bar/R workflows.</td>
+<td>Includes X-bar/R workflows.</td>
 </tr>
 <tr class="even">
 <td>Range / process dispersion</td>
 <td><code><a href="reference/cchart.R.html">cchart.R()</a></code></td>
 <td>Shewhart R chart; exact Tukey-based R chart</td>
-<td>The exact chart uses the relative range distribution through the Tukey distribution.</td>
+<td>Exact limits use the relative range distribution.</td>
 </tr>
 <tr class="odd">
 <td>Standard deviation</td>
 <td><code><a href="reference/cchart.S.html">cchart.S()</a></code></td>
 <td>Normalized S chart; exact chi-square-based S chart</td>
-<td>Exact limits are based on the chi-square distribution of the sample variance.</td>
+<td>Exact limits use the sample-variance distribution.</td>
 </tr>
 <tr class="even">
 <td>Nonconforming proportion</td>
-<td><code><a href="reference/cchart.p.html">cchart.p()</a></code></td>
-<td>Shewhart p chart; Cornish-Fisher p chart; standardized p chart</td>
-<td>The Cornish-Fisher option is designed for low nonconforming proportions where normal approximation is poor.</td>
+<td>
+<code><a href="reference/pchart_limits.html">pchart_limits()</a></code>, <code><a href="reference/pchart_alpha_risk.html">pchart_alpha_risk()</a></code>, <code><a href="reference/cchart.p.html">cchart.p()</a></code>
+</td>
+<td>Normal, CF1, CF2, and standardized p charts</td>
+<td>Includes exact binomial false-alarm evaluation and pooled estimation.</td>
 </tr>
 <tr class="odd">
 <td>Double-sampling np chart</td>
 <td>
 <code><a href="reference/dsnp_prob_accept.html">dsnp_prob_accept()</a></code>, <code><a href="reference/dsnp_arl.html">dsnp_arl()</a></code>, <code><a href="reference/dsnp_ass.html">dsnp_ass()</a></code>, <code><a href="reference/dsnp_limits.html">dsnp_limits()</a></code>, <code><a href="reference/cchart.DSnp.html">cchart.DSnp()</a></code>
 </td>
-<td>DS-np numerical core, limit search, and control chart</td>
+<td>Exact-binomial DS-np performance, limit search, and chart</td>
 <td>Two-stage sampling for high-quality processes with small samples.</td>
 </tr>
 <tr class="even">
 <td>Nonconformities per unit</td>
-<td><code><a href="reference/cchart.u.html">cchart.u()</a></code></td>
-<td>Shewhart u chart; standardized u chart</td>
-<td>Attribute chart for counts per inspection unit.</td>
+<td>
+<code><a href="reference/uchart_limits.html">uchart_limits()</a></code>, <code><a href="reference/uchart_alpha_risk.html">uchart_alpha_risk()</a></code>, <code><a href="reference/cchart.u.html">cchart.u()</a></code>
+</td>
+<td>Normal, CF1, CF2, and standardized u charts</td>
+<td>Includes exact Poisson risk and pooled rate estimation.</td>
 </tr>
 <tr class="odd">
 <td>Multivariate mean vector</td>
@@ -171,18 +179,26 @@
 <td>Supports individual and subgroup observations.</td>
 </tr>
 <tr class="even">
+<td>Multivariate variability</td>
+<td>
+<code><a href="reference/gv_stat.html">gv_stat()</a></code>, <code><a href="reference/gv_limits.html">gv_limits()</a></code>, <code><a href="reference/gv_alpha_risk.html">gv_alpha_risk()</a></code>, <code><a href="reference/cchart.GV.html">cchart.GV()</a></code>
+</td>
+<td>Normal, Cornish-Fisher, selected exact, and simulation-based generalized variance charts</td>
+<td>Exact dimension-two limits and selected published dimension-three quantiles.</td>
+</tr>
+<tr class="odd">
 <td>Relative range constants</td>
 <td>
 <code><a href="reference/d2.html">d2()</a></code>, <code><a href="reference/d3.html">d3()</a></code>
 </td>
 <td>Numerical integration using Tukey distribution functions</td>
-<td>Used by exact R-chart calculations and false alarm diagnostics.</td>
+<td>Used by exact R-chart calculations.</td>
 </tr>
-<tr class="odd">
-<td>False alarm risk</td>
+<tr class="even">
+<td>False-alarm risk for R charts</td>
 <td><code><a href="reference/alpha.risk.html">alpha.risk()</a></code></td>
-<td>Exact false alarm probability for the classical three-sigma R chart</td>
-<td>Useful for diagnosing inflated false alarm risk.</td>
+<td>Exact false-alarm probability for the classical three-sigma R chart</td>
+<td>Diagnoses inflated false-alarm risk.</td>
 </tr>
 </tbody>
 </table>
@@ -193,9 +209,9 @@
 <p>Install the CRAN version:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"IQCC"</span>, dependencies <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p>Or install the development version from GitHub:</p>
+<p>Install the development version from GitHub:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"flaviobarros/IQCC"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"flaviobarros/IQCC"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="quick-start">Quick start<a class="anchor" aria-label="anchor" href="#quick-start"></a>
@@ -208,38 +224,67 @@
 <span><span class="fu"><a href="reference/cchart.Xbar_R.html">cchart.Xbar_R</a></span><span class="op">(</span><span class="va">pistonrings</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">25</span>, <span class="op">]</span>, <span class="fl">5</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Exact R chart using Phase I data to estimate sigma</span></span>
-<span><span class="fu"><a href="reference/cchart.R.html">cchart.R</a></span><span class="op">(</span><span class="va">pistonrings</span><span class="op">[</span><span class="fl">26</span><span class="op">:</span><span class="fl">40</span>, <span class="op">]</span>, <span class="fl">5</span>, type <span class="op">=</span> <span class="st">"tukey"</span>, y <span class="op">=</span> <span class="va">pistonrings</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">25</span>, <span class="op">]</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># p chart with Cornish-Fisher limits</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">binomdata</span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/attach.html" class="external-link">attach</a></span><span class="op">(</span><span class="va">binomdata</span><span class="op">)</span></span>
-<span><span class="fu"><a href="reference/cchart.p.html">cchart.p</a></span><span class="op">(</span></span>
-<span>  x1 <span class="op">=</span> <span class="va">Di</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">12</span><span class="op">]</span>, n1 <span class="op">=</span> <span class="va">ni</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">12</span><span class="op">]</span>,</span>
-<span>  type <span class="op">=</span> <span class="st">"CF"</span>,</span>
-<span>  x2 <span class="op">=</span> <span class="va">Di</span><span class="op">[</span><span class="fl">13</span><span class="op">:</span><span class="fl">25</span><span class="op">]</span>, n2 <span class="op">=</span> <span class="va">ni</span><span class="op">[</span><span class="fl">13</span><span class="op">:</span><span class="fl">25</span><span class="op">]</span></span>
+<span><span class="fu"><a href="reference/cchart.R.html">cchart.R</a></span><span class="op">(</span></span>
+<span>  <span class="va">pistonrings</span><span class="op">[</span><span class="fl">26</span><span class="op">:</span><span class="fl">40</span>, <span class="op">]</span>,</span>
+<span>  <span class="fl">5</span>,</span>
+<span>  type <span class="op">=</span> <span class="st">"tukey"</span>,</span>
+<span>  y <span class="op">=</span> <span class="va">pistonrings</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">25</span>, <span class="op">]</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Hotelling T² chart (Phase I)</span></span>
-<span><span class="va">mu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5.682</span>, <span class="fl">88.22</span><span class="op">)</span></span>
-<span><span class="va">Sigma</span> <span class="op">&lt;-</span> <span class="fu">miscTools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/miscTools/man/symMatrix.html" class="external-link">symMatrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3.770</span>, <span class="op">-</span><span class="fl">5.495</span>, <span class="fl">13.53</span><span class="op">)</span>, <span class="fl">2</span><span class="op">)</span></span>
-<span><span class="va">datum</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/data.1.html">data.1</a></span><span class="op">(</span><span class="fl">20</span>, <span class="fl">10</span>, <span class="va">mu</span>, <span class="va">Sigma</span><span class="op">)</span></span>
-<span><span class="va">estat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/stats.html">stats</a></span><span class="op">(</span><span class="va">datum</span>, <span class="fl">20</span>, <span class="fl">10</span>, <span class="fl">2</span><span class="op">)</span></span>
-<span><span class="va">T2</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/T2.1.html">T2.1</a></span><span class="op">(</span><span class="va">estat</span>, <span class="fl">20</span>, <span class="fl">10</span><span class="op">)</span></span>
-<span><span class="fu"><a href="reference/cchart.T2.1.html">cchart.T2.1</a></span><span class="op">(</span><span class="va">T2</span>, <span class="fl">20</span>, <span class="fl">10</span>, <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
+<span><span class="co"># p-chart limits and exact false-alarm risk</span></span>
+<span><span class="va">p_limits</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/pchart_limits.html">pchart_limits</a></span><span class="op">(</span>p <span class="op">=</span> <span class="fl">0.015</span>, n <span class="op">=</span> <span class="fl">20</span>, type <span class="op">=</span> <span class="st">"cf2"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/pchart_alpha_risk.html">pchart_alpha_risk</a></span><span class="op">(</span></span>
+<span>  p <span class="op">=</span> <span class="fl">0.015</span>,</span>
+<span>  n <span class="op">=</span> <span class="fl">20</span>,</span>
+<span>  lcl <span class="op">=</span> <span class="va">p_limits</span><span class="op">$</span><span class="va">lcl</span>,</span>
+<span>  ucl <span class="op">=</span> <span class="va">p_limits</span><span class="op">$</span><span class="va">ucl</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># u-chart with pooled Phase I rate and CF2 limits</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">moonroof</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/cchart.u.html">cchart.u</a></span><span class="op">(</span></span>
+<span>  x1 <span class="op">=</span> <span class="va">moonroof</span><span class="op">$</span><span class="va">yi</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">17</span><span class="op">]</span>,</span>
+<span>  n1 <span class="op">=</span> <span class="va">moonroof</span><span class="op">$</span><span class="va">ni</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">17</span><span class="op">]</span>,</span>
+<span>  type <span class="op">=</span> <span class="st">"cf2"</span>,</span>
+<span>  x2 <span class="op">=</span> <span class="va">moonroof</span><span class="op">$</span><span class="va">yi</span><span class="op">[</span><span class="fl">18</span><span class="op">:</span><span class="fl">34</span><span class="op">]</span>,</span>
+<span>  n2 <span class="op">=</span> <span class="va">moonroof</span><span class="op">$</span><span class="va">ni</span><span class="op">[</span><span class="fl">18</span><span class="op">:</span><span class="fl">34</span><span class="op">]</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># DS-np performance for a published high-quality-process design</span></span>
+<span><span class="fu"><a href="reference/dsnp_arl.html">dsnp_arl</a></span><span class="op">(</span></span>
+<span>  p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.005</span>, <span class="fl">0.0075</span><span class="op">)</span>,</span>
+<span>  n1 <span class="op">=</span> <span class="fl">34</span>,</span>
+<span>  n2 <span class="op">=</span> <span class="fl">162</span>,</span>
+<span>  wl <span class="op">=</span> <span class="fl">1.5</span>,</span>
+<span>  ucl1 <span class="op">=</span> <span class="fl">2.5</span>,</span>
+<span>  ucl2 <span class="op">=</span> <span class="fl">4.5</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Generalized variance limits for dimension two</span></span>
+<span><span class="fu"><a href="reference/gv_limits.html">gv_limits</a></span><span class="op">(</span></span>
+<span>  n <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  p <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  det_sigma <span class="op">=</span> <span class="fl">0.5320</span>,</span>
+<span>  type <span class="op">=</span> <span class="st">"exact"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="learning-more">Learning more<a class="anchor" aria-label="anchor" href="#learning-more"></a>
 </h2>
-<p>The package includes vignettes that explain where IQCC fits and how to approach selected monitoring problems:</p>
+<p>The package includes three vignettes:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/vignette.html" class="external-link">vignette</a></span><span class="op">(</span><span class="st">"iqcc-positioning"</span>, package <span class="op">=</span> <span class="st">"IQCC"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/vignette.html" class="external-link">vignette</a></span><span class="op">(</span><span class="st">"high-quality-processes"</span>, package <span class="op">=</span> <span class="st">"IQCC"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/vignette.html" class="external-link">vignette</a></span><span class="op">(</span><span class="st">"high-quality-processes"</span>, package <span class="op">=</span> <span class="st">"IQCC"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/vignette.html" class="external-link">vignette</a></span><span class="op">(</span><span class="st">"statistical-foundations"</span>, package <span class="op">=</span> <span class="st">"IQCC"</span><span class="op">)</span></span></code></pre></div>
 <ul>
 <li>
-<code>iqcc-positioning</code> explains when IQCC is a better fit than a classical normal-approximation chart and how it complements broader SPC packages.</li>
+<code>iqcc-positioning</code> explains where IQCC fits in the R/SPC ecosystem.</li>
 <li>
-<code>high-quality-processes</code> focuses on rare nonconformities, Cornish-Fisher p charts, and the DS-np numerical core.</li>
+<code>high-quality-processes</code> focuses on rare nonconformities, Cornish-Fisher p charts, and DS-np monitoring.</li>
+<li>
+<code>statistical-foundations</code> records the probability models, derivations, and validation strategy behind the audited methods.</li>
 </ul>
+<p>A longer article-oriented technical document is available at <code>paper/statistical-foundations.md</code>.</p>
 </div>
 <div class="section level2">
 <h2 id="research-background">Research background<a class="anchor" aria-label="anchor" href="#research-background"></a>
@@ -247,20 +292,17 @@
 <p>IQCC was developed from research on improved statistical quality control charts, especially work associated with Emanuel Pimentel Barbosa and collaborators. The package emphasizes cases where classical Shewhart-type limits are simple and familiar but statistically inaccurate.</p>
 <p>Important methodological themes include:</p>
 <ul>
-<li>
-<strong>Cornish-Fisher quantile correction</strong> for attribute charts in high-quality processes, where the nonconforming proportion is very small and the binomial distribution is highly skewed.</li>
-<li>
-<strong>Exact range-chart limits</strong> using the relative range distribution, implemented through the Tukey distribution, to avoid the false alarm inflation of normal-based R charts.</li>
-<li>
-<strong>Exact probability limits</strong> for S charts based on the chi-square distribution.</li>
-<li>
-<strong>Hotelling T² monitoring</strong> for multivariate process mean vectors.</li>
+<li>Cornish-Fisher quantile correction for highly skewed attribute statistics;</li>
+<li>exact discrete false-alarm evaluation for binomial and Poisson charts;</li>
+<li>exact range-chart limits through the relative range distribution;</li>
+<li>double-sampling designs for rare nonconformities;</li>
+<li>Hotelling T² monitoring for multivariate process means;</li>
+<li>generalized variance monitoring through products of chi-square variables and Bartlett decomposition.</li>
 </ul>
 </div>
 <div class="section level2">
 <h2 id="development-roadmap">Development roadmap<a class="anchor" aria-label="anchor" href="#development-roadmap"></a>
 </h2>
-<p>The package currently implements several core ideas from the research program, but some published methods are not yet implemented. Planned or candidate extensions include:</p>
 <table class="table">
 <colgroup>
 <col width="25%">
@@ -277,11 +319,11 @@
 <tbody>
 <tr class="odd">
 <td>Double-sampling np chart</td>
-<td>Nonconforming proportion in high-quality processes with small samples</td>
+<td>Nonconforming proportion in high-quality processes</td>
 <td>
 <code><a href="reference/dsnp_limits.html">dsnp_limits()</a></code>, <code><a href="reference/cchart.DSnp.html">cchart.DSnp()</a></code>
 </td>
-<td>Implemented</td>
+<td>Implemented and validated</td>
 </tr>
 <tr class="even">
 <td>Generalized variance chart</td>
@@ -290,13 +332,13 @@
 <td>
 <code><a href="reference/gv_limits.html">gv_limits()</a></code>, <code><a href="reference/cchart.GV.html">cchart.GV()</a></code>
 </td>
-<td>Planned</td>
+<td>Implemented and validated</td>
 </tr>
 <tr class="odd">
-<td>Cornish-Fisher corrected generalized variance chart</td>
-<td>Corrected limits for <code>|S|</code> under non-normal sampling distribution</td>
-<td><code>gv_cf_limits()</code></td>
-<td>Planned</td>
+<td>Cornish-Fisher generalized variance limits</td>
+<td>Corrected limits for skewed <code>|S|</code> distribution</td>
+<td><code>gv_limits(type = "cf")</code></td>
+<td>Implemented</td>
 </tr>
 <tr class="even">
 <td>Auxiliary trace chart</td>
@@ -308,25 +350,36 @@
 <td>Planned</td>
 </tr>
 <tr class="odd">
-<td>Numerical validation tables</td>
-<td>Reproduce selected values from the underlying papers</td>
-<td>
-<code>tests/testthat/</code> fixtures</td>
+<td>Full DS-np sample-size optimization</td>
+<td>Joint design over sample sizes and limits</td>
+<td>future API</td>
 <td>Planned</td>
+</tr>
+<tr class="even">
+<td>Generic exact generalized variance quantiles</td>
+<td>Meijer-G or another validated numerical approach</td>
+<td>future API</td>
+<td>Research stage</td>
+</tr>
+<tr class="odd">
+<td>Numerical validation catalogue</td>
+<td>Centralized published fixtures and metadata</td>
+<td>
+<code>tests/testthat/</code> and documentation</td>
+<td>In progress</td>
 </tr>
 </tbody>
 </table>
-<p>These extensions should be implemented incrementally, with pure numerical functions separated from plotting functions and with validation against published examples whenever possible.</p>
 </div>
 <div class="section level2">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
 <ul>
-<li>Montgomery, D.C. (2008). <em>Introduction to Statistical Quality Control</em>. 6th ed. Wiley.</li>
+<li>Montgomery, D. C. (2008). <em>Introduction to Statistical Quality Control</em>. 6th ed. Wiley.</li>
 <li>Barros, F. et al. (2017). IQCC: An R Package for Improved Quality Control Charts. <em>Journal of Statistical Software</em>.</li>
-<li>Joekes, S. and Barbosa, E.P. (2013). An improved attribute control chart for monitoring non-conforming proportion in high quality processes. <em>Control Engineering Practice</em>.</li>
-<li>Barbosa, E.P., Gneri, M.A. and Meneguetti, A. (2013). Range Control Charts Revisited: Simpler Tippett-like Formulae, Its Practical Implementation, and the Study of False Alarm. <em>Communications in Statistics - Simulation and Computation</em>.</li>
-<li>Joekes, S., Smrekar, M. and Barbosa, E.P. (2015). Extending a double sampling control chart for non-conforming proportion in high quality processes to the case of small samples. <em>Statistical Methodology</em>.</li>
+<li>Joekes, S. and Barbosa, E. P. (2013). An improved attribute control chart for monitoring non-conforming proportion in high quality processes. <em>Control Engineering Practice</em>.</li>
+<li>Barbosa, E. P., Gneri, M. A. and Meneguetti, A. (2013). Range Control Charts Revisited: Simpler Tippett-like Formulae, Its Practical Implementation, and the Study of False Alarm. <em>Communications in Statistics - Simulation and Computation</em>.</li>
+<li>Joekes, S., Smrekar, M. and Barbosa, E. P. (2015). Extending a double sampling control chart for non-conforming proportion in high quality processes to the case of small samples. <em>Statistical Methodology</em>.</li>
 </ul>
 </div>
 </div>

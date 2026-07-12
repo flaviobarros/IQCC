@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IQCC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.8.0</span>
       </span>
     </div>
 
@@ -63,6 +63,57 @@
       <small>Source: <a href="https://github.com/flaviobarros/IQCC/blob/master/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.8.0" id="iqcc-080">IQCC 0.8.0<a class="anchor" aria-label="anchor" href="#iqcc-080"></a></h2>
+<div class="section level3">
+<h3 id="new-statistical-methods-0-8-0">New statistical methods<a class="anchor" aria-label="anchor" href="#new-statistical-methods-0-8-0"></a></h3>
+<ul><li>Add the double-sampling np chart family for high-quality processes: <code><a href="../reference/dsnp_prob_accept.html">dsnp_prob_accept()</a></code>, <code><a href="../reference/dsnp_arl.html">dsnp_arl()</a></code>, <code><a href="../reference/dsnp_ass.html">dsnp_ass()</a></code>, <code><a href="../reference/dsnp_limits.html">dsnp_limits()</a></code>, and <code><a href="../reference/cchart.DSnp.html">cchart.DSnp()</a></code>.</li>
+<li>Add generalized variance monitoring through <code><a href="../reference/gv_stat.html">gv_stat()</a></code>, <code><a href="../reference/gv_limits.html">gv_limits()</a></code>, <code><a href="../reference/gv_alpha_risk.html">gv_alpha_risk()</a></code>, and <code><a href="../reference/cchart.GV.html">cchart.GV()</a></code>.</li>
+<li>Support normal, Cornish-Fisher, selected exact, and simulation-based limits for generalized variance charts.</li>
+<li>Add pure numerical u-chart functions <code><a href="../reference/uchart_limits.html">uchart_limits()</a></code> and <code><a href="../reference/uchart_alpha_risk.html">uchart_alpha_risk()</a></code>.</li>
+<li>Add pure numerical p-chart functions <code><a href="../reference/pchart_limits.html">pchart_limits()</a></code> and <code><a href="../reference/pchart_alpha_risk.html">pchart_alpha_risk()</a></code>.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="statistical-corrections-0-8-0">Statistical corrections<a class="anchor" aria-label="anchor" href="#statistical-corrections-0-8-0"></a></h3>
+<ul><li>Replace the unweighted mean of subgroup proportions with the pooled binomial estimator in <code><a href="../reference/cchart.p.html">cchart.p()</a></code>.</li>
+<li>Replace the unweighted mean of subgroup rates with the pooled Poisson estimator in <code><a href="../reference/cchart.u.html">cchart.u()</a></code>.</li>
+<li>Correct standardized p and u charts so standardized statistics are not divided by subgroup size a second time.</li>
+<li>Audit the Cornish-Fisher p-chart implementation against the operational formulas and published numerical examples.</li>
+<li>Derive and validate CF1 and CF2 u-chart limits from Poisson cumulants.</li>
+<li>Correct the DS-np limit search so every candidate second-stage threshold is evaluated independently.</li>
+<li>Harden DS-np decision regions, probability calculations, ARL, ASS, and plotting.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="scientific-validation-0-8-0">Scientific validation<a class="anchor" aria-label="anchor" href="#scientific-validation-0-8-0"></a></h3>
+<ul><li>Reproduce published p-chart false-alarm examples from Joekes and Barbosa (2013).</li>
+<li>Reproduce published DS-np ARL and ASS values from Joekes, Smrekar, and Barbosa (2015).</li>
+<li>Reproduce published generalized variance limits for dimensions two and three.</li>
+<li>Add independent numerical oracles for discrete DS-np probabilities and exact dimension-two generalized variance risk.</li>
+<li>Add regression tests for scaling, monotonicity, boundary cases, invalid inputs, random-number-state preservation, and legacy aliases.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="documentation-0-8-0">Documentation<a class="anchor" aria-label="anchor" href="#documentation-0-8-0"></a></h3>
+<ul><li>Add package vignettes on IQCC positioning, high-quality processes, and the statistical foundations of the audited methods.</li>
+<li>Add <code>paper/statistical-foundations.md</code> as article-oriented technical source material.</li>
+<li>Expand the README with scientific positioning, implemented methods, references, and development roadmap.</li>
+<li>Add documentation for all new public functions and S3 plotting methods.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="engineering-and-infrastructure-0-8-0">Engineering and infrastructure<a class="anchor" aria-label="anchor" href="#engineering-and-infrastructure-0-8-0"></a></h3>
+<ul><li>Add GitHub Actions workflows for R CMD check, pkgdown, and test coverage.</li>
+<li>Add Codecov reporting and README badge.</li>
+<li>Expand automated tests substantially across legacy and new functionality.</li>
+<li>Separate numerical kernels from chart construction and plotting where audited.</li>
+<li>Improve input validation and replace silent string returns with errors.</li>
+<li>Remove examples based on <code><a href="https://rdrr.io/r/base/attach.html" class="external-link">attach()</a></code> from audited interfaces.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="compatibility-0-8-0">Compatibility<a class="anchor" aria-label="anchor" href="#compatibility-0-8-0"></a></h3>
+<ul><li>Preserve legacy p-chart aliases <code>norm</code>, <code>CF</code>, and <code>std</code>.</li>
+<li>Preserve legacy u-chart aliases <code>norm</code>, <code>CF</code>, and <code>std</code>; historical <code>CF</code> maps to the two-term Cornish-Fisher formula.</li>
+<li>Existing chart wrappers remain available while exposing new pure numerical APIs for reproducible calculations.</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.7.1" id="iqcc-071">IQCC 0.7.1<a class="anchor" aria-label="anchor" href="#iqcc-071"></a></h2>
 <div class="section level3">
