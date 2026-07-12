@@ -1,0 +1,326 @@
+# IQCC
+
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/IQCC)](https://cran.r-project.org/package=IQCC)
+[![Codecov test
+coverage](https://codecov.io/gh/flaviobarros/IQCC/branch/master/graph/badge.svg)](https://app.codecov.io/gh/flaviobarros/IQCC)
+![Licence](https://img.shields.io/badge/licence-GPL--2-blue.svg)[![minimal
+R
+version](https://img.shields.io/badge/R%3E%3D-3.5.0-6666ff.svg)](https://cran.r-project.org/)
+[![packageversion](https://img.shields.io/badge/Package%20version-0.8.0-orange.svg?style=flat-square)](https://flaviobarros.github.io/IQCC/commits/master)
+[![DOI](https://zenodo.org/badge/18469916.svg)](https://zenodo.org/badge/latestdoi/18469916)
+[![](https://cranlogs.r-pkg.org/badges/IQCC)](https://cran.r-project.org/package=IQCC)
+
+**IQCC** implements *Improved Quality Control Charts*: statistical
+process control charts with exact, corrected, standardized, or
+simulation-based limits for univariate and multivariate monitoring.
+
+The package is motivated by a recurring practical problem in classical
+Shewhart-type control charts: when the statistic being monitored is
+discrete, skewed, bounded, or strongly non-normal, usual normal-based
+three-sigma limits can be badly misplaced. In those cases, the nominal
+false-alarm risk may differ substantially from the actual one. IQCC
+keeps the familiar control-chart workflow while exposing numerical
+functions that make limits, risk, ARL, and sample-size calculations
+reproducible and testable.
+
+## Main features
+
+- **Univariate control charts**: X-bar, R, S, p, and u charts.
+- **Improved probability limits**: exact, Cornish-Fisher corrected,
+  standardized, and simulation-based limits.
+- **High-quality processes**: corrected p charts and double-sampling np
+  charts for rare nonconformities.
+- **Multivariate monitoring**: Hotelling T² charts and generalized
+  variance charts.
+- **False-alarm diagnostics**: exact binomial, Poisson, range-chart, and
+  generalized variance risk calculations where available.
+- **Phase I and Phase II support**: retrospective estimation and
+  prospective monitoring.
+- **Research-oriented numerical layer**: pure functions separated from
+  plotting interfaces for validation and simulation studies.
+
+## Implemented methods
+
+| Monitoring problem | Function(s) | Implemented methods | Notes |
+|----|----|----|----|
+| Mean of a univariate process | [`cchart.Xbar()`](https://flaviobarros.github.io/IQCC/reference/cchart.Xbar.md), [`cchart.Xbar1()`](https://flaviobarros.github.io/IQCC/reference/cchart.Xbar1.md), [`cchart.Xbar2()`](https://flaviobarros.github.io/IQCC/reference/cchart.Xbar2.md), [`cchart.Xbar_R()`](https://flaviobarros.github.io/IQCC/reference/cchart.Xbar_R.md) | Shewhart-type X-bar charts | Includes X-bar/R workflows. |
+| Range / process dispersion | [`cchart.R()`](https://flaviobarros.github.io/IQCC/reference/cchart.R.md) | Shewhart R chart; exact Tukey-based R chart | Exact limits use the relative range distribution. |
+| Standard deviation | [`cchart.S()`](https://flaviobarros.github.io/IQCC/reference/cchart.S.md) | Normalized S chart; exact chi-square-based S chart | Exact limits use the sample-variance distribution. |
+| Nonconforming proportion | [`pchart_limits()`](https://flaviobarros.github.io/IQCC/reference/pchart_limits.md), [`pchart_alpha_risk()`](https://flaviobarros.github.io/IQCC/reference/pchart_alpha_risk.md), [`cchart.p()`](https://flaviobarros.github.io/IQCC/reference/cchart.p.md) | Normal, CF1, CF2, and standardized p charts | Includes exact binomial false-alarm evaluation and pooled estimation. |
+| Double-sampling np chart | [`dsnp_prob_accept()`](https://flaviobarros.github.io/IQCC/reference/dsnp_prob_accept.md), [`dsnp_arl()`](https://flaviobarros.github.io/IQCC/reference/dsnp_arl.md), [`dsnp_ass()`](https://flaviobarros.github.io/IQCC/reference/dsnp_ass.md), [`dsnp_limits()`](https://flaviobarros.github.io/IQCC/reference/dsnp_limits.md), [`cchart.DSnp()`](https://flaviobarros.github.io/IQCC/reference/cchart.DSnp.md) | Exact-binomial DS-np performance, limit search, and chart | Two-stage sampling for high-quality processes with small samples. |
+| Nonconformities per unit | [`uchart_limits()`](https://flaviobarros.github.io/IQCC/reference/uchart_limits.md), [`uchart_alpha_risk()`](https://flaviobarros.github.io/IQCC/reference/uchart_alpha_risk.md), [`cchart.u()`](https://flaviobarros.github.io/IQCC/reference/cchart.u.md) | Normal, CF1, CF2, and standardized u charts | Includes exact Poisson risk and pooled rate estimation. |
+| Multivariate mean vector | [`T2.1()`](https://flaviobarros.github.io/IQCC/reference/T2.1.md), [`T2.2()`](https://flaviobarros.github.io/IQCC/reference/T2.2.md), [`cchart.T2.1()`](https://flaviobarros.github.io/IQCC/reference/cchart.T2.1.md), [`cchart.T2.2()`](https://flaviobarros.github.io/IQCC/reference/cchart.T2.2.md) | Hotelling T² charts for Phase I and Phase II | Supports individual and subgroup observations. |
+| Multivariate variability | [`gv_stat()`](https://flaviobarros.github.io/IQCC/reference/gv_stat.md), [`gv_limits()`](https://flaviobarros.github.io/IQCC/reference/gv_limits.md), [`gv_alpha_risk()`](https://flaviobarros.github.io/IQCC/reference/gv_alpha_risk.md), [`cchart.GV()`](https://flaviobarros.github.io/IQCC/reference/cchart.GV.md) | Normal, Cornish-Fisher, selected exact, and simulation-based generalized variance charts | Exact dimension-two limits and selected published dimension-three quantiles. |
+| Relative range constants | [`d2()`](https://flaviobarros.github.io/IQCC/reference/d2.md), [`d3()`](https://flaviobarros.github.io/IQCC/reference/d3.md) | Numerical integration using Tukey distribution functions | Used by exact R-chart calculations. |
+| False-alarm risk for R charts | [`alpha.risk()`](https://flaviobarros.github.io/IQCC/reference/alpha.risk.md) | Exact false-alarm probability for the classical three-sigma R chart | Diagnoses inflated false-alarm risk. |
+
+## Installation
+
+Install the CRAN version:
+
+``` r
+
+install.packages("IQCC", dependencies = TRUE)
+```
+
+Install the development version from GitHub:
+
+``` r
+
+remotes::install_github("flaviobarros/IQCC")
+```
+
+## Quick start
+
+``` r
+
+library(IQCC)
+
+# X-bar and R charts
+data(pistonrings)
+cchart.Xbar_R(pistonrings[1:25, ], 5)
+
+# Exact R chart using Phase I data to estimate sigma
+cchart.R(
+  pistonrings[26:40, ],
+  5,
+  type = "tukey",
+  y = pistonrings[1:25, ]
+)
+
+# p-chart limits and exact false-alarm risk
+p_limits <- pchart_limits(p = 0.015, n = 20, type = "cf2")
+pchart_alpha_risk(
+  p = 0.015,
+  n = 20,
+  lcl = p_limits$lcl,
+  ucl = p_limits$ucl
+)
+
+# u-chart with pooled Phase I rate and CF2 limits
+data(moonroof)
+cchart.u(
+  x1 = moonroof$yi[1:17],
+  n1 = moonroof$ni[1:17],
+  type = "cf2",
+  x2 = moonroof$yi[18:34],
+  n2 = moonroof$ni[18:34]
+)
+
+# DS-np performance for a published high-quality-process design
+dsnp_arl(
+  p = c(0.005, 0.0075),
+  n1 = 34,
+  n2 = 162,
+  wl = 1.5,
+  ucl1 = 2.5,
+  ucl2 = 4.5
+)
+
+# Generalized variance limits for dimension two
+gv_limits(
+  n = 10,
+  p = 2,
+  det_sigma = 0.5320,
+  type = "exact"
+)
+```
+
+## Learning more
+
+The package includes three vignettes:
+
+``` r
+
+vignette("iqcc-positioning", package = "IQCC")
+vignette("high-quality-processes", package = "IQCC")
+vignette("statistical-foundations", package = "IQCC")
+```
+
+- `iqcc-positioning` explains where IQCC fits in the R/SPC ecosystem.
+- `high-quality-processes` focuses on rare nonconformities,
+  Cornish-Fisher p charts, and DS-np monitoring.
+- `statistical-foundations` records the probability models, derivations,
+  and validation strategy behind the audited methods.
+
+A longer article-oriented technical document is available at
+`paper/statistical-foundations.md`.
+
+## Research background
+
+IQCC was developed from research on improved statistical quality control
+charts, especially work associated with Emanuel Pimentel Barbosa and
+collaborators. The package emphasizes cases where classical
+Shewhart-type limits are simple and familiar but statistically
+inaccurate.
+
+Important methodological themes include:
+
+- Cornish-Fisher quantile correction for highly skewed attribute
+  statistics;
+- exact discrete false-alarm evaluation for binomial and Poisson charts;
+- exact range-chart limits through the relative range distribution;
+- double-sampling designs for rare nonconformities;
+- Hotelling T² monitoring for multivariate process means;
+- generalized variance monitoring through products of chi-square
+  variables and Bartlett decomposition.
+
+## Development roadmap
+
+| Candidate extension | Statistical target | Possible function names | Status |
+|----|----|----|----|
+| Double-sampling np chart | Nonconforming proportion in high-quality processes | [`dsnp_limits()`](https://flaviobarros.github.io/IQCC/reference/dsnp_limits.md), [`cchart.DSnp()`](https://flaviobarros.github.io/IQCC/reference/cchart.DSnp.md) | Implemented and validated |
+| Generalized variance chart | Multivariate process variability using `|S|` | [`gv_limits()`](https://flaviobarros.github.io/IQCC/reference/gv_limits.md), [`cchart.GV()`](https://flaviobarros.github.io/IQCC/reference/cchart.GV.md) | Implemented and validated |
+| Cornish-Fisher generalized variance limits | Corrected limits for skewed `|S|` distribution | `gv_limits(type = "cf")` | Implemented |
+| Auxiliary trace chart | Complementary monitoring using `tr(V)` | `trv_limits()`, `cchart.trV()` | Planned |
+| Full DS-np sample-size optimization | Joint design over sample sizes and limits | future API | Planned |
+| Generic exact generalized variance quantiles | Meijer-G or another validated numerical approach | future API | Research stage |
+| Numerical validation catalogue | Centralized published fixtures and metadata | `tests/testthat/` and documentation | In progress |
+
+## References
+
+- Montgomery, D. C. (2008). *Introduction to Statistical Quality
+  Control*. 6th ed. Wiley.
+- Joekes, S. and Barbosa, E. P. (2013). An improved attribute control
+  chart for monitoring non-conforming proportion in high quality
+  processes. *Control Engineering Practice*.
+- Barbosa, E. P., Gneri, M. A. and Meneguetti, A. (2013). Range Control
+  Charts Revisited: Simpler Tippett-like Formulae, Its Practical
+  Implementation, and the Study of False Alarm. *Communications in
+  Statistics - Simulation and Computation*.
+- Joekes, S., Smrekar, M. and Barbosa, E. P. (2015). Extending a double
+  sampling control chart for non-conforming proportion in high quality
+  processes to the case of small samples. *Statistical Methodology*.
+
+# Package index
+
+## Package overview
+
+- [`IQCC`](https://flaviobarros.github.io/IQCC/reference/IQCC-package.md)
+  [`IQCC-package`](https://flaviobarros.github.io/IQCC/reference/IQCC-package.md)
+  : IQCC: Improved Quality Control Charts
+
+## Univariate location and dispersion
+
+Shewhart charts and distribution-aware limits for continuous
+measurements.
+
+- [`cchart.Xbar()`](https://flaviobarros.github.io/IQCC/reference/cchart.Xbar.md)
+  : X-bar Control Chart for phase I and II.
+- [`cchart.Xbar1()`](https://flaviobarros.github.io/IQCC/reference/cchart.Xbar1.md)
+  : X-bar Shewhart Control Chart for phase I.
+- [`cchart.Xbar2()`](https://flaviobarros.github.io/IQCC/reference/cchart.Xbar2.md)
+  : X-bar Shewhart Control Chart for phase II.
+- [`cchart.Xbar_R()`](https://flaviobarros.github.io/IQCC/reference/cchart.Xbar_R.md)
+  : X-bar and R control charts
+- [`cchart.R()`](https://flaviobarros.github.io/IQCC/reference/cchart.R.md)
+  : R control chart
+- [`cchart.S()`](https://flaviobarros.github.io/IQCC/reference/cchart.S.md)
+  : S Control Chart.
+- [`alpha.risk()`](https://flaviobarros.github.io/IQCC/reference/alpha.risk.md)
+  : False Alarm probability for the 3-sigma R chart.
+- [`c4()`](https://flaviobarros.github.io/IQCC/reference/c4.md) : C4
+  Constant.
+- [`d2()`](https://flaviobarros.github.io/IQCC/reference/d2.md) : D2
+  Constant.
+- [`d3()`](https://flaviobarros.github.io/IQCC/reference/d3.md) : D3
+  Constant.
+
+## Attribute control charts
+
+Limits and false-alarm calculations for binomial and Poisson monitoring.
+
+- [`pchart_limits()`](https://flaviobarros.github.io/IQCC/reference/pchart_limits.md)
+  : Probability Limits for p Charts
+- [`pchart_alpha_risk()`](https://flaviobarros.github.io/IQCC/reference/pchart_alpha_risk.md)
+  : Exact False-Alarm Risk for p-Chart Limits
+- [`cchart.p()`](https://flaviobarros.github.io/IQCC/reference/cchart.p.md)
+  : p-chart
+- [`uchart_limits()`](https://flaviobarros.github.io/IQCC/reference/uchart_limits.md)
+  : Probability Limits for u Charts
+- [`uchart_alpha_risk()`](https://flaviobarros.github.io/IQCC/reference/uchart_alpha_risk.md)
+  : Exact False-Alarm Risk for u-Chart Limits
+- [`cchart.u()`](https://flaviobarros.github.io/IQCC/reference/cchart.u.md)
+  : u-chart
+
+## Double-sampling np charts
+
+Exact-binomial design, performance evaluation, and operational
+monitoring.
+
+- [`dsnp_prob_accept()`](https://flaviobarros.github.io/IQCC/reference/dsnp_prob_accept.md)
+  : Double-Sampling np Chart: Acceptance Probability
+- [`dsnp_arl()`](https://flaviobarros.github.io/IQCC/reference/dsnp_arl.md)
+  : Double-Sampling np Chart: Average Run Length
+- [`dsnp_ass()`](https://flaviobarros.github.io/IQCC/reference/dsnp_ass.md)
+  : Double-Sampling np Chart: Average Sample Size
+- [`dsnp_limits()`](https://flaviobarros.github.io/IQCC/reference/dsnp_limits.md)
+  : Double-Sampling np Chart: Limit Search
+- [`cchart.DSnp()`](https://flaviobarros.github.io/IQCC/reference/cchart.DSnp.md)
+  : Double-Sampling np Control Chart
+- [`plot(`*`<cchart.DSnp>`*`)`](https://flaviobarros.github.io/IQCC/reference/plot.cchart.DSnp.md)
+  : Plot a DS-np Control Chart
+
+## Multivariate monitoring
+
+Hotelling T-squared and generalized variance charts.
+
+- [`T2.1()`](https://flaviobarros.github.io/IQCC/reference/T2.1.md) :
+  Hotelling T2 Statistic for Phase I.
+- [`T2.2()`](https://flaviobarros.github.io/IQCC/reference/T2.2.md) :
+  Hotelling T2 Statistic for Phase II.
+- [`cchart.T2.1()`](https://flaviobarros.github.io/IQCC/reference/cchart.T2.1.md)
+  : Phase I Hotelling Control Chart.
+- [`cchart.T2.2()`](https://flaviobarros.github.io/IQCC/reference/cchart.T2.2.md)
+  : Phase II Hotelling Control Chart.
+- [`gv_stat()`](https://flaviobarros.github.io/IQCC/reference/gv_stat.md)
+  : Generalized Variance by Subgroup
+- [`gv_limits()`](https://flaviobarros.github.io/IQCC/reference/gv_limits.md)
+  : Generalized Variance Control Limits
+- [`gv_alpha_risk()`](https://flaviobarros.github.io/IQCC/reference/gv_alpha_risk.md)
+  : False-Alarm Risk for Generalized Variance Charts
+- [`cchart.GV()`](https://flaviobarros.github.io/IQCC/reference/cchart.GV.md)
+  [`plot(`*`<cchart.GV>`*`)`](https://flaviobarros.github.io/IQCC/reference/cchart.GV.md)
+  : Generalized Variance Control Chart
+
+## Data preparation and utilities
+
+- [`data.1()`](https://flaviobarros.github.io/IQCC/reference/data.1.md)
+  : Hotelling Control Chart Phase I simulated data.
+- [`data.2()`](https://flaviobarros.github.io/IQCC/reference/data.2.md)
+  : Hotelling Control Chart Phase II simulated data.
+- [`add.data()`](https://flaviobarros.github.io/IQCC/reference/add.data.md)
+  : Updates the Hotelling Control Chart.
+- [`remove.data()`](https://flaviobarros.github.io/IQCC/reference/remove.data.md)
+  : Remove an undesirable observation.
+- [`stats()`](https://flaviobarros.github.io/IQCC/reference/stats.md) :
+  Auxiliary statistics for the multivariate control chart.
+- [`table.const()`](https://flaviobarros.github.io/IQCC/reference/table.const.md)
+  : Table of values for the constants d2, d3 and c4.
+- [`table.qtukey()`](https://flaviobarros.github.io/IQCC/reference/table.qtukey.md)
+  : Tukey Quantile Table
+
+## Example datasets
+
+- [`binomdata`](https://flaviobarros.github.io/IQCC/reference/binomdata.md)
+  : Binomial Data.
+- [`moonroof`](https://flaviobarros.github.io/IQCC/reference/moonroof.md)
+  : Moonroof
+- [`pistonrings`](https://flaviobarros.github.io/IQCC/reference/pistonrings.md)
+  : Piston Rings Data Set.
+- [`softdrink`](https://flaviobarros.github.io/IQCC/reference/softdrink.md)
+  : Soft Drink Data Set.
+
+# Articles
+
+### Overview
+
+- [When to use IQCC: exact and corrected control
+  charts](https://flaviobarros.github.io/IQCC/articles/iqcc-positioning.md):
+
+### Statistical methods
+
+- [High-quality processes and rare
+  nonconformities](https://flaviobarros.github.io/IQCC/articles/high-quality-processes.md):
+- [Statistical Foundations of
+  IQCC](https://flaviobarros.github.io/IQCC/articles/statistical-foundations.md):
