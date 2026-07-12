@@ -18,7 +18,7 @@ Description: Implements improved statistical process control charts with
     interfaces to support reproducible statistical validation.
 Depends: R (>= 3.5.0)
 License: GPL-2
-URL: https://github.com/flaviobarros/IQCC, https://flaviobarros.github.io/IQCC
+URL: https://github.com/flaviobarros/IQCC, https://flaviobarros.github.io/IQCC/
 BugReports: https://github.com/flaviobarros/IQCC/issues
 Encoding: UTF-8
 LazyData: true
