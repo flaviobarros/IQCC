@@ -19,13 +19,13 @@ knitr::opts_chunk$set(
 ## Motivation
 
 High-quality processes are processes in which nonconformities are rare. In that
-setting, attribute data are often highly discrete, bounded below by zero, and
+setting, attribute data are highly discrete, bounded below by zero, and often
 strongly asymmetric. Classical normal-approximation control limits may therefore
 be poorly calibrated, even when the usual chart is familiar and easy to apply.
 
-This is one of the main motivations for IQCC. The package includes methods for
-improving the calibration of attribute charts and now also includes the numerical
-core for double-sampling np charts.
+IQCC addresses this problem with corrected p-chart limits, exact binomial
+false-alarm calculations, and a complete double-sampling np workflow including
+performance evaluation, automatic limit search, chart construction, and plotting.
 
 ## Why classical p charts can be problematic
 
@@ -36,15 +36,19 @@ proportion of nonconforming items is not too close to zero or one.
 In high-quality processes, however, the in-control proportion `p0` can be very
 small. Then the number of nonconforming units in a subgroup is better understood
 as a binomial count with a skewed and discrete distribution. A symmetric
-three-sigma approximation can produce limits with an actual false alarm risk that
-differs from the intended one.
+three-sigma approximation can produce limits whose actual false-alarm risk differs
+from the intended one.
 
 ## Cornish-Fisher corrected p charts
 
-IQCC implements a Cornish-Fisher corrected p chart through `cchart.p()` with
-`type = "CF"`. The goal is to keep a familiar p-chart interface while using a
-limit calculation that better reflects the distributional asymmetry of the
-binomial statistic.
+IQCC distinguishes two corrected methods:
+
+- `type = "cf1"` uses the first skewness correction;
+- `type = "cf2"` uses the two-adjustment operational limits documented by
+  Joekes and Barbosa (2013).
+
+Use these explicit names in new code. The historical alias `"CF"` remains
+available in `cchart.p()` and maps to `"cf1"`.
 
 ```{r cf-p-chart, eval = FALSE}
 library(IQCC)
@@ -54,43 +58,51 @@ data(binomdata)
 cchart.p(
   x1 = binomdata$Di[1:12],
   n1 = binomdata$ni[1:12],
-  type = "CF",
+  type = "cf2",
   x2 = binomdata$Di[13:25],
   n2 = binomdata$ni[13:25]
 )
 ```
 
-Use this option when the data are proportions of nonconforming items and the
-ordinary normal approximation is questionable because the estimated proportion is
-small.
+The pure numerical functions make the underlying calculation directly
+inspectable:
+
+```{r p-chart-risk, eval = FALSE}
+lim <- pchart_limits(p = 0.015, n = 20, type = "cf2")
+lim
+
+pchart_alpha_risk(
+  p = 0.015,
+  n = 20,
+  lcl = lim$lcl,
+  ucl = lim$ucl
+)
+```
 
 ## Double-sampling np charts
 
-Double-sampling np charts use two possible sampling stages. A first sample is
+A double-sampling np chart uses two possible sampling stages. A first sample is
 inspected. If the count of nonconforming items is clearly acceptable, the process
-is not signaled. If it is clearly large, the chart signals. If the count lies in
-an intermediate region, a second sample is inspected and the combined count is
-used for the final decision.
+is not signaled. If it is clearly large, the chart signals immediately. If the
+count lies in an intermediate region, a second sample is inspected and the
+combined count is used for the final decision.
 
-The DS-np method is useful because it can reduce the average sample size while
-maintaining a desired monitoring performance. This is particularly relevant when
-inspection is expensive and nonconformities are rare.
+The DS-np method can reduce the average sample size while maintaining a desired
+monitoring performance. This is especially relevant when inspection is expensive
+and nonconformities are rare.
 
-IQCC currently provides the numerical core for DS-np charts:
+IQCC provides the complete DS-np workflow:
 
-- `dsnp_prob_accept()` computes the total acceptance probability for a proposed
-  plan.
-- `dsnp_arl()` computes the average run length for a proposed plan.
-- `dsnp_ass()` computes the average sample size for a proposed plan.
-
-The automatic limit search and the plotting interface are planned as subsequent
-steps.
+- `dsnp_prob_accept()` computes the total acceptance probability;
+- `dsnp_arl()` computes average run length;
+- `dsnp_ass()` computes average sample size;
+- `dsnp_limits()` searches and ranks feasible limits;
+- `cchart.DSnp()` classifies observations and constructs the chart.
 
 ## Inspecting a proposed DS-np plan
 
-The following plan is written in the fractional-limit convention used by the
-DS-np numerical core. Fractional limits avoid ambiguity when the monitored
-statistic is an integer count.
+The following published plan uses fractional limits. Fractional limits remove
+ambiguity when the monitored statistic is an integer count.
 
 ```{r dsnp-core, eval = FALSE}
 library(IQCC)
@@ -100,57 +112,99 @@ n2 <- 162
 wl <- 1.5
 ucl1 <- 2.5
 ucl2 <- 4.5
-
-# In-control proportion
 p0 <- 0.005
-
-# Alternative proportion
 p1 <- 0.0075
 
 dsnp_prob_accept(p0, n1, n2, wl, ucl1, ucl2)
 dsnp_arl(p0, n1, n2, wl, ucl1, ucl2)
 dsnp_ass(p0, n1, n2, wl, ucl1)
-
 dsnp_arl(p1, n1, n2, wl, ucl1, ucl2)
 ```
 
-This separates the numerical design problem from the eventual control-chart
-plot. Before plotting a chart, it should be possible to inspect the operating
-characteristics of the proposed limits.
+The approximate published performance values are `ARL0 = 803.41`,
+`ARL1 = 193.22`, and `ASS0 = 35.94`.
 
-## Interpreting the fractional limits
+## Searching for limits
+
+`dsnp_limits()` enumerates valid integer decision thresholds, represents them as
+fractional limits, evaluates their operating characteristics, and ranks the
+candidates.
+
+```{r dsnp-search, eval = FALSE}
+lim <- dsnp_limits(
+  p0 = 0.005,
+  n1 = 34,
+  n2 = 162,
+  alpha = 0.0027,
+  p1 = 0.0075
+)
+
+lim$best[, c("wl", "ucl1", "ucl2", "p_signal0",
+             "arl0", "arl1", "ass0")]
+```
+
+When `p1` is supplied, feasible plans are ranked using their out-of-control ARL.
+The returned candidate table allows the user to inspect alternatives instead of
+accepting a single opaque design.
+
+## Interpreting fractional limits
 
 For a DS-np plan with first-stage count `D1` and second-stage count `D2`, IQCC
-uses the following interpretation:
+uses the following rule:
 
 - accept at the first stage when `D1 <= floor(wl)`;
 - signal at the first stage when `D1 >= floor(ucl1) + 1`;
 - otherwise inspect the second sample;
-- after the second sample, accept when `D1 + D2 <= floor(ucl2)`.
+- after the second sample, accept when `D1 + D2 <= floor(ucl2)`;
+- signal after the second stage otherwise.
 
-For example, with `wl = 1.5`, `ucl1 = 2.5`, and `ucl2 = 4.5`:
+For `wl = 1.5`, `ucl1 = 2.5`, and `ucl2 = 4.5`:
 
 - accept at the first stage if `D1 <= 1`;
 - continue to the second stage if `D1 = 2`;
 - signal at the first stage if `D1 >= 3`;
 - accept after the second stage if `D1 + D2 <= 4`.
 
+## Constructing the chart
+
+A limits object returned by `dsnp_limits()` can be supplied directly to
+`cchart.DSnp()`.
+
+```{r dsnp-chart, eval = FALSE}
+x1 <- c(0, 0, 1, 0, 0, 1, 0, 0, 0, 2, 0, 0, 1, 0, 0)
+x2 <- c(NA, NA, NA, NA, NA, NA, NA, NA, NA, 1, NA, NA, NA, NA, NA)
+
+chart <- cchart.DSnp(
+  x1,
+  n1 = 34,
+  n2 = 162,
+  p0 = 0.005,
+  x2 = x2,
+  limits = lim,
+  p1 = 0.0075
+)
+
+chart$limits
+chart$performance
+chart$data
+```
+
+The plotting method uses separate panels for first-stage counts and second-stage
+combined counts, preserving the proper scale for each decision rule.
+
 ## Practical workflow
 
 A practical high-quality-process workflow in IQCC is:
 
-1. Start with `cchart.p(type = "CF")` when monitoring the proportion of
-   nonconforming items and subgroup sizes are known.
-2. Use the DS-np numerical functions when inspection effort matters and a
-   double-sampling plan is being considered.
-3. Compare candidate plans by in-control false alarm probability, out-of-control
-   ARL, and average sample size.
-4. Use the future `dsnp_limits()` and `cchart.DSnp()` interfaces once they are
-   implemented.
+1. Compare normal, CF1, and CF2 limits with `pchart_limits()`.
+2. Evaluate actual binomial risk with `pchart_alpha_risk()`.
+3. Use `cchart.p()` for routine p-chart monitoring.
+4. Use `dsnp_limits()` when inspection effort motivates a double-sampling plan.
+5. Compare candidates using false-alarm probability, out-of-control ARL, and ASS.
+6. Supply the selected design to `cchart.DSnp()` for operational monitoring.
 
 ## Development status
 
-The high-quality-process functionality is being expanded incrementally. The
-current development version includes the DS-np numerical core. Future PRs should
-add automatic limit search, a plotting wrapper, and examples that connect the
-DS-np functions to a complete monitoring workflow.
+The p-chart and DS-np functionality described above is implemented in IQCC
+0.8.0. Further work will expand executable examples, design optimization over
+sample sizes, and article-level replication material.
