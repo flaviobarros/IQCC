@@ -1,0 +1,58 @@
+name: release-candidate
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+permissions: read-all
+
+jobs:
+  build-source-package:
+    runs-on: ubuntu-latest
+
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      R_KEEP_PKG_SOURCE: yes
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: r-lib/actions/setup-pandoc@v2
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: release
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: any::rcmdcheck
+          needs: check
+
+      - name: Build source package
+        run: R CMD build --compact-vignettes=gs+qpdf .
+        shell: bash
+
+      - name: Check built source package
+        run: |
+          PKG_TARBALL=$(find . -maxdepth 1 -name 'IQCC_*.tar.gz' -print -quit)
+          test -n "$PKG_TARBALL"
+          R CMD check --as-cran --no-manual "$PKG_TARBALL"
+        shell: bash
+
+      - name: Upload source tarball
+        uses: actions/upload-artifact@v7
+        with:
+          name: IQCC-source-package
+          path: IQCC_*.tar.gz
+          if-no-files-found: error
+
+      - name: Upload CRAN-style check results
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: IQCC-cran-check-results
+          path: IQCC.Rcheck
+          if-no-files-found: warn
