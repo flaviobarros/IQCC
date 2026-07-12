@@ -150,7 +150,6 @@ Important methodological themes include:
 ## References
 
 - Montgomery, D. C. (2008). *Introduction to Statistical Quality Control*. 6th ed. Wiley.
-- Barros, F. et al. (2017). IQCC: An R Package for Improved Quality Control Charts. *Journal of Statistical Software*.
 - Joekes, S. and Barbosa, E. P. (2013). An improved attribute control chart for monitoring non-conforming proportion in high quality processes. *Control Engineering Practice*.
 - Barbosa, E. P., Gneri, M. A. and Meneguetti, A. (2013). Range Control Charts Revisited: Simpler Tippett-like Formulae, Its Practical Implementation, and the Study of False Alarm. *Communications in Statistics - Simulation and Computation*.
 - Joekes, S., Smrekar, M. and Barbosa, E. P. (2015). Extending a double sampling control chart for non-conforming proportion in high quality processes to the case of small samples. *Statistical Methodology*.
