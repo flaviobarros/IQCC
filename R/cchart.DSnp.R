@@ -165,7 +165,12 @@ cchart.DSnp <- function(x1, n1, n2, p0,
     if(!is.null(x2))
     {
         if(!is.numeric(x2))
-            stop("x2 must be numeric")
+        {
+            if(is.logical(x2) && all(is.na(x2)))
+                x2 <- as.numeric(x2)
+            else
+                stop("x2 must be numeric")
+        }
         if(length(x2) != m)
             stop("x2 must have the same length as x1")
         if(any(!is.na(x2) & !is.finite(x2)))
