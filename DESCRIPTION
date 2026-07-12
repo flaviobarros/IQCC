@@ -1,12 +1,21 @@
 Package: IQCC
 Title: Improved Quality Control Charts
-Version: 0.7
-Authors@R: c(person("Flavio", "Barros", email = "flaviomargarito@gmail.com", role = c("aut", "cre")),
-           person("Emanuel", "Barbosa", role = "ctb"),
-           person("Elias", "Goncalves", role = "ctb"),
-           person("Daniela", "Recchia", role = "ctb"))
-Description: Builds statistical control charts with exact limits for
-        univariate and multivariate cases.
+Version: 0.8.0
+Authors@R: c(
+    person("Flavio", "Barros", email = "flaviomargarito@gmail.com",
+           role = c("aut", "cre")),
+    person("Emanuel", "Barbosa", role = "ctb"),
+    person("Elias", "Goncalves", role = "ctb"),
+    person("Daniela", "Recchia", role = "ctb")
+    )
+Description: Implements improved statistical process control charts with
+    exact, Cornish-Fisher corrected, standardized, and simulation-based
+    probability limits. Methods include univariate attribute and variable
+    charts, double-sampling charts for rare nonconformities, Hotelling
+    T-squared charts, and generalized variance charts for multivariate
+    process variability. Numerical functions for limits, false-alarm risk,
+    average run length, and average sample size are separated from plotting
+    interfaces to support reproducible statistical validation.
 Depends: R (>= 3.5.0)
 License: GPL-2
 URL: https://github.com/flaviobarros/IQCC, https://flaviobarros.github.io/IQCC
@@ -15,10 +24,13 @@ Encoding: UTF-8
 LazyData: true
 Language: en-US
 RoxygenNote: 7.3.2
-Imports: qcc,
+Imports:
     MASS,
-    miscTools
-Suggests: knitr,
+    miscTools,
+    qcc
+Suggests:
+    covr,
+    knitr,
     rmarkdown,
     testthat (>= 3.0.0)
 VignetteBuilder: knitr
