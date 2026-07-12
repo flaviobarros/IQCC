@@ -29,7 +29,7 @@ dsnp_limits <- function(p0, n1, n2, alpha = 0.0027,
     n2 <- .dsnp_validate_size(n2, "n2")
     if(!is.numeric(alpha) || length(alpha) != 1 || !is.finite(alpha) ||
        alpha <= 0 || alpha >= 1)
-        stop("alpha must be a finite scalar between 0 and 1")
+        stop("alpha must be between 0 and 1 and be a finite scalar")
     if(!is.null(p1))
         p1 <- .dsnp_validate_probability(p1, "p1", scalar = TRUE)
     if(!is.logical(conservative) || length(conservative) != 1 ||
