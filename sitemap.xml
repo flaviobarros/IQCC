@@ -14,6 +14,7 @@
 <url><loc>/reference/binomdata.html</loc></url>
 <url><loc>/reference/c4.html</loc></url>
 <url><loc>/reference/cchart.DSnp.html</loc></url>
+<url><loc>/reference/cchart.GV.html</loc></url>
 <url><loc>/reference/cchart.R.html</loc></url>
 <url><loc>/reference/cchart.S.html</loc></url>
 <url><loc>/reference/cchart.T2.1.html</loc></url>
@@ -32,6 +33,9 @@
 <url><loc>/reference/dsnp_ass.html</loc></url>
 <url><loc>/reference/dsnp_limits.html</loc></url>
 <url><loc>/reference/dsnp_prob_accept.html</loc></url>
+<url><loc>/reference/gv_alpha_risk.html</loc></url>
+<url><loc>/reference/gv_limits.html</loc></url>
+<url><loc>/reference/gv_stat.html</loc></url>
 <url><loc>/reference/index.html</loc></url>
 <url><loc>/reference/moonroof.html</loc></url>
 <url><loc>/reference/pchart_alpha_risk.html</loc></url>
