@@ -48,8 +48,7 @@
 #'   metrics at \code{p1} are included in the returned object.
 #' @param plot Logical. If \code{TRUE} (default), draws the control chart.
 #'   If \code{FALSE}, only returns the result object.
-#' @param ... Additional arguments passed to \code{plot()} (currently
-#'   unused).
+#' @param ... Additional arguments passed to \code{plot()}.
 #'
 #' @return An object of class \code{"cchart.DSnp"}, which is a list with the
 #' following elements:
@@ -69,7 +68,6 @@
 #' }
 #'
 #' @export
-#' @importFrom graphics legend abline plot points
 #' @author Daniela R. Recchia, Emanuel P. Barbosa
 #' @seealso \code{\link{dsnp_limits}}, \code{\link{dsnp_prob_accept}},
 #'   \code{\link{dsnp_arl}}, \code{\link{dsnp_ass}}
@@ -100,9 +98,10 @@ cchart.DSnp <- function(x1, n1, n2, p0,
 {
     cl <- match.call()
 
-    # --- Validate x1 ---
     if(!is.numeric(x1) || length(x1) < 1)
         stop("x1 must be a non-empty numeric vector")
+    if(any(!is.finite(x1)))
+        stop("x1 must contain only finite values")
     if(any(x1 < 0))
         stop("x1 must not contain negative values")
     if(any(x1 > n1))
@@ -111,61 +110,66 @@ cchart.DSnp <- function(x1, n1, n2, p0,
         stop("x1 must contain integer values")
 
     m <- length(x1)
-
-    # --- Resolve limits ---
     have_limits_obj <- !is.null(limits)
-    have_manual     <- !is.null(wl) || !is.null(ucl1) || !is.null(ucl2)
-    have_none       <- !have_limits_obj && !have_manual
+    have_manual <- !is.null(wl) || !is.null(ucl1) || !is.null(ucl2)
+    have_none <- !have_limits_obj && !have_manual
 
     if(have_limits_obj && have_manual)
         stop("Cannot specify both 'limits' and manual 'wl'/'ucl1'/'ucl2'")
-
     if(have_manual && (is.null(wl) || is.null(ucl1) || is.null(ucl2)))
         stop("All of 'wl', 'ucl1', and 'ucl2' must be provided together")
 
     if(have_limits_obj)
     {
-        if(!is.null(limits$best))
-        {
-            wl   <- limits$best$wl
-            ucl1 <- limits$best$ucl1
-            ucl2 <- limits$best$ucl2
-        }
-        else
-        {
-            stop("'limits' object does not contain a 'best' element")
-        }
+        if(!is.list(limits) || is.null(limits$best) ||
+           !is.data.frame(limits$best) || nrow(limits$best) < 1 ||
+           !all(c("wl", "ucl1", "ucl2") %in% names(limits$best)))
+            stop("'limits' must contain a non-empty 'best' data frame with wl, ucl1, and ucl2")
+
+        if(!is.null(limits$n1) && !identical(as.integer(limits$n1), as.integer(n1)))
+            stop("n1 is incompatible with the supplied limits object")
+        if(!is.null(limits$n2) && !identical(as.integer(limits$n2), as.integer(n2)))
+            stop("n2 is incompatible with the supplied limits object")
+        if(!is.null(limits$p0) && !isTRUE(all.equal(as.numeric(limits$p0), as.numeric(p0))))
+            stop("p0 is incompatible with the supplied limits object")
+
+        wl <- limits$best$wl[1]
+        ucl1 <- limits$best$ucl1[1]
+        ucl2 <- limits$best$ucl2[1]
     }
 
     if(have_none)
     {
         lim <- dsnp_limits(p0, n1, n2, alpha = alpha, p1 = p1,
                            max_results = 1)
-        wl   <- lim$best$wl
+        wl <- lim$best$wl
         ucl1 <- lim$best$ucl1
         ucl2 <- lim$best$ucl2
     }
 
-    # --- Validate limits ---
     if(!is.numeric(wl) || !is.numeric(ucl1) || !is.numeric(ucl2))
         stop("wl, ucl1, and ucl2 must be numeric")
     if(length(wl) != 1 || length(ucl1) != 1 || length(ucl2) != 1)
         stop("wl, ucl1, and ucl2 must be scalar")
+    if(any(!is.finite(c(wl, ucl1, ucl2))))
+        stop("wl, ucl1, and ucl2 must be finite")
     if(wl >= ucl1)
         stop("wl must be less than ucl1")
     if(ucl2 <= wl)
         stop("ucl2 must be greater than wl")
 
-    # --- Integer thresholds ---
-    wl_accept   <- floor(wl)
+    wl_accept <- floor(wl)
     ucl1_reject <- floor(ucl1) + 1
     ucl2_accept <- floor(ucl2)
 
-    # --- Validate x2 ---
     if(!is.null(x2))
     {
+        if(!is.numeric(x2))
+            stop("x2 must be numeric")
         if(length(x2) != m)
             stop("x2 must have the same length as x1")
+        if(any(!is.na(x2) & !is.finite(x2)))
+            stop("x2 must contain only finite values or NA")
         if(any(!is.na(x2) & x2 < 0))
             stop("x2 must not contain negative values")
         if(any(!is.na(x2) & x2 > n2))
@@ -174,7 +178,6 @@ cchart.DSnp <- function(x1, n1, n2, p0,
             stop("x2 must contain integer values")
     }
 
-    # --- Classify each observation ---
     index <- seq_len(m)
     stage <- character(m)
     signal <- logical(m)
@@ -184,20 +187,18 @@ cchart.DSnp <- function(x1, n1, n2, p0,
     for(i in seq_len(m))
     {
         d1 <- x1[i]
-
         if(d1 <= wl_accept)
         {
-            stage[i]  <- "accept_first"
+            stage[i] <- "accept_first"
             signal[i] <- FALSE
         }
         else if(d1 >= ucl1_reject)
         {
-            stage[i]  <- "signal_first"
+            stage[i] <- "signal_first"
             signal[i] <- TRUE
         }
         else
         {
-            # Intermediate zone: second sample required
             if(is.null(x2) || is.na(x2_used[i]))
                 stop(paste0("Second sample (x2) is required for observation ",
                             i, " where x1 = ", d1,
@@ -206,155 +207,71 @@ cchart.DSnp <- function(x1, n1, n2, p0,
             total[i] <- d1 + d2
             if(total[i] > ucl2_accept)
             {
-                stage[i]  <- "signal_second"
+                stage[i] <- "signal_second"
                 signal[i] <- TRUE
             }
             else
             {
-                stage[i]  <- "accept_second"
+                stage[i] <- "accept_second"
                 signal[i] <- FALSE
             }
         }
     }
 
-    # --- Build data frame ---
     data_df <- data.frame(
-        index  = index,
-        x1     = x1,
-        x2     = x2_used,
-        total  = total,
-        stage  = stage,
+        index = index,
+        x1 = x1,
+        x2 = x2_used,
+        total = total,
+        stage = stage,
         signal = signal,
         stringsAsFactors = FALSE
     )
 
-    # --- Performance metrics ---
-    arl0_res  <- dsnp_arl(p0, n1, n2, wl, ucl1, ucl2)
-    ass0_res  <- dsnp_ass(p0, n1, n2, wl, ucl1)
-    pa0_res   <- dsnp_prob_accept(p0, n1, n2, wl, ucl1, ucl2)
+    arl0_res <- dsnp_arl(p0, n1, n2, wl, ucl1, ucl2)
+    ass0_res <- dsnp_ass(p0, n1, n2, wl, ucl1)
+    pa0_res <- dsnp_prob_accept(p0, n1, n2, wl, ucl1, ucl2)
 
     performance <- list(
-        arl0       = arl0_res$arl,
-        ass0       = ass0_res$ass,
-        p_signal0  = pa0_res$p_signal
+        arl0 = arl0_res$arl,
+        ass0 = ass0_res$ass,
+        p_signal0 = pa0_res$p_signal
     )
 
     if(!is.null(p1))
     {
         arl1_res <- dsnp_arl(p1, n1, n2, wl, ucl1, ucl2)
         ass1_res <- dsnp_ass(p1, n1, n2, wl, ucl1)
-        pa1_res  <- dsnp_prob_accept(p1, n1, n2, wl, ucl1, ucl2)
-
-        performance$arl1      <- arl1_res$arl
-        performance$ass1      <- ass1_res$ass
+        pa1_res <- dsnp_prob_accept(p1, n1, n2, wl, ucl1, ucl2)
+        performance$arl1 <- arl1_res$arl
+        performance$ass1 <- ass1_res$ass
         performance$p_signal1 <- pa1_res$p_signal
     }
 
-    # --- Assemble result ---
     result <- list(
-        call        = cl,
-        data        = data_df,
-        limits      = list(
-            wl           = wl,
-            ucl1         = ucl1,
-            ucl2         = ucl2,
-            wl_accept    = wl_accept,
-            ucl1_reject  = ucl1_reject,
-            ucl2_accept  = ucl2_accept
+        call = cl,
+        data = data_df,
+        limits = list(
+            wl = wl,
+            ucl1 = ucl1,
+            ucl2 = ucl2,
+            wl_accept = wl_accept,
+            ucl1_reject = ucl1_reject,
+            ucl2_accept = ucl2_accept
         ),
-        parameters  = list(
-            n1    = n1,
-            n2    = n2,
-            p0    = p0,
+        parameters = list(
+            n1 = n1,
+            n2 = n2,
+            p0 = p0,
             alpha = alpha,
-            p1    = p1
+            p1 = p1
         ),
         performance = performance
     )
     class(result) <- "cchart.DSnp"
 
-    # --- Plot ---
     if(plot)
         plot.cchart.DSnp(result, ...)
 
     result
-}
-
-#' Plot a DS-np Control Chart
-#'
-#' S3 method for plotting objects of class \code{"cchart.DSnp"}.
-#'
-#' The plot shows the first-stage counts \code{x1} against the sample index.
-#' Points requiring a second sample are shown as open circles. Points that
-#' signal (at either stage) are shown in red. Horizontal lines mark the
-#' fractional limits.
-#'
-#' Note that \code{ucl2} is on the scale of the combined count
-#' \code{x1 + x2}. The plot is a simple operational visualization; the
-#' full decision logic is in the returned object.
-#'
-#' @param x An object of class \code{"cchart.DSnp"}.
-#' @param ... Additional graphical parameters (currently unused).
-#' @return Invisible \code{x}.
-#' @export
-#' @method plot cchart.DSnp
-plot.cchart.DSnp <- function(x, ...)
-{
-    d    <- x$data
-    lim  <- x$limits
-    n1   <- x$parameters$n1
-
-    # Determine y-axis range
-    y_max <- max(d$x1, na.rm = TRUE)
-    y_max <- max(y_max, lim$ucl1 + 1, lim$ucl2, na.rm = TRUE)
-    y_max <- ceiling(y_max * 1.1)
-    if(y_max < 5) y_max <- 5
-
-    # Base plot: x1 vs index
-    plot(d$index, d$x1, type = "n",
-         xlab = "Sample index", ylab = "Count (x1)",
-         xlim = c(1, nrow(d)),
-         ylim = c(0, y_max),
-         main = "DS-np Control Chart",
-         las = 1)
-
-    # Points that stayed at first stage (no second sample needed)
-    first_only <- d$stage %in% c("accept_first", "signal_first")
-    points(d$index[first_only], d$x1[first_only],
-           pch = 16, cex = 1.2)
-
-    # Points that needed a second sample
-    second <- d$stage %in% c("accept_second", "signal_second")
-    if(any(second))
-        points(d$index[second], d$x1[second],
-               pch = 1, cex = 1.2)
-
-    # Highlight signals in red
-    if(any(d$signal))
-        points(d$index[d$signal], d$x1[d$signal],
-               pch = 4, cex = 1.4, col = "red", lwd = 2)
-
-    # Limit lines
-    abline(h = lim$wl,   lty = 2, col = "blue")
-    abline(h = lim$ucl1, lty = 2, col = "red")
-    abline(h = lim$ucl2, lty = 3, col = "darkgreen")
-
-    # Legend
-    legend("topleft",
-           legend = c(
-               "First stage only",
-               "Second sample needed",
-               "Signal",
-               paste0("wl = ", lim$wl),
-               paste0("ucl1 = ", lim$ucl1),
-               paste0("ucl2 = ", lim$ucl2)
-           ),
-           pch   = c(16, 1, 4, NA, NA, NA),
-           lty   = c(NA, NA, NA, 2, 2, 3),
-           col   = c("black", "black", "red", "blue", "red", "darkgreen"),
-           cex   = 0.8,
-           bg    = "white",
-           bty   = "n")
-
-    invisible(x)
 }
