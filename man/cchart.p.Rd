@@ -21,12 +21,9 @@ cchart.p(
 
 \item{n1}{Phase I sample size or vector of sample sizes.}
 
-\item{type}{Chart type. Accepted values are \code{"normal"}, \code{"cf1"},
-\code{"cf2"}, and \code{"standardized"}. The legacy aliases
-\code{"norm"}, \code{"CF"}, and \code{"std"} remain supported;
-\code{"CF"} maps to \code{"cf1"}.}
+\item{type}{Chart type. Accepted values are \code{"normal"}, \code{"cf1"}, \code{"cf2"}, and \code{"standardized"}. The legacy aliases \code{"norm"}, \code{"CF"}, and \code{"std"} remain supported; \code{"CF"} maps to \code{"cf1"}.}
 
-\item{p1}{Phase I subgroup proportions. Used when \code{x1} is not supplied.}
+\item{p1}{Phase I subgroup proportions. Used instead of \code{x1}.}
 
 \item{x2}{Phase II nonconforming counts.}
 
@@ -34,9 +31,9 @@ cchart.p(
 
 \item{phat}{Known or previously estimated in-control proportion.}
 
-\item{p2}{Phase II subgroup proportions. Used when \code{x2} is not supplied.}
+\item{p2}{Phase II subgroup proportions. Used instead of \code{x2}.}
 
-\item{alpha}{Nominal false alarm probability. Defaults to 0.0027.}
+\item{alpha}{Nominal two-sided false alarm probability. Defaults to 0.0027.}
 }
 \value{
 Invisibly returns the \code{qcc} object used to draw the chart.
@@ -45,14 +42,9 @@ Invisibly returns the \code{qcc} object used to draw the chart.
 Build normal, Cornish-Fisher corrected, or standardized p charts.
 }
 \details{
-For a Phase I chart, \code{n1} and either \code{x1} or \code{p1} must be
-supplied. For a Phase II chart, \code{n2} and either \code{x2} or \code{p2}
-must be supplied, together with Phase I information or a known
-\code{phat}.
+For a Phase I chart, \code{n1} and exactly one of \code{x1} or \code{p1} must be supplied. For a Phase II chart, \code{n2} and exactly one of \code{x2} or \code{p2} must be supplied, together with Phase I information or a known \code{phat}.
 
-When sample sizes vary, the process proportion is estimated by the pooled
-binomial estimator, \eqn{sum(x_i) / sum(n_i)}, rather than by the unweighted
-mean of subgroup proportions.
+When sample sizes vary, the process proportion is estimated by the pooled binomial estimator, \eqn{sum(x_i) / sum(n_i)}, rather than by the unweighted mean of subgroup proportions. The plotting wrapper uses two-sided limits; use \code{pchart_limits()} directly for one-sided upper limits.
 }
 \examples{
 data(binomdata)
@@ -65,12 +57,9 @@ cchart.p(type = "standardized", p2 = binomdata$Di[13:25] /
          phat = 0.1115833)
 }
 \references{
-Montgomery, D. C. (2008). \emph{Introduction to Statistical Quality
-Control}. Wiley.
+Montgomery, D. C. (2008). \emph{Introduction to Statistical Quality Control}. Wiley.
 
-Joekes, S. and Barbosa, E. P. (2013). An improved attribute control chart
-for monitoring non-conforming proportion in high quality processes.
-\emph{Control Engineering Practice}, 21, 407--412.
+Joekes, S. and Barbosa, E. P. (2013). An improved attribute control chart for monitoring non-conforming proportion in high quality processes. \emph{Control Engineering Practice}, 21, 407--412. \doi{10.1016/j.conengprac.2012.12.005}.
 }
 \author{
 Daniela R. Recchia, Emanuel P. Barbosa
