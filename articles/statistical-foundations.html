@@ -83,8 +83,6 @@ bounded, or strongly non-normal. The package combines three ideas:</p>
 <li>validate formulas against independent calculations and published
 examples.</li>
 </ol>
-<p>This vignette summarizes the probability models behind the audited p,
-u, double-sampling np, and generalized-variance charts.</p>
 </div>
 <div class="section level2">
 <h2 id="binomial-p-chart">Binomial p chart<a class="anchor" aria-label="anchor" href="#binomial-p-chart"></a>
@@ -105,20 +103,33 @@ p\pm z\sqrt{\frac{p(1-p)}{n}}.
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mfrac><mrow><mo stretchy="false" form="prefix">(</mo><msup><mi>z</mi><mn>2</mn></msup><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><mn>2</mn><mi>p</mi><mo stretchy="false" form="postfix">)</mo></mrow><mrow><mn>6</mn><mi>n</mi></mrow></mfrac><annotation encoding="application/x-tex">
 \frac{(z^2-1)(1-2p)}{6n}
 </annotation></semantics></math></p>
-<p>to the normal quantile on the original p scale. For
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>z</mi><mo>=</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">z=3</annotation></semantics></math>,
-this becomes
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>4</mn><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><mn>2</mn><mi>p</mi><mo stretchy="false" form="postfix">)</mo><mi>/</mi><mo stretchy="false" form="prefix">(</mo><mn>3</mn><mi>n</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">4(1-2p)/(3n)</annotation></semantics></math>.</p>
-<p>The second corrected p chart follows the operational formula in
-Joekes and Barbosa (2013). This is important because a generic signed
-lower-tail Cornish-Fisher substitution does not reproduce the paper’s
-reported limits.</p>
+<p>to the normal quantile on the original p scale.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/pchart_limits.html">pchart_limits</a></span><span class="op">(</span>p <span class="op">=</span> <span class="fl">0.015</span>, n <span class="op">=</span> <span class="fl">20</span>, type <span class="op">=</span> <span class="st">"normal"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/pchart_limits.html">pchart_limits</a></span><span class="op">(</span>p <span class="op">=</span> <span class="fl">0.015</span>, n <span class="op">=</span> <span class="fl">20</span>, type <span class="op">=</span> <span class="st">"cf1"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/pchart_limits.html">pchart_limits</a></span><span class="op">(</span>p <span class="op">=</span> <span class="fl">0.015</span>, n <span class="op">=</span> <span class="fl">20</span>, type <span class="op">=</span> <span class="st">"cf2"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="../reference/pchart_alpha_risk.html">pchart_alpha_risk</a></span><span class="op">(</span>p <span class="op">=</span> <span class="fl">0.015</span>, n <span class="op">=</span> <span class="fl">20</span>, type <span class="op">=</span> <span class="st">"cf2"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">pchart_table</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span></span>
+<span>  <span class="va">rbind</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"normal"</span>, <span class="st">"cf1"</span>, <span class="st">"cf2"</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">method</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">lim</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pchart_limits.html">pchart_limits</a></span><span class="op">(</span>p <span class="op">=</span> <span class="fl">0.015</span>, n <span class="op">=</span> <span class="fl">20</span>, type <span class="op">=</span> <span class="va">method</span><span class="op">)</span></span>
+<span>    <span class="va">risk</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pchart_alpha_risk.html">pchart_alpha_risk</a></span><span class="op">(</span></span>
+<span>      p <span class="op">=</span> <span class="fl">0.015</span>,</span>
+<span>      n <span class="op">=</span> <span class="fl">20</span>,</span>
+<span>      lcl <span class="op">=</span> <span class="va">lim</span><span class="op">$</span><span class="va">lcl</span>,</span>
+<span>      ucl <span class="op">=</span> <span class="va">lim</span><span class="op">$</span><span class="va">ucl</span></span>
+<span>    <span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>      method <span class="op">=</span> <span class="va">method</span>,</span>
+<span>      lcl <span class="op">=</span> <span class="va">lim</span><span class="op">$</span><span class="va">lcl</span>,</span>
+<span>      center <span class="op">=</span> <span class="va">lim</span><span class="op">$</span><span class="va">center</span>,</span>
+<span>      ucl <span class="op">=</span> <span class="va">lim</span><span class="op">$</span><span class="va">ucl</span>,</span>
+<span>      alpha <span class="op">=</span> <span class="va">risk</span>,</span>
+<span>      arl0 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">risk</span> <span class="op">==</span> <span class="fl">0</span>, <span class="cn">Inf</span>, <span class="fl">1</span> <span class="op">/</span> <span class="va">risk</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">}</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">pchart_table</span></span>
+<span><span class="co">#&gt;   method lcl center        ucl        alpha       arl0</span></span>
+<span><span class="co">#&gt; 1 normal   0  0.015 0.09653924 0.0357458712   27.97526</span></span>
+<span><span class="co">#&gt; 2    cf1   0  0.015 0.16120479 0.0002023458 4942.03542</span></span>
+<span><span class="co">#&gt; 3    cf2   0  0.015 0.13031923 0.0031780828  314.65511</span></span></code></pre></div>
 <p>For unequal subgroup sizes, IQCC estimates the in-control proportion
 using the pooled estimator</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mover><mi>p</mi><mo accent="true">̂</mo></mover><mn>0</mn></msub><mo>=</mo><mfrac><mrow><munder><mo>∑</mo><mi>i</mi></munder><msub><mi>X</mi><mi>i</mi></msub></mrow><mrow><munder><mo>∑</mo><mi>i</mi></munder><msub><mi>n</mi><mi>i</mi></msub></mrow></mfrac><mi>.</mi></mrow><annotation encoding="application/x-tex">
@@ -137,29 +148,32 @@ X\sim\operatorname{Poisson}(\lambda n),\qquad U=X/n.
 E(U)=\lambda,\qquad
 \operatorname{Var}(U)=\frac{\lambda}{n}.
 </annotation></semantics></math></p>
-<p>The standardized skewness and excess kurtosis are</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>γ</mi><mn>1</mn></msub><mo>=</mo><mfrac><mn>1</mn><msqrt><mrow><mi>λ</mi><mi>n</mi></mrow></msqrt></mfrac><mo>,</mo><mspace width="2.0em"></mspace><msub><mi>γ</mi><mn>2</mn></msub><mo>=</mo><mfrac><mn>1</mn><mrow><mi>λ</mi><mi>n</mi></mrow></mfrac><mi>.</mi></mrow><annotation encoding="application/x-tex">
-\gamma_1=\frac{1}{\sqrt{\lambda n}},\qquad
-\gamma_2=\frac{1}{\lambda n}.
-</annotation></semantics></math></p>
-<p>The first Cornish-Fisher addition on the original scale is</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mrow><msup><mi>z</mi><mn>2</mn></msup><mo>−</mo><mn>1</mn></mrow><mrow><mn>6</mn><mi>n</mi></mrow></mfrac><mi>.</mi></mrow><annotation encoding="application/x-tex">
-\frac{z^2-1}{6n}.
-</annotation></semantics></math></p>
-<p>The second-order term simplifies to</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mrow><mi>z</mi><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><msup><mi>z</mi><mn>2</mn></msup><mo stretchy="false" form="postfix">)</mo></mrow><mrow><mn>72</mn><mi>n</mi><msqrt><mrow><mi>λ</mi><mi>n</mi></mrow></msqrt></mrow></mfrac><mi>.</mi></mrow><annotation encoding="application/x-tex">
-\frac{z(1-z^2)}{72n\sqrt{\lambda n}}.
-</annotation></semantics></math></p>
-<p>For
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>z</mi><mo>=</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">z=3</annotation></semantics></math>,
-the upper limit is</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>λ</mi><mo>+</mo><mn>3</mn><msqrt><mfrac><mi>λ</mi><mi>n</mi></mfrac></msqrt><mo>+</mo><mfrac><mn>4</mn><mrow><mn>3</mn><mi>n</mi></mrow></mfrac><mo>−</mo><mfrac><mn>1</mn><mrow><mn>3</mn><mi>n</mi><msqrt><mrow><mi>λ</mi><mi>n</mi></mrow></msqrt></mrow></mfrac><mi>.</mi></mrow><annotation encoding="application/x-tex">
-\lambda+3\sqrt{\frac{\lambda}{n}}
-+\frac{4}{3n}
--\frac{1}{3n\sqrt{\lambda n}}.
-</annotation></semantics></math></p>
-<p>The actual risk is evaluated under the Poisson count model,
-respecting strict signaling inequalities.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">u_table</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span></span>
+<span>  <span class="va">rbind</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"normal"</span>, <span class="st">"cf1"</span>, <span class="st">"cf2"</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">method</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">lim</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/uchart_limits.html">uchart_limits</a></span><span class="op">(</span>lambda <span class="op">=</span> <span class="fl">0.15</span>, n <span class="op">=</span> <span class="fl">20</span>, type <span class="op">=</span> <span class="va">method</span><span class="op">)</span></span>
+<span>    <span class="va">risk</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/uchart_alpha_risk.html">uchart_alpha_risk</a></span><span class="op">(</span></span>
+<span>      lambda <span class="op">=</span> <span class="fl">0.15</span>,</span>
+<span>      n <span class="op">=</span> <span class="fl">20</span>,</span>
+<span>      lcl <span class="op">=</span> <span class="va">lim</span><span class="op">$</span><span class="va">lcl</span>,</span>
+<span>      ucl <span class="op">=</span> <span class="va">lim</span><span class="op">$</span><span class="va">ucl</span></span>
+<span>    <span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>      method <span class="op">=</span> <span class="va">method</span>,</span>
+<span>      lcl <span class="op">=</span> <span class="va">lim</span><span class="op">$</span><span class="va">lcl</span>,</span>
+<span>      center <span class="op">=</span> <span class="va">lim</span><span class="op">$</span><span class="va">center</span>,</span>
+<span>      ucl <span class="op">=</span> <span class="va">lim</span><span class="op">$</span><span class="va">ucl</span>,</span>
+<span>      alpha <span class="op">=</span> <span class="va">risk</span>,</span>
+<span>      arl0 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">risk</span> <span class="op">==</span> <span class="fl">0</span>, <span class="cn">Inf</span>, <span class="fl">1</span> <span class="op">/</span> <span class="va">risk</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">}</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">u_table</span></span>
+<span><span class="co">#&gt;   method lcl center       ucl       alpha     arl0</span></span>
+<span><span class="co">#&gt; 1 normal   0   0.15 0.4098056 0.003802992 262.9509</span></span>
+<span><span class="co">#&gt; 2    cf1   0   0.15 0.4764711 0.001102488 907.0392</span></span>
+<span><span class="co">#&gt; 3    cf2   0   0.15 0.4668489 0.001102488 907.0392</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="double-sampling-np-chart">Double-sampling np chart<a class="anchor" aria-label="anchor" href="#double-sampling-np-chart"></a>
@@ -186,31 +200,13 @@ c=\lfloor UCL_2\rfloor.
 <li>accept at stage 2 when
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>D</mi><mn>1</mn></msub><mo>+</mo><msub><mi>D</mi><mn>2</mn></msub><mo>≤</mo><mi>c</mi></mrow><annotation encoding="application/x-tex">D_1+D_2\leq c</annotation></semantics></math>.</li>
 </ul>
-<p>The first-stage acceptance probability is</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>P</mi><mrow><mi>a</mi><mi>I</mi></mrow></msub><mo stretchy="false" form="prefix">(</mo><mi>p</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>D</mi><mn>1</mn></msub><mo>≤</mo><mi>a</mi><mo stretchy="false" form="postfix">)</mo><mi>.</mi></mrow><annotation encoding="application/x-tex">
-P_{aI}(p)=P(D_1\leq a).
-</annotation></semantics></math></p>
-<p>The second-stage acceptance probability is</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>P</mi><mrow><mi>a</mi><mi>I</mi><mi>I</mi></mrow></msub><mo stretchy="false" form="prefix">(</mo><mi>p</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><munderover><mo>∑</mo><mrow><msub><mi>d</mi><mn>1</mn></msub><mo>=</mo><mi>a</mi><mo>+</mo><mn>1</mn></mrow><mrow><mi>b</mi><mo>−</mo><mn>1</mn></mrow></munderover><mi>P</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>D</mi><mn>1</mn></msub><mo>=</mo><msub><mi>d</mi><mn>1</mn></msub><mo stretchy="false" form="postfix">)</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>D</mi><mn>2</mn></msub><mo>≤</mo><mi>c</mi><mo>−</mo><msub><mi>d</mi><mn>1</mn></msub><mo stretchy="false" form="postfix">)</mo><mi>.</mi></mrow><annotation encoding="application/x-tex">
-P_{aII}(p)=
-\sum_{d_1=a+1}^{b-1}
-P(D_1=d_1)P(D_2\leq c-d_1).
-</annotation></semantics></math></p>
 <p>Thus</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>P</mi><mi>T</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>p</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mi>P</mi><mrow><mi>a</mi><mi>I</mi></mrow></msub><mo stretchy="false" form="prefix">(</mo><mi>p</mi><mo stretchy="false" form="postfix">)</mo><mo>+</mo><msub><mi>P</mi><mrow><mi>a</mi><mi>I</mi><mi>I</mi></mrow></msub><mo stretchy="false" form="prefix">(</mo><mi>p</mi><mo stretchy="false" form="postfix">)</mo><mo>,</mo><mspace width="2.0em"></mspace><mi>A</mi><mi>R</mi><mi>L</mi><mo stretchy="false" form="prefix">(</mo><mi>p</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mfrac><mn>1</mn><mrow><mn>1</mn><mo>−</mo><msub><mi>P</mi><mi>T</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>p</mi><mo stretchy="false" form="postfix">)</mo></mrow></mfrac><mi>.</mi></mrow><annotation encoding="application/x-tex">
-P_T(p)=P_{aI}(p)+P_{aII}(p),
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mi>R</mi><mi>L</mi><mo stretchy="false" form="prefix">(</mo><mi>p</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mfrac><mn>1</mn><mrow><mn>1</mn><mo>−</mo><msub><mi>P</mi><mi>T</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>p</mi><mo stretchy="false" form="postfix">)</mo></mrow></mfrac><mo>,</mo><mspace width="2.0em"></mspace><mi>A</mi><mi>S</mi><mi>S</mi><mo stretchy="false" form="prefix">(</mo><mi>p</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mi>n</mi><mn>1</mn></msub><mo>+</mo><msub><mi>n</mi><mn>2</mn></msub><msub><mi>P</mi><mn>2</mn></msub><mo stretchy="false" form="prefix">(</mo><mi>p</mi><mo stretchy="false" form="postfix">)</mo><mi>.</mi></mrow><annotation encoding="application/x-tex">
+ARL(p)=\frac{1}{1-P_T(p)},
 \qquad
-ARL(p)=\frac{1}{1-P_T(p)}.
-</annotation></semantics></math></p>
-<p>The probability of requiring a second sample is</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>P</mi><mn>2</mn></msub><mo stretchy="false" form="prefix">(</mo><mi>p</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>a</mi><mo>&lt;</mo><msub><mi>D</mi><mn>1</mn></msub><mo>&lt;</mo><mi>b</mi><mo stretchy="false" form="postfix">)</mo><mo>,</mo></mrow><annotation encoding="application/x-tex">
-P_2(p)=P(a&lt;D_1&lt;b),
-</annotation></semantics></math></p>
-<p>and</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mi>S</mi><mi>S</mi><mo stretchy="false" form="prefix">(</mo><mi>p</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mi>n</mi><mn>1</mn></msub><mo>+</mo><msub><mi>n</mi><mn>2</mn></msub><msub><mi>P</mi><mn>2</mn></msub><mo stretchy="false" form="prefix">(</mo><mi>p</mi><mo stretchy="false" form="postfix">)</mo><mi>.</mi></mrow><annotation encoding="application/x-tex">
 ASS(p)=n_1+n_2P_2(p).
 </annotation></semantics></math></p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">prob</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dsnp_prob_accept.html">dsnp_prob_accept</a></span><span class="op">(</span></span>
 <span>  p <span class="op">=</span> <span class="fl">0.005</span>,</span>
 <span>  n1 <span class="op">=</span> <span class="fl">34</span>,</span>
@@ -220,13 +216,15 @@ ASS(p)=n_1+n_2P_2(p).
 <span>  ucl2 <span class="op">=</span> <span class="fl">4.5</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">arl0</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dsnp_arl.html">dsnp_arl</a></span><span class="op">(</span><span class="fl">0.005</span>, <span class="fl">34</span>, <span class="fl">162</span>, <span class="fl">1.5</span>, <span class="fl">2.5</span>, <span class="fl">4.5</span><span class="op">)</span><span class="op">$</span><span class="va">arl</span></span>
-<span><span class="va">arl1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dsnp_arl.html">dsnp_arl</a></span><span class="op">(</span><span class="fl">0.0075</span>, <span class="fl">34</span>, <span class="fl">162</span>, <span class="fl">1.5</span>, <span class="fl">2.5</span>, <span class="fl">4.5</span><span class="op">)</span><span class="op">$</span><span class="va">arl</span></span>
-<span><span class="va">ass0</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dsnp_ass.html">dsnp_ass</a></span><span class="op">(</span><span class="fl">0.005</span>, <span class="fl">34</span>, <span class="fl">162</span>, <span class="fl">1.5</span>, <span class="fl">2.5</span><span class="op">)</span><span class="op">$</span><span class="va">ass</span></span></code></pre></div>
-<p>The published values are approximately</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mi>R</mi><msub><mi>L</mi><mn>0</mn></msub><mo>=</mo><mn>803.41</mn><mo>,</mo><mspace width="2.0em"></mspace><mi>A</mi><mi>R</mi><msub><mi>L</mi><mn>1</mn></msub><mo>=</mo><mn>193.22</mn><mo>,</mo><mspace width="2.0em"></mspace><mi>A</mi><mi>S</mi><msub><mi>S</mi><mn>0</mn></msub><mo>=</mo><mn>35.94</mn><mi>.</mi></mrow><annotation encoding="application/x-tex">
-ARL_0=803.41,\qquad ARL_1=193.22,\qquad ASS_0=35.94.
-</annotation></semantics></math></p>
+<span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  pt <span class="op">=</span> <span class="va">prob</span><span class="op">$</span><span class="va">pt</span>,</span>
+<span>  p_signal <span class="op">=</span> <span class="va">prob</span><span class="op">$</span><span class="va">p_signal</span>,</span>
+<span>  arl0 <span class="op">=</span> <span class="fu"><a href="../reference/dsnp_arl.html">dsnp_arl</a></span><span class="op">(</span><span class="fl">0.005</span>, <span class="fl">34</span>, <span class="fl">162</span>, <span class="fl">1.5</span>, <span class="fl">2.5</span>, <span class="fl">4.5</span><span class="op">)</span><span class="op">$</span><span class="va">arl</span>,</span>
+<span>  arl1 <span class="op">=</span> <span class="fu"><a href="../reference/dsnp_arl.html">dsnp_arl</a></span><span class="op">(</span><span class="fl">0.0075</span>, <span class="fl">34</span>, <span class="fl">162</span>, <span class="fl">1.5</span>, <span class="fl">2.5</span>, <span class="fl">4.5</span><span class="op">)</span><span class="op">$</span><span class="va">arl</span>,</span>
+<span>  ass0 <span class="op">=</span> <span class="fu"><a href="../reference/dsnp_ass.html">dsnp_ass</a></span><span class="op">(</span><span class="fl">0.005</span>, <span class="fl">34</span>, <span class="fl">162</span>, <span class="fl">1.5</span>, <span class="fl">2.5</span><span class="op">)</span><span class="op">$</span><span class="va">ass</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt;          pt    p_signal     arl0     arl1     ass0</span></span>
+<span><span class="co">#&gt; 1 0.9987553 0.001244692 803.4114 193.2229 35.93534</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="generalized-variance-chart">Generalized variance chart<a class="anchor" aria-label="anchor" href="#generalized-variance-chart"></a>
@@ -252,74 +250,71 @@ G\overset{d}{=}
 Y_j\sim\chi^2_{n-j},
 </annotation></semantics></math></p>
 <p>with independent factors.</p>
-<p>Consequently,</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mo stretchy="false" form="prefix">(</mo><msup><mi>G</mi><mi>r</mi></msup><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mo stretchy="false" form="prefix">|</mo><mi mathvariant="normal">Σ</mi><msup><mo stretchy="false" form="prefix">|</mo><mi>r</mi></msup><msup><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mn>2</mn><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mi>p</mi><mi>r</mi></mrow></msup><munderover><mo>∏</mo><mrow><mi>j</mi><mo>=</mo><mn>1</mn></mrow><mi>p</mi></munderover><mfrac><mrow><mi mathvariant="normal">Γ</mi><mo stretchy="false" form="prefix">(</mo><mi>r</mi><mo>+</mo><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo>−</mo><mi>j</mi><mo stretchy="false" form="postfix">)</mo><mi>/</mi><mn>2</mn><mo stretchy="false" form="postfix">)</mo></mrow><mrow><mi mathvariant="normal">Γ</mi><mo stretchy="false" form="prefix">(</mo><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo>−</mo><mi>j</mi><mo stretchy="false" form="postfix">)</mo><mi>/</mi><mn>2</mn><mo stretchy="false" form="postfix">)</mo></mrow></mfrac><mi>.</mi></mrow><annotation encoding="application/x-tex">
-E(G^r)=
-|\Sigma|^r
-\left(\frac{2}{n-1}\right)^{pr}
-\prod_{j=1}^{p}
-\frac{\Gamma(r+(n-j)/2)}{\Gamma((n-j)/2)}.
-</annotation></semantics></math></p>
-<p>These moments provide the mean, variance, skewness, and kurtosis
-required by normal and Cornish-Fisher limits.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/gv_limits.html">gv_limits</a></span><span class="op">(</span></span>
-<span>  n <span class="op">=</span> <span class="fl">10</span>,</span>
-<span>  p <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>  det_sigma <span class="op">=</span> <span class="fl">0.5320</span>,</span>
-<span>  type <span class="op">=</span> <span class="st">"normal"</span></span>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">gv_table</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span></span>
+<span>  <span class="va">rbind</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"normal"</span>, <span class="st">"cf"</span>, <span class="st">"exact"</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">method</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">lim</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/gv_limits.html">gv_limits</a></span><span class="op">(</span></span>
+<span>      n <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>      p <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>      det_sigma <span class="op">=</span> <span class="fl">0.5320</span>,</span>
+<span>      type <span class="op">=</span> <span class="va">method</span></span>
+<span>    <span class="op">)</span></span>
+<span>    <span class="va">risk</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/gv_alpha_risk.html">gv_alpha_risk</a></span><span class="op">(</span></span>
+<span>      n <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>      p <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>      det_sigma <span class="op">=</span> <span class="fl">0.5320</span>,</span>
+<span>      type <span class="op">=</span> <span class="va">method</span></span>
+<span>    <span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>      method <span class="op">=</span> <span class="va">method</span>,</span>
+<span>      lcl <span class="op">=</span> <span class="va">lim</span><span class="op">$</span><span class="va">lcl</span>,</span>
+<span>      center <span class="op">=</span> <span class="va">lim</span><span class="op">$</span><span class="va">center</span>,</span>
+<span>      ucl <span class="op">=</span> <span class="va">lim</span><span class="op">$</span><span class="va">ucl</span>,</span>
+<span>      alpha <span class="op">=</span> <span class="va">risk</span><span class="op">$</span><span class="va">alpha</span>,</span>
+<span>      arl0 <span class="op">=</span> <span class="va">risk</span><span class="op">$</span><span class="va">arl0</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">}</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="../reference/gv_limits.html">gv_limits</a></span><span class="op">(</span></span>
-<span>  n <span class="op">=</span> <span class="fl">10</span>,</span>
-<span>  p <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>  det_sigma <span class="op">=</span> <span class="fl">0.5320</span>,</span>
-<span>  type <span class="op">=</span> <span class="st">"cf"</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="../reference/gv_limits.html">gv_limits</a></span><span class="op">(</span></span>
-<span>  n <span class="op">=</span> <span class="fl">10</span>,</span>
-<span>  p <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>  det_sigma <span class="op">=</span> <span class="fl">0.5320</span>,</span>
-<span>  type <span class="op">=</span> <span class="st">"exact"</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">gv_table</span></span>
+<span><span class="co">#&gt;   method lcl    center      ucl       alpha      arl0</span></span>
+<span><span class="co">#&gt; 1 normal   0 0.4728889 1.428685 0.020789525  48.10115</span></span>
+<span><span class="co">#&gt; 2     cf   0 0.4728889 2.160305 0.002651853 377.09479</span></span>
+<span><span class="co">#&gt; 3  exact   0 0.4728889 2.153629 0.002700000 370.37037</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span></span>
+<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/array.html" class="external-link">array</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">10</span> <span class="op">*</span> <span class="fl">8</span> <span class="op">*</span> <span class="fl">2</span><span class="op">)</span>, dim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">8</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/cchart.GV.html">cchart.GV</a></span><span class="op">(</span><span class="va">x</span>, Sigma <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">"exact"</span>, plot <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<p><img src="statistical-foundations_files/figure-html/gv-figure-1.png" class="r-plt" alt="" width="672"></p>
+<pre><code><span><span class="co">#&gt; Generalized Variance Control Chart</span></span>
+<span><span class="co">#&gt;   Dimension: p = 2 ; subgroup size n = 8 </span></span>
+<span><span class="co">#&gt;   Subgroups: 10 (Phase I: 10 ; Phase II: 0 )</span></span>
+<span><span class="co">#&gt;   Limits: exact / upper ; nominal alpha = 0.0027 </span></span>
+<span><span class="co">#&gt;   Covariance: supplied Sigma </span></span>
+<span><span class="co">#&gt;   LCL = 0 ; center = 0.8571 ; UCL = 4.622 </span></span>
+<span><span class="co">#&gt;   Signals: 0</span></span></code></pre>
 <p>For dimension two, the exact distribution simplifies to</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>G</mi><mover><mo>=</mo><mi>d</mi></mover><mfrac><mrow><mo stretchy="false" form="prefix">|</mo><mi mathvariant="normal">Σ</mi><mo stretchy="false" form="prefix">|</mo></mrow><mrow><mn>4</mn><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo>−</mo><mn>1</mn><msup><mo stretchy="false" form="postfix">)</mo><mn>2</mn></msup></mrow></mfrac><msup><mrow><mo stretchy="true" form="prefix">(</mo><msubsup><mi>χ</mi><mrow><mn>2</mn><mi>n</mi><mo>−</mo><mn>4</mn></mrow><mn>2</mn></msubsup><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup><mi>.</mi></mrow><annotation encoding="application/x-tex">
 G\overset{d}{=}
 \frac{|\Sigma|}{4(n-1)^2}
 \left(\chi^2_{2n-4}\right)^2.
 </annotation></semantics></math></p>
-<p>This gives exact quantiles and exact false-alarm probabilities.</p>
 <p>For higher dimensions, IQCC offers simulation using the Bartlett
 factors. The package does not claim a generic Meijer-G implementation.
 Published exact quantiles are used only in explicitly supported
 dimension-three cases.</p>
-<p>When
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">|</mo><mi mathvariant="normal">Σ</mi><mo stretchy="false" form="prefix">|</mo></mrow><annotation encoding="application/x-tex">|\Sigma|</annotation></semantics></math>
-is unknown, the package estimates it from the average Phase I covariance
-matrix. If
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math>
-subgroups are used and
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ν</mi><mo>=</mo><mi>m</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\nu=m(n-1)</annotation></semantics></math>,
-the determinant correction is</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>b</mi><mn>3</mn></msub><mo>=</mo><mfrac><mrow><munderover><mo>∏</mo><mrow><mi>j</mi><mo>=</mo><mn>1</mn></mrow><mi>p</mi></munderover><mo stretchy="false" form="prefix">(</mo><mi>ν</mi><mo>−</mo><mi>j</mi><mo>+</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><msup><mi>ν</mi><mi>p</mi></msup></mfrac><mo>,</mo><mspace width="2.0em"></mspace><mover><mrow><mo stretchy="false" form="prefix">|</mo><mi mathvariant="normal">Σ</mi><mo stretchy="false" form="prefix">|</mo></mrow><mo accent="true">̂</mo></mover><mo>=</mo><mfrac><mrow><mo stretchy="false" form="prefix">|</mo><mover><mi>S</mi><mo accent="true">‾</mo></mover><mo stretchy="false" form="prefix">|</mo></mrow><msub><mi>b</mi><mn>3</mn></msub></mfrac><mi>.</mi></mrow><annotation encoding="application/x-tex">
-b_3=\frac{\prod_{j=1}^{p}(\nu-j+1)}{\nu^p},
-\qquad
-\widehat{|\Sigma|}=\frac{|\bar S|}{b_3}.
-</annotation></semantics></math></p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"&lt;!-- IQCC_EXECUTED_FOUNDATIONS --&gt;\n"</span><span class="op">)</span></span></code></pre></div>
+<!-- IQCC_EXECUTED_FOUNDATIONS -->
 </div>
 <div class="section level2">
 <h2 id="validation-strategy">Validation strategy<a class="anchor" aria-label="anchor" href="#validation-strategy"></a>
 </h2>
-<p>IQCC combines:</p>
-<ul>
-<li>algebraic property tests;</li>
-<li>exact or independently coded numerical oracles;</li>
-<li>reproduction of published numerical examples.</li>
-</ul>
-<p>This strategy is particularly important for control charts because a
-plausible formula may still use a different tail convention, integer
-threshold, or parameter-estimation rule than the intended method.</p>
+<p>IQCC combines algebraic property tests, independently coded numerical
+oracles, and reproduction of published numerical examples. This is
+particularly important because a plausible formula may still use a
+different tail convention, integer threshold, or parameter-estimation
+rule than the intended method.</p>
 </div>
 <div class="section level2">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>

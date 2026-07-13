@@ -11,9 +11,6 @@ bounded, or strongly non-normal. The package combines three ideas:
 3.  validate formulas against independent calculations and published
     examples.
 
-This vignette summarizes the probability models behind the audited p, u,
-double-sampling np, and generalized-variance charts.
-
 ## Binomial p chart
 
 For
@@ -39,21 +36,35 @@ The first Cornish-Fisher correction adds
 \frac{(z^2-1)(1-2p)}{6n}
 ```
 
-to the normal quantile on the original p scale. For $`z=3`$, this
-becomes $`4(1-2p)/(3n)`$.
-
-The second corrected p chart follows the operational formula in Joekes
-and Barbosa (2013). This is important because a generic signed
-lower-tail Cornish-Fisher substitution does not reproduce the paper’s
-reported limits.
+to the normal quantile on the original p scale.
 
 ``` r
 
-pchart_limits(p = 0.015, n = 20, type = "normal")
-pchart_limits(p = 0.015, n = 20, type = "cf1")
-pchart_limits(p = 0.015, n = 20, type = "cf2")
-
-pchart_alpha_risk(p = 0.015, n = 20, type = "cf2")
+pchart_table <- do.call(
+  rbind,
+  lapply(c("normal", "cf1", "cf2"), function(method) {
+    lim <- pchart_limits(p = 0.015, n = 20, type = method)
+    risk <- pchart_alpha_risk(
+      p = 0.015,
+      n = 20,
+      lcl = lim$lcl,
+      ucl = lim$ucl
+    )
+    data.frame(
+      method = method,
+      lcl = lim$lcl,
+      center = lim$center,
+      ucl = lim$ucl,
+      alpha = risk,
+      arl0 = ifelse(risk == 0, Inf, 1 / risk)
+    )
+  })
+)
+pchart_table
+#>   method lcl center        ucl        alpha       arl0
+#> 1 normal   0  0.015 0.09653924 0.0357458712   27.97526
+#> 2    cf1   0  0.015 0.16120479 0.0002023458 4942.03542
+#> 3    cf2   0  0.015 0.13031923 0.0031780828  314.65511
 ```
 
 For unequal subgroup sizes, IQCC estimates the in-control proportion
@@ -78,35 +89,34 @@ E(U)=\lambda,\qquad
 \operatorname{Var}(U)=\frac{\lambda}{n}.
 ```
 
-The standardized skewness and excess kurtosis are
+``` r
 
-``` math
-\gamma_1=\frac{1}{\sqrt{\lambda n}},\qquad
-\gamma_2=\frac{1}{\lambda n}.
+u_table <- do.call(
+  rbind,
+  lapply(c("normal", "cf1", "cf2"), function(method) {
+    lim <- uchart_limits(lambda = 0.15, n = 20, type = method)
+    risk <- uchart_alpha_risk(
+      lambda = 0.15,
+      n = 20,
+      lcl = lim$lcl,
+      ucl = lim$ucl
+    )
+    data.frame(
+      method = method,
+      lcl = lim$lcl,
+      center = lim$center,
+      ucl = lim$ucl,
+      alpha = risk,
+      arl0 = ifelse(risk == 0, Inf, 1 / risk)
+    )
+  })
+)
+u_table
+#>   method lcl center       ucl       alpha     arl0
+#> 1 normal   0   0.15 0.4098056 0.003802992 262.9509
+#> 2    cf1   0   0.15 0.4764711 0.001102488 907.0392
+#> 3    cf2   0   0.15 0.4668489 0.001102488 907.0392
 ```
-
-The first Cornish-Fisher addition on the original scale is
-
-``` math
-\frac{z^2-1}{6n}.
-```
-
-The second-order term simplifies to
-
-``` math
-\frac{z(1-z^2)}{72n\sqrt{\lambda n}}.
-```
-
-For $`z=3`$, the upper limit is
-
-``` math
-\lambda+3\sqrt{\frac{\lambda}{n}}
-+\frac{4}{3n}
--\frac{1}{3n\sqrt{\lambda n}}.
-```
-
-The actual risk is evaluated under the Poisson count model, respecting
-strict signaling inequalities.
 
 ## Double-sampling np chart
 
@@ -132,37 +142,11 @@ The decision rule is:
 - continue when $`a<D_1<b`$;
 - accept at stage 2 when $`D_1+D_2\leq c`$.
 
-The first-stage acceptance probability is
-
-``` math
-P_{aI}(p)=P(D_1\leq a).
-```
-
-The second-stage acceptance probability is
-
-``` math
-P_{aII}(p)=
-\sum_{d_1=a+1}^{b-1}
-P(D_1=d_1)P(D_2\leq c-d_1).
-```
-
 Thus
 
 ``` math
-P_T(p)=P_{aI}(p)+P_{aII}(p),
+ARL(p)=\frac{1}{1-P_T(p)},
 \qquad
-ARL(p)=\frac{1}{1-P_T(p)}.
-```
-
-The probability of requiring a second sample is
-
-``` math
-P_2(p)=P(a<D_1<b),
-```
-
-and
-
-``` math
 ASS(p)=n_1+n_2P_2(p).
 ```
 
@@ -177,15 +161,15 @@ prob <- dsnp_prob_accept(
   ucl2 = 4.5
 )
 
-arl0 <- dsnp_arl(0.005, 34, 162, 1.5, 2.5, 4.5)$arl
-arl1 <- dsnp_arl(0.0075, 34, 162, 1.5, 2.5, 4.5)$arl
-ass0 <- dsnp_ass(0.005, 34, 162, 1.5, 2.5)$ass
-```
-
-The published values are approximately
-
-``` math
-ARL_0=803.41,\qquad ARL_1=193.22,\qquad ASS_0=35.94.
+data.frame(
+  pt = prob$pt,
+  p_signal = prob$p_signal,
+  arl0 = dsnp_arl(0.005, 34, 162, 1.5, 2.5, 4.5)$arl,
+  arl1 = dsnp_arl(0.0075, 34, 162, 1.5, 2.5, 4.5)$arl,
+  ass0 = dsnp_ass(0.005, 34, 162, 1.5, 2.5)$ass
+)
+#>          pt    p_signal     arl0     arl1     ass0
+#> 1 0.9987553 0.001244692 803.4114 193.2229 35.93534
 ```
 
 ## Generalized variance chart
@@ -215,42 +199,56 @@ Y_j\sim\chi^2_{n-j},
 
 with independent factors.
 
-Consequently,
+``` r
 
-``` math
-E(G^r)=
-|\Sigma|^r
-\left(\frac{2}{n-1}\right)^{pr}
-\prod_{j=1}^{p}
-\frac{\Gamma(r+(n-j)/2)}{\Gamma((n-j)/2)}.
+gv_table <- do.call(
+  rbind,
+  lapply(c("normal", "cf", "exact"), function(method) {
+    lim <- gv_limits(
+      n = 10,
+      p = 2,
+      det_sigma = 0.5320,
+      type = method
+    )
+    risk <- gv_alpha_risk(
+      n = 10,
+      p = 2,
+      det_sigma = 0.5320,
+      type = method
+    )
+    data.frame(
+      method = method,
+      lcl = lim$lcl,
+      center = lim$center,
+      ucl = lim$ucl,
+      alpha = risk$alpha,
+      arl0 = risk$arl0
+    )
+  })
+)
+gv_table
+#>   method lcl    center      ucl       alpha      arl0
+#> 1 normal   0 0.4728889 1.428685 0.020789525  48.10115
+#> 2     cf   0 0.4728889 2.160305 0.002651853 377.09479
+#> 3  exact   0 0.4728889 2.153629 0.002700000 370.37037
 ```
-
-These moments provide the mean, variance, skewness, and kurtosis
-required by normal and Cornish-Fisher limits.
 
 ``` r
 
-gv_limits(
-  n = 10,
-  p = 2,
-  det_sigma = 0.5320,
-  type = "normal"
-)
-
-gv_limits(
-  n = 10,
-  p = 2,
-  det_sigma = 0.5320,
-  type = "cf"
-)
-
-gv_limits(
-  n = 10,
-  p = 2,
-  det_sigma = 0.5320,
-  type = "exact"
-)
+set.seed(321)
+x <- array(rnorm(10 * 8 * 2), dim = c(10, 8, 2))
+cchart.GV(x, Sigma = diag(2), type = "exact", plot = TRUE)
 ```
+
+![](statistical-foundations_files/figure-html/gv-figure-1.png)
+
+    #> Generalized Variance Control Chart
+    #>   Dimension: p = 2 ; subgroup size n = 8 
+    #>   Subgroups: 10 (Phase I: 10 ; Phase II: 0 )
+    #>   Limits: exact / upper ; nominal alpha = 0.0027 
+    #>   Covariance: supplied Sigma 
+    #>   LCL = 0 ; center = 0.8571 ; UCL = 4.622 
+    #>   Signals: 0
 
 For dimension two, the exact distribution simplifies to
 
@@ -260,34 +258,23 @@ G\overset{d}{=}
 \left(\chi^2_{2n-4}\right)^2.
 ```
 
-This gives exact quantiles and exact false-alarm probabilities.
-
 For higher dimensions, IQCC offers simulation using the Bartlett
 factors. The package does not claim a generic Meijer-G implementation.
 Published exact quantiles are used only in explicitly supported
 dimension-three cases.
 
-When $`|\Sigma|`$ is unknown, the package estimates it from the average
-Phase I covariance matrix. If $`m`$ subgroups are used and
-$`\nu=m(n-1)`$, the determinant correction is
+``` r
 
-``` math
-b_3=\frac{\prod_{j=1}^{p}(\nu-j+1)}{\nu^p},
-\qquad
-\widehat{|\Sigma|}=\frac{|\bar S|}{b_3}.
+cat("<!-- IQCC_EXECUTED_FOUNDATIONS -->\n")
 ```
 
 ## Validation strategy
 
-IQCC combines:
-
-- algebraic property tests;
-- exact or independently coded numerical oracles;
-- reproduction of published numerical examples.
-
-This strategy is particularly important for control charts because a
-plausible formula may still use a different tail convention, integer
-threshold, or parameter-estimation rule than the intended method.
+IQCC combines algebraic property tests, independently coded numerical
+oracles, and reproduction of published numerical examples. This is
+particularly important because a plausible formula may still use a
+different tail convention, integer threshold, or parameter-estimation
+rule than the intended method.
 
 ## References
 

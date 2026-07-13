@@ -85,7 +85,6 @@ nominal value.</p>
 <div class="section level2">
 <h2 id="positioning-in-the-r-ecosystem">Positioning in the R ecosystem<a class="anchor" aria-label="anchor" href="#positioning-in-the-r-ecosystem"></a>
 </h2>
-<p>A practical way to position IQCC is:</p>
 <blockquote>
 <p>IQCC is a specialized package for exact and corrected control-chart
 limits, especially for small samples, rare nonconformities, asymmetric
@@ -97,202 +96,184 @@ statistically well calibrated for the distribution and sample size at
 hand.</p>
 </div>
 <div class="section level2">
-<h2 id="when-iqcc-is-especially-useful">When IQCC is especially useful<a class="anchor" aria-label="anchor" href="#when-iqcc-is-especially-useful"></a>
-</h2>
-<table class="table">
-<colgroup>
-<col width="33%">
-<col width="33%">
-<col width="33%">
-</colgroup>
-<thead><tr class="header">
-<th>Monitoring problem</th>
-<th>Classical difficulty</th>
-<th>IQCC direction</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td>Range-based dispersion monitoring</td>
-<td>Normal approximations can inflate the actual false-alarm risk,
-especially for small subgroups.</td>
-<td>Use exact range-chart limits based on the relative range
-distribution.</td>
-</tr>
-<tr class="even">
-<td>Standard deviation monitoring</td>
-<td>The distribution of the sample standard deviation is asymmetric for
-small samples.</td>
-<td>Use exact limits derived from the chi-square distribution of the
-sample variance.</td>
-</tr>
-<tr class="odd">
-<td>Nonconforming proportion in high-quality processes</td>
-<td>The binomial distribution is discrete, bounded, and strongly skewed
-when the nonconforming proportion is very small.</td>
-<td>Use CF1 or CF2 limits, exact binomial risk evaluation, or a
-double-sampling np chart.</td>
-</tr>
-<tr class="even">
-<td>Nonconformities per unit</td>
-<td>Poisson counts are discrete and skewed when the expected count is
-small.</td>
-<td>Use CF1 or CF2 limits and exact Poisson risk evaluation.</td>
-</tr>
-<tr class="odd">
-<td>Multivariate process mean monitoring</td>
-<td>Hotelling T-squared requires phase-specific calibration.</td>
-<td>Use the implemented Phase I and Phase II Hotelling T-squared
-functions.</td>
-</tr>
-<tr class="even">
-<td>Multivariate process variability</td>
-<td>A normal approximation for generalized variance may be poorly
-calibrated.</td>
-<td>Use normal, Cornish-Fisher, selected exact, or simulation-based
-generalized variance limits.</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section level2">
 <h2 id="current-implemented-methods">Current implemented methods<a class="anchor" aria-label="anchor" href="#current-implemented-methods"></a>
 </h2>
-<p>The current package includes several families of functions:</p>
+<p>The current package includes:</p>
 <ul>
 <li>
-<code><a href="../reference/cchart.R.html">cchart.R()</a></code> for range charts, including exact
-Tukey-based limits.</li>
-<li>
-<code><a href="../reference/cchart.S.html">cchart.S()</a></code> for standard deviation charts, including
-exact chi-square-based limits.</li>
+<code><a href="../reference/cchart.R.html">cchart.R()</a></code> and <code><a href="../reference/cchart.S.html">cchart.S()</a></code> for range and
+standard-deviation charts;</li>
 <li>
 <code><a href="../reference/pchart_limits.html">pchart_limits()</a></code>, <code><a href="../reference/pchart_alpha_risk.html">pchart_alpha_risk()</a></code>, and
-<code><a href="../reference/cchart.p.html">cchart.p()</a></code> for normal, CF1, CF2, and standardized p
-charts.</li>
+<code><a href="../reference/cchart.p.html">cchart.p()</a></code>;</li>
 <li>
 <code><a href="../reference/uchart_limits.html">uchart_limits()</a></code>, <code><a href="../reference/uchart_alpha_risk.html">uchart_alpha_risk()</a></code>, and
-<code><a href="../reference/cchart.u.html">cchart.u()</a></code> for normal, CF1, CF2, and standardized u
-charts.</li>
-<li>
-<code><a href="../reference/dsnp_prob_accept.html">dsnp_prob_accept()</a></code>, <code><a href="../reference/dsnp_arl.html">dsnp_arl()</a></code>,
-<code><a href="../reference/dsnp_ass.html">dsnp_ass()</a></code>, <code><a href="../reference/dsnp_limits.html">dsnp_limits()</a></code>, and
-<code><a href="../reference/cchart.DSnp.html">cchart.DSnp()</a></code> for double-sampling np design and
-monitoring.</li>
-<li>
-<code><a href="../reference/T2.1.html">T2.1()</a></code>, <code><a href="../reference/T2.2.html">T2.2()</a></code>,
-<code><a href="../reference/cchart.T2.1.html">cchart.T2.1()</a></code>, and <code><a href="../reference/cchart.T2.2.html">cchart.T2.2()</a></code> for Hotelling
-T-squared monitoring.</li>
-<li>
-<code><a href="../reference/gv_stat.html">gv_stat()</a></code>, <code><a href="../reference/gv_limits.html">gv_limits()</a></code>,
-<code><a href="../reference/gv_alpha_risk.html">gv_alpha_risk()</a></code>, and <code><a href="../reference/cchart.GV.html">cchart.GV()</a></code> for
-generalized variance monitoring.</li>
-<li>
-<code><a href="../reference/alpha.risk.html">alpha.risk()</a></code> for studying the actual false-alarm risk
-of classical range charts.</li>
+<code><a href="../reference/cchart.u.html">cchart.u()</a></code>;</li>
+<li>the DS-np design and monitoring family;</li>
+<li>Hotelling T-squared Phase I and Phase II functions;</li>
+<li>generalized-variance limits, risk diagnostics, and charts.</li>
 </ul>
 </div>
 <div class="section level2">
-<h2 id="example-using-a-corrected-p-chart">Example: using a corrected p chart<a class="anchor" aria-label="anchor" href="#example-using-a-corrected-p-chart"></a>
+<h2 id="executed-example-corrected-p-chart-limits">Executed example: corrected p-chart limits<a class="anchor" aria-label="anchor" href="#executed-example-corrected-p-chart-limits"></a>
 </h2>
-<p>The example below constructs a p chart using the explicit
-two-adjustment Cornish-Fisher method.</p>
+<p>The chunk below is evaluated when the vignette and the pkgdown site
+are built. It prints the limits and their exact binomial false-alarm
+probability.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/flaviobarros/IQCC" class="external-link">IQCC</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">binomdata</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">binomdata</span><span class="op">)</span></span>
+<span><span class="va">p0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">binomdata</span><span class="op">$</span><span class="va">Di</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">12</span><span class="op">]</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">binomdata</span><span class="op">$</span><span class="va">ni</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">12</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="va">lim_p</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pchart_limits.html">pchart_limits</a></span><span class="op">(</span>p <span class="op">=</span> <span class="va">p0</span>, n <span class="op">=</span> <span class="fl">20</span>, type <span class="op">=</span> <span class="st">"cf2"</span><span class="op">)</span></span>
+<span><span class="va">risk_p</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pchart_alpha_risk.html">pchart_alpha_risk</a></span><span class="op">(</span></span>
+<span>  p <span class="op">=</span> <span class="va">p0</span>,</span>
+<span>  n <span class="op">=</span> <span class="fl">20</span>,</span>
+<span>  lcl <span class="op">=</span> <span class="va">lim_p</span><span class="op">$</span><span class="va">lcl</span>,</span>
+<span>  ucl <span class="op">=</span> <span class="va">lim_p</span><span class="op">$</span><span class="va">ucl</span></span>
+<span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/cchart.p.html">cchart.p</a></span><span class="op">(</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  p0 <span class="op">=</span> <span class="va">p0</span>,</span>
+<span>  lcl <span class="op">=</span> <span class="va">lim_p</span><span class="op">$</span><span class="va">lcl</span>,</span>
+<span>  center <span class="op">=</span> <span class="va">lim_p</span><span class="op">$</span><span class="va">center</span>,</span>
+<span>  ucl <span class="op">=</span> <span class="va">lim_p</span><span class="op">$</span><span class="va">ucl</span>,</span>
+<span>  actual_alpha <span class="op">=</span> <span class="va">risk_p</span>,</span>
+<span>  arl0 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">risk_p</span> <span class="op">==</span> <span class="fl">0</span>, <span class="cn">Inf</span>, <span class="fl">1</span> <span class="op">/</span> <span class="va">risk_p</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt;          p0 lcl    center       ucl actual_alpha     arl0</span></span>
+<span><span class="co">#&gt; 1 0.1134454   0 0.1134454 0.3653831 0.0009758464 1024.751</span></span></code></pre></div>
+<p>The operational chart itself is also executed and produces a figure
+in the published article.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/cchart.p.html">cchart.p</a></span><span class="op">(</span></span>
 <span>  x1 <span class="op">=</span> <span class="va">binomdata</span><span class="op">$</span><span class="va">Di</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">12</span><span class="op">]</span>,</span>
 <span>  n1 <span class="op">=</span> <span class="va">binomdata</span><span class="op">$</span><span class="va">ni</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">12</span><span class="op">]</span>,</span>
 <span>  type <span class="op">=</span> <span class="st">"cf2"</span>,</span>
 <span>  x2 <span class="op">=</span> <span class="va">binomdata</span><span class="op">$</span><span class="va">Di</span><span class="op">[</span><span class="fl">13</span><span class="op">:</span><span class="fl">25</span><span class="op">]</span>,</span>
 <span>  n2 <span class="op">=</span> <span class="va">binomdata</span><span class="op">$</span><span class="va">ni</span><span class="op">[</span><span class="fl">13</span><span class="op">:</span><span class="fl">25</span><span class="op">]</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>Use the explicit names <code>"cf1"</code> and <code>"cf2"</code> in
-new code. The historical alias <code>"CF"</code> is retained for
-compatibility, but it maps to <code>"cf1"</code> in
-<code><a href="../reference/cchart.p.html">cchart.p()</a></code> and to <code>"cf2"</code> in
-<code><a href="../reference/cchart.u.html">cchart.u()</a></code>.</p>
+<p><img src="iqcc-positioning_files/figure-html/p-chart-figure-1.png" class="r-plt" alt="" width="672"></p>
 </div>
 <div class="section level2">
-<h2 id="example-ds-np-chart-with-automatic-limit-search">Example: DS-np chart with automatic limit search<a class="anchor" aria-label="anchor" href="#example-ds-np-chart-with-automatic-limit-search"></a>
+<h2 id="executed-example-ds-np-operating-characteristics">Executed example: DS-np operating characteristics<a class="anchor" aria-label="anchor" href="#executed-example-ds-np-operating-characteristics"></a>
 </h2>
-<p>The double-sampling np chart uses two sampling stages to monitor the
-nonconforming proportion in high-quality processes.
-<code><a href="../reference/dsnp_limits.html">dsnp_limits()</a></code> searches for feasible fractional limits, and
-<code><a href="../reference/cchart.DSnp.html">cchart.DSnp()</a></code> builds and plots the chart.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/flaviobarros/IQCC" class="external-link">IQCC</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">lim</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dsnp_limits.html">dsnp_limits</a></span><span class="op">(</span></span>
-<span>  p0 <span class="op">=</span> <span class="fl">0.005</span>,</span>
-<span>  n1 <span class="op">=</span> <span class="fl">34</span>,</span>
-<span>  n2 <span class="op">=</span> <span class="fl">162</span>,</span>
-<span>  alpha <span class="op">=</span> <span class="fl">0.0027</span>,</span>
-<span>  p1 <span class="op">=</span> <span class="fl">0.0075</span></span>
-<span><span class="op">)</span></span>
-<span><span class="va">lim</span><span class="op">$</span><span class="va">best</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"wl"</span>, <span class="st">"ucl1"</span>, <span class="st">"ucl2"</span>, <span class="st">"arl0"</span>, <span class="st">"arl1"</span>, <span class="st">"ass0"</span><span class="op">)</span><span class="op">]</span></span>
-<span></span>
-<span><span class="va">x1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">2</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span></span>
-<span><span class="va">x2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="cn">NA</span>, <span class="cn">NA</span>, <span class="cn">NA</span>, <span class="cn">NA</span>, <span class="cn">NA</span>, <span class="cn">NA</span>, <span class="cn">NA</span>, <span class="cn">NA</span>, <span class="fl">1</span>, <span class="cn">NA</span>, <span class="cn">NA</span>, <span class="cn">NA</span>, <span class="cn">NA</span>, <span class="cn">NA</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">chart</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cchart.DSnp.html">cchart.DSnp</a></span><span class="op">(</span></span>
-<span>  <span class="va">x1</span>,</span>
-<span>  n1 <span class="op">=</span> <span class="fl">34</span>,</span>
-<span>  n2 <span class="op">=</span> <span class="fl">162</span>,</span>
-<span>  p0 <span class="op">=</span> <span class="fl">0.005</span>,</span>
-<span>  x2 <span class="op">=</span> <span class="va">x2</span>,</span>
-<span>  limits <span class="op">=</span> <span class="va">lim</span></span>
-<span><span class="op">)</span></span>
-<span><span class="va">chart</span><span class="op">$</span><span class="va">performance</span></span></code></pre></div>
-</div>
-<div class="section level2">
-<h2 id="example-generalized-variance-limits">Example: generalized variance limits<a class="anchor" aria-label="anchor" href="#example-generalized-variance-limits"></a>
-</h2>
+<p>The published small-sample design can be evaluated directly without
+an expensive search.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/gv_limits.html">gv_limits</a></span><span class="op">(</span></span>
-<span>  n <span class="op">=</span> <span class="fl">10</span>,</span>
-<span>  p <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>  det_sigma <span class="op">=</span> <span class="fl">0.5320</span>,</span>
-<span>  type <span class="op">=</span> <span class="st">"exact"</span></span>
+<code class="sourceCode R"><span><span class="va">n1</span> <span class="op">&lt;-</span> <span class="fl">34</span></span>
+<span><span class="va">n2</span> <span class="op">&lt;-</span> <span class="fl">162</span></span>
+<span><span class="va">wl</span> <span class="op">&lt;-</span> <span class="fl">1.5</span></span>
+<span><span class="va">ucl1</span> <span class="op">&lt;-</span> <span class="fl">2.5</span></span>
+<span><span class="va">ucl2</span> <span class="op">&lt;-</span> <span class="fl">4.5</span></span>
+<span><span class="va">p0</span> <span class="op">&lt;-</span> <span class="fl">0.005</span></span>
+<span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fl">0.0075</span></span>
+<span></span>
+<span><span class="va">perf_dsnp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  quantity <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ARL0"</span>, <span class="st">"ARL1"</span>, <span class="st">"ASS0"</span><span class="op">)</span>,</span>
+<span>  value <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="../reference/dsnp_arl.html">dsnp_arl</a></span><span class="op">(</span><span class="va">p0</span>, <span class="va">n1</span>, <span class="va">n2</span>, <span class="va">wl</span>, <span class="va">ucl1</span>, <span class="va">ucl2</span><span class="op">)</span><span class="op">$</span><span class="va">arl</span>,</span>
+<span>    <span class="fu"><a href="../reference/dsnp_arl.html">dsnp_arl</a></span><span class="op">(</span><span class="va">p1</span>, <span class="va">n1</span>, <span class="va">n2</span>, <span class="va">wl</span>, <span class="va">ucl1</span>, <span class="va">ucl2</span><span class="op">)</span><span class="op">$</span><span class="va">arl</span>,</span>
+<span>    <span class="fu"><a href="../reference/dsnp_ass.html">dsnp_ass</a></span><span class="op">(</span><span class="va">p0</span>, <span class="va">n1</span>, <span class="va">n2</span>, <span class="va">wl</span>, <span class="va">ucl1</span><span class="op">)</span><span class="op">$</span><span class="va">ass</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">perf_dsnp</span></span>
+<span><span class="co">#&gt;   quantity     value</span></span>
+<span><span class="co">#&gt; 1     ARL0 803.41143</span></span>
+<span><span class="co">#&gt; 2     ARL1 193.22286</span></span>
+<span><span class="co">#&gt; 3     ASS0  35.93534</span></span></code></pre></div>
+<p>A compact search is used in the vignette so that CI remains fast
+while still executing the design algorithm.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">small_search</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dsnp_limits.html">dsnp_limits</a></span><span class="op">(</span></span>
+<span>  p0 <span class="op">=</span> <span class="fl">0.05</span>,</span>
+<span>  n1 <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>  n2 <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  alpha <span class="op">=</span> <span class="fl">0.05</span>,</span>
+<span>  p1 <span class="op">=</span> <span class="fl">0.10</span>,</span>
+<span>  max_results <span class="op">=</span> <span class="fl">5</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">small_search</span><span class="op">$</span><span class="va">best</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"wl"</span>, <span class="st">"ucl1"</span>, <span class="st">"ucl2"</span>, <span class="st">"arl0"</span>, <span class="st">"arl1"</span>, <span class="st">"ass0"</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="co">#&gt;    wl ucl1 ucl2     arl0     arl1     ass0</span></span>
+<span><span class="co">#&gt; 1 0.5  1.5  2.5 24.91743 5.951221 7.036266</span></span></code></pre></div>
+<p>The chart is built with explicit limits, which makes the displayed
+decision rule reproducible.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">x1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">2</span>, <span class="fl">4</span>, <span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span></span>
+<span><span class="va">x2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="cn">NA</span>, <span class="fl">2</span>, <span class="cn">NA</span>, <span class="cn">NA</span>, <span class="cn">NA</span>, <span class="fl">3</span>, <span class="cn">NA</span>, <span class="cn">NA</span>, <span class="cn">NA</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">chart_dsnp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cchart.DSnp.html">cchart.DSnp</a></span><span class="op">(</span></span>
+<span>  <span class="va">x1</span>,</span>
+<span>  n1 <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  n2 <span class="op">=</span> <span class="fl">20</span>,</span>
+<span>  p0 <span class="op">=</span> <span class="fl">0.05</span>,</span>
+<span>  x2 <span class="op">=</span> <span class="va">x2</span>,</span>
+<span>  wl <span class="op">=</span> <span class="fl">1.5</span>,</span>
+<span>  ucl1 <span class="op">=</span> <span class="fl">2.5</span>,</span>
+<span>  ucl2 <span class="op">=</span> <span class="fl">4.5</span>,</span>
+<span>  plot <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>Exact limits are available for dimension two and for selected
-published upper-limit cases in dimension three. Simulation is available
-for more general higher-dimensional cases.</p>
+<p><img src="iqcc-positioning_files/figure-html/dsnp-figure-1.png" class="r-plt" alt="" width="672"></p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">chart_dsnp</span><span class="op">$</span><span class="va">performance</span></span>
+<span><span class="co">#&gt; $arl0</span></span>
+<span><span class="co">#&gt; [1] 58.35236</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $ass0</span></span>
+<span><span class="co">#&gt; [1] 11.4927</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $p_signal0</span></span>
+<span><span class="co">#&gt; [1] 0.01713727</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="executed-example-generalized-variance">Executed example: generalized variance<a class="anchor" aria-label="anchor" href="#executed-example-generalized-variance"></a>
+</h2>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">gv_comparison</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span></span>
+<span>  <span class="va">rbind</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"normal"</span>, <span class="st">"cf"</span>, <span class="st">"exact"</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">method</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">limits</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/gv_limits.html">gv_limits</a></span><span class="op">(</span></span>
+<span>      n <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>      p <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>      det_sigma <span class="op">=</span> <span class="fl">0.5320</span>,</span>
+<span>      type <span class="op">=</span> <span class="va">method</span></span>
+<span>    <span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>method <span class="op">=</span> <span class="va">method</span>, lcl <span class="op">=</span> <span class="va">limits</span><span class="op">$</span><span class="va">lcl</span>,</span>
+<span>               center <span class="op">=</span> <span class="va">limits</span><span class="op">$</span><span class="va">center</span>, ucl <span class="op">=</span> <span class="va">limits</span><span class="op">$</span><span class="va">ucl</span><span class="op">)</span></span>
+<span>  <span class="op">}</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">gv_comparison</span></span>
+<span><span class="co">#&gt;   method lcl    center      ucl</span></span>
+<span><span class="co">#&gt; 1 normal   0 0.4728889 1.428685</span></span>
+<span><span class="co">#&gt; 2     cf   0 0.4728889 2.160305</span></span>
+<span><span class="co">#&gt; 3  exact   0 0.4728889 2.153629</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
+<span><span class="va">gv_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/array.html" class="external-link">array</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">8</span> <span class="op">*</span> <span class="fl">8</span> <span class="op">*</span> <span class="fl">2</span><span class="op">)</span>, dim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">8</span>, <span class="fl">8</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/cchart.GV.html">cchart.GV</a></span><span class="op">(</span></span>
+<span>  <span class="va">gv_data</span>,</span>
+<span>  Sigma <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span>,</span>
+<span>  type <span class="op">=</span> <span class="st">"exact"</span>,</span>
+<span>  plot <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p><img src="iqcc-positioning_files/figure-html/gv-figure-1.png" class="r-plt" alt="" width="672"></p>
+<pre><code><span><span class="co">#&gt; Generalized Variance Control Chart</span></span>
+<span><span class="co">#&gt;   Dimension: p = 2 ; subgroup size n = 8 </span></span>
+<span><span class="co">#&gt;   Subgroups: 8 (Phase I: 8 ; Phase II: 0 )</span></span>
+<span><span class="co">#&gt;   Limits: exact / upper ; nominal alpha = 0.0027 </span></span>
+<span><span class="co">#&gt;   Covariance: supplied Sigma </span></span>
+<span><span class="co">#&gt;   LCL = 0 ; center = 0.8571 ; UCL = 4.622 </span></span>
+<span><span class="co">#&gt;   Signals: 0</span></span></code></pre>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"&lt;!-- IQCC_EXECUTED_POSITIONING --&gt;\n"</span><span class="op">)</span></span></code></pre></div>
+<!-- IQCC_EXECUTED_POSITIONING -->
 </div>
 <div class="section level2">
 <h2 id="development-principles">Development principles<a class="anchor" aria-label="anchor" href="#development-principles"></a>
 </h2>
-<p>Future extensions should follow three principles.</p>
-<p>First, numerical calculations should be separated from plotting
-functions. A limit, probability, average run length, or false-alarm risk
-shown in a chart should be reproducible by a small numerical
-function.</p>
-<p>Second, new methods should be validated against published tables or
-examples when possible. This is particularly important for charts based
-on exact or corrected distributional calculations.</p>
-<p>Third, IQCC should remain complementary to the broader R SPC
-ecosystem. Its strongest role is to provide statistically calibrated
-alternatives for cases where classical approximations are simple but
-inaccurate.</p>
-</div>
-<div class="section level2">
-<h2 id="related-roadmap-items">Related roadmap items<a class="anchor" aria-label="anchor" href="#related-roadmap-items"></a>
-</h2>
-<p>The principal remaining research and documentation extensions
-are:</p>
-<ul>
-<li>an auxiliary trace chart for complementary multivariate variability
-monitoring;</li>
-<li>full DS-np joint optimization over sample sizes and limits;</li>
-<li>generic exact generalized variance quantiles beyond the explicitly
-supported cases;</li>
-<li>a centralized catalogue of published validation fixtures;</li>
-<li>expanded executable vignettes and replication materials for a future
-article.</li>
-</ul>
-<p>These items are tracked in the GitHub issue roadmap and should be
-implemented in small, reviewable pull requests.</p>
+<p>Numerical calculations should remain separated from plotting
+functions, new methods should be validated against published examples
+whenever possible, and IQCC should remain complementary to the broader R
+statistical process-control ecosystem.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
