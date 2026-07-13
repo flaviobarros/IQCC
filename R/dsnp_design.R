@@ -78,6 +78,31 @@
 #' )
 #' res$best[, c("n1", "n2", "wl", "ucl1", "ucl2", "arl0", "arl1")]
 #' @importFrom utils head
+
+# Internal helper: min-max scale a vector that should be minimized.
+# +Inf values (worst case) receive scale 1.  NA, NaN, and -Inf are rejected.
+.scale_minimize <- function(x)
+{
+    if(any(is.na(x) | is.nan(x) | x == -Inf))
+        stop("objective values contain invalid non-finite values")
+
+    finite <- is.finite(x)
+    out <- rep(1, length(x))
+
+    if(!any(finite))
+        return(out)
+
+    xmin <- min(x[finite])
+    xmax <- max(x[finite])
+
+    if(xmax == xmin)
+        out[finite] <- 0
+    else
+        out[finite] <- (x[finite] - xmin) / (xmax - xmin)
+
+    out
+}
+
 dsnp_design <- function(
     p0,
     p1,
@@ -284,21 +309,11 @@ dsnp_design <- function(
     }
     else if(objective == "weighted")
     {
-        arl1_vals <- candidates$arl1
-        ass0_vals <- candidates$ass0
+        candidates$arl1_scaled <- .scale_minimize(candidates$arl1)
+        candidates$ass0_scaled <- .scale_minimize(candidates$ass0)
 
-        arl1_range <- max(arl1_vals) - min(arl1_vals)
-        ass0_range <- max(ass0_vals) - min(ass0_vals)
-
-        arl1_scaled <- if(arl1_range == 0) 0 else
-            (arl1_vals - min(arl1_vals)) / arl1_range
-        ass0_scaled <- if(ass0_range == 0) 0 else
-            (ass0_vals - min(ass0_vals)) / ass0_range
-
-        candidates$arl1_scaled <- arl1_scaled
-        candidates$ass0_scaled <- ass0_scaled
-        candidates$score <- weights["arl1"] * arl1_scaled +
-                            weights["ass0"] * ass0_scaled
+        candidates$score <- weights["arl1"] * candidates$arl1_scaled +
+                            weights["ass0"] * candidates$ass0_scaled
 
         candidates <- candidates[order(
             candidates$score,

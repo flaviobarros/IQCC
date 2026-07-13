@@ -536,3 +536,87 @@ test_that("dsnp_design arl1 and ass0 objectives do not have score columns", {
   expect_false("arl1_scaled" %in% names(res$candidates))
   expect_false("ass0_scaled" %in% names(res$candidates))
 })
+
+# --- .scale_minimize unit tests ---
+
+test_that(".scale_minimize finite values use min-max scaling", {
+  expect_equal(IQCC:::.scale_minimize(c(10, 20, 30)), c(0, 0.5, 1))
+})
+
+test_that(".scale_minimize assigns scale 1 to +Inf", {
+  expect_equal(IQCC:::.scale_minimize(c(10, 20, Inf)), c(0, 1, 1))
+})
+
+test_that(".scale_minimize constant finite produces zeros", {
+  expect_equal(IQCC:::.scale_minimize(c(10, 10, Inf)), c(0, 0, 1))
+})
+
+test_that(".scale_minimize all +Inf produces ones", {
+  expect_equal(IQCC:::.scale_minimize(c(Inf, Inf)), c(1, 1))
+})
+
+test_that(".scale_minimize rejects NA", {
+  expect_error(IQCC:::.scale_minimize(c(10, NA, 20)),
+               "objective values contain invalid non-finite values")
+})
+
+test_that(".scale_minimize rejects NaN", {
+  expect_error(IQCC:::.scale_minimize(c(10, NaN, 20)),
+               "objective values contain invalid non-finite values")
+})
+
+test_that(".scale_minimize rejects -Inf", {
+  expect_error(IQCC:::.scale_minimize(c(10, -Inf, 20)),
+               "objective values contain invalid non-finite values")
+})
+
+test_that("dsnp_design weighted produces finite scores with Inf arl1", {
+  # Mock dsnp_limits to inject one candidate with arl1 = Inf
+  real_dsnp_limits <- dsnp_limits
+  mock_dsnp_limits <- function(p0, n1, n2, ...) {
+    res <- real_dsnp_limits(p0 = p0, n1 = n1, n2 = n2, ...)
+    if(n1 == 5 && n2 == 8 && nrow(res$candidates) > 1)
+      res$candidates$arl1[1] <- Inf
+    res$best <- res$candidates[1, , drop = FALSE]
+    res
+  }
+  testthat::local_mocked_bindings(dsnp_limits = mock_dsnp_limits)
+
+  res <- dsnp_design(p0 = 0.05, p1 = 0.10,
+                     n1_range = 5:6, n2_range = 8:9,
+                     arl0_min = 50, objective = "weighted")
+  cand <- res$candidates
+
+  # No NA or NaN in scores
+  expect_true(all(is.finite(cand$score)))
+  expect_true(all(!is.na(cand$score)))
+  expect_true(all(!is.nan(cand$score)))
+
+  # Inf arl1 candidates get arl1_scaled = 1
+  inf_rows <- cand$arl1 == Inf
+  if(any(inf_rows))
+    expect_true(all(cand$arl1_scaled[inf_rows] == 1))
+})
+
+test_that("dsnp_design weighted never ranks Inf arl1 before finite arl1", {
+  real_dsnp_limits <- dsnp_limits
+  mock_dsnp_limits <- function(p0, n1, n2, ...) {
+    res <- real_dsnp_limits(p0 = p0, n1 = n1, n2 = n2, ...)
+    if(n1 == 5 && n2 == 8 && nrow(res$candidates) > 2)
+      res$candidates$arl1[1] <- Inf
+    res$best <- res$candidates[1, , drop = FALSE]
+    res
+  }
+  testthat::local_mocked_bindings(dsnp_limits = mock_dsnp_limits)
+
+  res <- dsnp_design(p0 = 0.05, p1 = 0.10,
+                     n1_range = 5:6, n2_range = 8:9,
+                     arl0_min = 50, objective = "weighted")
+  cand <- res$candidates
+
+  # With positive arl1 weight, any finite-arl1 candidate must come before Inf-arl1
+  finite_idx <- which(is.finite(cand$arl1))
+  inf_idx <- which(cand$arl1 == Inf)
+  if(length(finite_idx) > 0 && length(inf_idx) > 0)
+    expect_true(max(finite_idx) < min(inf_idx))
+})
