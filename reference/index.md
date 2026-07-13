@@ -64,6 +64,10 @@ monitoring.
   : Double-Sampling np Chart: Limit Search
 - [`cchart.DSnp()`](https://flaviobarros.github.io/IQCC/reference/cchart.DSnp.md)
   : Double-Sampling np Control Chart
+- [`print(`*`<cchart.DSnp>`*`)`](https://flaviobarros.github.io/IQCC/reference/print.cchart.DSnp.md)
+  [`summary(`*`<cchart.DSnp>`*`)`](https://flaviobarros.github.io/IQCC/reference/print.cchart.DSnp.md)
+  [`print(`*`<summary.cchart.DSnp>`*`)`](https://flaviobarros.github.io/IQCC/reference/print.cchart.DSnp.md)
+  : Print and Summarize a Double-Sampling np Control Chart
 - [`plot(`*`<cchart.DSnp>`*`)`](https://flaviobarros.github.io/IQCC/reference/plot.cchart.DSnp.md)
   : Plot a DS-np Control Chart
 
@@ -88,6 +92,10 @@ Hotelling T-squared and generalized variance charts.
 - [`cchart.GV()`](https://flaviobarros.github.io/IQCC/reference/cchart.GV.md)
   [`plot(`*`<cchart.GV>`*`)`](https://flaviobarros.github.io/IQCC/reference/cchart.GV.md)
   : Generalized Variance Control Chart
+- [`print(`*`<cchart.GV>`*`)`](https://flaviobarros.github.io/IQCC/reference/print.cchart.GV.md)
+  [`summary(`*`<cchart.GV>`*`)`](https://flaviobarros.github.io/IQCC/reference/print.cchart.GV.md)
+  [`print(`*`<summary.cchart.GV>`*`)`](https://flaviobarros.github.io/IQCC/reference/print.cchart.GV.md)
+  : Print and Summarize a Generalized Variance Control Chart
 
 ## Data preparation and utilities
 
