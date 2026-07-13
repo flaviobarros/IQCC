@@ -72,8 +72,8 @@ data.frame(
   lcl = lim_p$lcl,
   center = lim_p$center,
   ucl = lim_p$ucl,
-  actual_alpha = risk_p$alpha,
-  arl0 = risk_p$arl0
+  actual_alpha = risk_p,
+  arl0 = ifelse(risk_p == 0, Inf, 1 / risk_p)
 )
 ```
 
