@@ -38,6 +38,29 @@ jobs:
         run: pkgdown::build_site_github_pages(dest_dir = "docs", new_process = FALSE, install = FALSE)
         shell: Rscript {0}
 
+      - name: Verify vignette execution and generated outputs
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          for article in iqcc-positioning high-quality-processes statistical-foundations; do
+            test -s "docs/articles/${article}.html"
+          done
+
+          grep -q "IQCC_EXECUTED_POSITIONING" docs/articles/iqcc-positioning.html
+          grep -q "IQCC_EXECUTED_HIGH_QUALITY" docs/articles/high-quality-processes.html
+          grep -q "IQCC_EXECUTED_FOUNDATIONS" docs/articles/statistical-foundations.html
+
+          grep -q "actual_alpha" docs/articles/iqcc-positioning.html
+          grep -q "ARL0" docs/articles/high-quality-processes.html
+          grep -q "gv_table" docs/articles/statistical-foundations.html
+
+          figure_count=$(find docs/articles -type f \( -name '*.png' -o -name '*.svg' \) | wc -l)
+          if [ "$figure_count" -lt 3 ]; then
+            echo "Expected at least three generated vignette figures, found $figure_count"
+            exit 1
+          fi
+
       - name: Deploy to GitHub Pages
         if: github.event_name == 'push'
         uses: JamesIves/github-pages-deploy-action@v4.6.8
