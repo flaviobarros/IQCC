@@ -72,8 +72,8 @@ pchart_table <- do.call(
       lcl = lim$lcl,
       center = lim$center,
       ucl = lim$ucl,
-      alpha = risk$alpha,
-      arl0 = risk$arl0
+      alpha = risk,
+      arl0 = ifelse(risk == 0, Inf, 1 / risk)
     )
   })
 )
@@ -118,8 +118,8 @@ u_table <- do.call(
       lcl = lim$lcl,
       center = lim$center,
       ucl = lim$ucl,
-      alpha = risk$alpha,
-      arl0 = risk$arl0
+      alpha = risk,
+      arl0 = ifelse(risk == 0, Inf, 1 / risk)
     )
   })
 )
