@@ -55,8 +55,8 @@ p_results <- do.call(
       lcl = lim$lcl,
       center = lim$center,
       ucl = lim$ucl,
-      actual_alpha = risk$alpha,
-      arl0 = risk$arl0
+      actual_alpha = risk,
+      arl0 = ifelse(risk == 0, Inf, 1 / risk)
     )
   })
 )
