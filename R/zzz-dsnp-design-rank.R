@@ -19,6 +19,12 @@ dsnp_design <- function(
 {
     objective <- match.arg(objective)
 
+    # Preserve the validation contract of the original implementation before
+    # requesting the full candidate set internally.
+    if(length(max_results) != 1 || !is.finite(max_results) ||
+       max_results != floor(max_results) || max_results < 1)
+        stop("max_results must be a positive integer")
+
     # Ask the validated implementation for the full ranked set so a finite
     # candidate cannot be lost before the additional weighted-order rule is
     # applied.
