@@ -2,40 +2,20 @@
 % Please edit documentation in R/cchart.S.R
 \name{cchart.S}
 \alias{cchart.S}
-\title{S Control Chart.}
-\usage{
-cchart.S(x, type = "n", m = NULL)
-}
+\title{Standard-Deviation Control Chart}
+\usage{cchart.S(x, type = c("n", "e"), m = NULL)}
 \arguments{
-\item{x}{The data to be plotted.}
-
-\item{type}{A character string specifying the type of S control chart to be
-plotted where "n" plots a S chart with normalized probability limits and "e"
-plots a S chart with exact limits.}
-
-\item{m}{The sample size. Only necessary in the control chart with exact
-(probability) limits.}
+\item{x}{Subgroup data accepted by \code{qcc::qcc()} for an \code{"S"} chart. Rows represent subgroups and columns observations within subgroups.}
+\item{type}{Either \code{"n"} for normalized limits or \code{"e"} for exact equal-tail probability limits.}
+\item{m}{Integer subgroup size, at least 2. It is required when \code{type = "e"}. If omitted, a warning is issued and the normalized chart is drawn instead.}
 }
-\value{
-Return a S control chart.
-}
-\description{
-This function builds a S control chart.
-}
-\details{
-The exact limits are the alpha/2 and 1-alpha/2 quantiles of the S
-distribution which is proportional to the square root of a chi-square
-distribution.
-}
-\examples{
-
-data(softdrink)
-#S chart with normalized probability limits
-cchart.S(softdrink, type = "n")
-#S chart with exact probability limits
-cchart.S(softdrink, type = "e", 10)
-
-}
-\author{
-Daniela R. Recchia, Emanuel P. Barbosa
-}
+\value{Invisibly, the \code{"qcc"} object returned by \code{qcc::qcc()}. The function also draws the chart.}
+\description{Build a control chart for subgroup standard deviations using either normalized limits or exact probability limits derived from the chi-square distribution of the sample variance.}
+\details{For exact limits, \eqn{(m-1)S^2/\sigma^2} is treated as chi-square with \eqn{m-1} degrees of freedom. Limits are obtained from the 0.00135 and 0.99865 chi-square quantiles and the scale estimate \code{qcc::sd.S(x)}.}
+\section{Errors and warnings}{An error is raised for an unsupported \code{type} or an invalid supplied \code{m}. If exact limits are requested without \code{m}, the function warns and falls back to the normalized chart.}
+\examples{data(softdrink)
+normalized <- cchart.S(softdrink, type = "n")
+exact <- cchart.S(softdrink, type = "e", m = 10)}
+\references{Montgomery, D. C. (2009). \emph{Introduction to Statistical Quality Control}, 6th ed. Wiley.}
+\seealso{\code{\link{cchart.R}}, \code{\link{c4}}}
+\author{Daniela R. Recchia, Emanuel P. Barbosa}
