@@ -1,22 +1,50 @@
-#' False Alarm probability for the 3-sigma R chart.
-#' 
-#' Used to calculate the real probability of false alarm in the 3-sigma R
-#' chart.
-#' 
-#' This alpha risk is calculated under the exact R statistics distribution and
-#' its values for small sample sizes will be much larger than the reference
-#' value 0,0027.
-#' 
-#' @param n The sample size. Can be a vector for multiple sample sizes.
-#' @return Return a vector of alpha risk values for the given sample sizes.
+#' False-Alarm Probability for the Three-Sigma R Chart
+#'
+#' Compute the actual in-control false-alarm probability of the conventional
+#' three-sigma range chart under the exact distribution of the relative range
+#' statistic \eqn{W = R / \sigma}.
+#'
+#' The conventional limits are
+#' \deqn{D_1\sigma = \max\{0, d_2(n) - 3d_3(n)\}\sigma}
+#' and
+#' \deqn{D_2\sigma = \{d_2(n) + 3d_3(n)\}\sigma.}
+#' Because the relative range is not normally distributed for the small
+#' subgroup sizes commonly used in practice, the resulting false-alarm
+#' probability can be substantially larger than 0.0027.
+#'
+#' @param n Numeric vector of integer subgroup sizes, each at least 2.
+#'
+#' @return A numeric vector with the same length and order as \code{n}.
+#' Element \eqn{i} is
+#' \deqn{1 - \{F_W(D_2;n_i) - F_W(D_1;n_i)\},}
+#' where \eqn{F_W} is evaluated with \code{stats::ptukey()} using infinite
+#' denominator degrees of freedom.
+#'
+#' @section Interpretation:
+#' The result is the probability that an in-control subgroup falls below the
+#' conventional lower limit or above the conventional upper limit. It is not
+#' the nominal value requested by an exact probability-limit design.
+#'
+#' @section Errors:
+#' An error is raised when any subgroup size is smaller than 2. The underlying
+#' \code{d2()} and \code{d3()} calculations also require finite admissible
+#' subgroup sizes.
+#'
+#' @references
+#' Barbosa, E. P., Gneri, M. A., and Meneguetti, A. (2013). Range control
+#' charts revisited: Simpler Tippett-like formulae, its practical
+#' implementation, and the study of false alarm. \emph{Communications in
+#' Statistics - Simulation and Computation}, 42(2), 247--262.
+#' \doi{10.1080/03610918.2011.639967}.
+#'
+#' @seealso \code{\link{cchart.R}}, \code{\link{d2}}, \code{\link{d3}},
+#' \code{\link{table.qtukey}}
 #' @export
 #' @author Daniela R. Recchia, Emanuel P. Barbosa
-#' @seealso \link{d2},\link{d3},\link{c4}
 #' @importFrom stats ptukey
 #' @examples
-#' 
-#' alpha.risk(15)
-#' 
+#' alpha.risk(5)
+#' alpha.risk(c(3, 5, 10, 15))
 alpha.risk <- function(n)
 {
     D1 <- function(n)

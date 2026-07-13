@@ -2,33 +2,15 @@
 % Please edit documentation in R/alpha.risk.R
 \name{alpha.risk}
 \alias{alpha.risk}
-\title{False Alarm probability for the 3-sigma R chart.}
-\usage{
-alpha.risk(n)
-}
-\arguments{
-\item{n}{The sample size. Can be a vector for multiple sample sizes.}
-}
-\value{
-Return a vector of alpha risk values for the given sample sizes.
-}
-\description{
-Used to calculate the real probability of false alarm in the 3-sigma R
-chart.
-}
-\details{
-This alpha risk is calculated under the exact R statistics distribution and
-its values for small sample sizes will be much larger than the reference
-value 0,0027.
-}
-\examples{
-
-alpha.risk(15)
-
-}
-\seealso{
-\link{d2},\link{d3},\link{c4}
-}
-\author{
-Daniela R. Recchia, Emanuel P. Barbosa
-}
+\title{False-Alarm Probability for the Three-Sigma R Chart}
+\usage{alpha.risk(n)}
+\arguments{\item{n}{Numeric vector of integer subgroup sizes, each at least 2.}}
+\value{A numeric vector with the same length and order as \code{n}, containing the exact in-control false-alarm probability of the conventional three-sigma R chart.}
+\description{Compute the actual in-control false-alarm probability of the conventional three-sigma range chart under the exact distribution of the relative range statistic \eqn{W = R / \sigma}.}
+\details{The conventional limits use \eqn{D_1=\max\{0,d_2(n)-3d_3(n)\}} and \eqn{D_2=d_2(n)+3d_3(n)}. The returned risk is \eqn{1-\{F_W(D_2)-F_W(D_1)\}}, evaluated with \code{stats::ptukey()}. For small subgroup sizes this risk can be substantially larger than 0.0027.}
+\section{Errors}{An error is raised when any subgroup size is smaller than 2.}
+\examples{alpha.risk(5)
+alpha.risk(c(3, 5, 10, 15))}
+\references{Barbosa, E. P., Gneri, M. A., and Meneguetti, A. (2013). Range control charts revisited: Simpler Tippett-like formulae, its practical implementation, and the study of false alarm. \emph{Communications in Statistics - Simulation and Computation}, 42(2), 247--262. \doi{10.1080/03610918.2011.639967}.}
+\seealso{\code{\link{cchart.R}}, \code{\link{d2}}, \code{\link{d3}}, \code{\link{table.qtukey}}}
+\author{Daniela R. Recchia, Emanuel P. Barbosa}
