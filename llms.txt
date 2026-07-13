@@ -214,11 +214,11 @@ measurements.
 - [`cchart.Xbar_R()`](https://flaviobarros.github.io/IQCC/reference/cchart.Xbar_R.md)
   : X-bar and R control charts
 - [`cchart.R()`](https://flaviobarros.github.io/IQCC/reference/cchart.R.md)
-  : R control chart
+  : Range Control Chart
 - [`cchart.S()`](https://flaviobarros.github.io/IQCC/reference/cchart.S.md)
-  : S Control Chart.
+  : Standard-Deviation Control Chart
 - [`alpha.risk()`](https://flaviobarros.github.io/IQCC/reference/alpha.risk.md)
-  : False Alarm probability for the 3-sigma R chart.
+  : False-Alarm Probability for the Three-Sigma R Chart
 - [`c4()`](https://flaviobarros.github.io/IQCC/reference/c4.md) : C4
   Constant.
 - [`d2()`](https://flaviobarros.github.io/IQCC/reference/d2.md) : D2

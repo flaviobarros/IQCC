@@ -33,9 +33,6 @@ Daniela R. Recchia, Emanuel P. Barbosa.
 
 data(pistonrings)
 attach(pistonrings)
-#> The following objects are masked from pistonrings (pos = 3):
-#> 
-#>     V1, V2, V3, V4, V5
 cchart.Xbar_R(pistonrings[1:25, ], 5)
 
 

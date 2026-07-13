@@ -1,39 +1,62 @@
-# S Control Chart.
+# Standard-Deviation Control Chart
 
-This function builds a S control chart.
+Build a control chart for subgroup standard deviations using either
+normalized limits or exact probability limits derived from the
+chi-square distribution of the sample variance.
 
 ## Usage
 
 ``` r
-cchart.S(x, type = "n", m = NULL)
+cchart.S(x, type = c("n", "e"), m = NULL)
 ```
 
 ## Arguments
 
 - x:
 
-  The data to be plotted.
+  Subgroup data accepted by
+  [`qcc::qcc()`](https://rdrr.io/pkg/qcc/man/qcc.html) for an `"S"`
+  chart. Rows represent subgroups and columns observations within
+  subgroups.
 
 - type:
 
-  A character string specifying the type of S control chart to be
-  plotted where "n" plots a S chart with normalized probability limits
-  and "e" plots a S chart with exact limits.
+  Either `"n"` for normalized limits or `"e"` for exact equal-tail
+  probability limits.
 
 - m:
 
-  The sample size. Only necessary in the control chart with exact
-  (probability) limits.
+  Integer subgroup size, at least 2. It is required when `type = "e"`.
+  If omitted, a warning is issued and the normalized chart is drawn
+  instead.
 
 ## Value
 
-Return a S control chart.
+Invisibly, the `"qcc"` object returned by
+[`qcc::qcc()`](https://rdrr.io/pkg/qcc/man/qcc.html). The function also
+draws the chart.
 
 ## Details
 
-The exact limits are the alpha/2 and 1-alpha/2 quantiles of the S
-distribution which is proportional to the square root of a chi-square
-distribution.
+For exact limits, \\(m-1)S^2/\sigma^2\\ is treated as chi-square with
+\\m-1\\ degrees of freedom. Limits are obtained from the 0.00135 and
+0.99865 chi-square quantiles and the scale estimate `qcc::sd.S(x)`.
+
+## Errors and warnings
+
+An error is raised for an unsupported `type` or an invalid supplied `m`.
+If exact limits are requested without `m`, the function warns and falls
+back to the normalized chart.
+
+## References
+
+Montgomery, D. C. (2009). *Introduction to Statistical Quality Control*,
+6th ed. Wiley.
+
+## See also
+
+[`cchart.R`](https://flaviobarros.github.io/IQCC/reference/cchart.R.md),
+[`c4`](https://flaviobarros.github.io/IQCC/reference/c4.md)
 
 ## Author
 
@@ -42,44 +65,8 @@ Daniela R. Recchia, Emanuel P. Barbosa
 ## Examples
 
 ``` r
-
 data(softdrink)
-#S chart with normalized probability limits
-cchart.S(softdrink, type = "n")
+normalized <- cchart.S(softdrink, type = "n")
 
-#> List of 11
-#>  $ call      : language qcc(data = x, type = "S")
-#>  $ type      : chr "S"
-#>  $ data.name : chr "x"
-#>  $ data      : num [1:15, 1:10] 2.5 0 1.5 0 0 1 1 0 -2 -0.5 ...
-#>   ..- attr(*, "dimnames")=List of 2
-#>  $ statistics: Named num [1:15] 1.333 0.926 1.125 1.174 0.471 ...
-#>   ..- attr(*, "names")= chr [1:15] "1" "2" "3" "4" ...
-#>  $ sizes     : int [1:15] 10 10 10 10 10 10 10 10 10 10 ...
-#>  $ center    : num 1.09
-#>  $ std.dev   : num 1.12
-#>  $ nsigmas   : num 3
-#>  $ limits    : num [1, 1:2] 0.31 1.88
-#>   ..- attr(*, "dimnames")=List of 2
-#>  $ violations:List of 2
-#>  - attr(*, "class")= chr "qcc"
-#S chart with exact probability limits
-cchart.S(softdrink, type = "e", 10)
-
-#> List of 11
-#>  $ call      : language qcc(data = x, type = "S", limits = c((sqrt(qchisq(Q_LOWER, m - 1)/(m -      1))) * sd.S(x), (sqrt(qchisq(Q_UPPER,| __truncated__
-#>  $ type      : chr "S"
-#>  $ data.name : chr "x"
-#>  $ data      : num [1:15, 1:10] 2.5 0 1.5 0 0 1 1 0 -2 -0.5 ...
-#>   ..- attr(*, "dimnames")=List of 2
-#>  $ statistics: Named num [1:15] 1.333 0.926 1.125 1.174 0.471 ...
-#>   ..- attr(*, "names")= chr [1:15] "1" "2" "3" "4" ...
-#>  $ sizes     : int [1:15] 10 10 10 10 10 10 10 10 10 10 ...
-#>  $ center    : num 1.09
-#>  $ std.dev   : num 1.12
-#>  $ nsigmas   : num 3
-#>  $ limits    : num [1, 1:2] 0.417 1.95
-#>   ..- attr(*, "dimnames")=List of 2
-#>  $ violations:List of 2
-#>  - attr(*, "class")= chr "qcc"
+exact <- cchart.S(softdrink, type = "e", m = 10)
 ```

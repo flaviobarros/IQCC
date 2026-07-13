@@ -1,44 +1,77 @@
-# R control chart
+# Range Control Chart
 
-This function builds a R control chart.
+Build a control chart for subgroup ranges using either the conventional
+three-sigma approximation or exact probability limits from the
+distribution of the relative range \\W = R / \sigma\\.
 
 ## Usage
 
 ``` r
-cchart.R(x, n, type = "norm", y = NULL)
+cchart.R(x, n, type = c("norm", "tukey"), y = NULL)
 ```
 
 ## Arguments
 
 - x:
 
-  The data to be plotted.
+  Phase II subgroup data accepted by
+  [`qcc::qcc()`](https://rdrr.io/pkg/qcc/man/qcc.html) for an `"R"`
+  chart. Rows represent subgroups and columns observations within
+  subgroups.
 
 - n:
 
-  The sample size.
+  Integer subgroup size, at least 2.
 
 - type:
 
-  The type of R chart to be plotted. The options are "norm" (traditional
-  Shewhart R chart) and "tukey" (exact R chart). If not specified, a
-  Shewhart R chart will be plotted.
+  Either `"norm"` for the conventional three-sigma chart or `"tukey"`
+  for exact equal-tail probability limits.
 
 - y:
 
-  The data used in phase I to estimate the standard deviation. Required
-  when type = "tukey".
+  Phase I subgroup data used to estimate \\\sigma\\ through
+  [`qcc::sd.R()`](https://rdrr.io/pkg/qcc/man/stats.R.html) when
+  `type = "tukey"`.
 
 ## Value
 
-Return a R control chart.
+Invisibly, the `"qcc"` object returned by
+[`qcc::qcc()`](https://rdrr.io/pkg/qcc/man/qcc.html). The function also
+draws the chart.
 
 ## Details
 
-The Shewhart R chart was designed for phase I (at this moment). The
-limits of the exact R chart are the alpha/2 and 1-alpha/2 quantiles of
-the R distribution that are calculated as estimated process sd times the
-quantiles of the relative range (W=R/sigma) distribution.
+For `type = "norm"`, limits are delegated to `qcc`. For
+`type = "tukey"`, exact limits are computed from
+[`stats::qtukey()`](https://rdrr.io/r/stats/Tukey.html) and the Phase I
+scale estimate `qcc::sd.R(y)`. The conventional chart annotates the
+actual false-alarm risk from `alpha.risk(n)`.
+
+## Phase convention
+
+The exact chart treats `y` as Phase I reference data and `x` as the
+plotted monitoring data.
+
+## Errors
+
+An error is raised for an unsupported `type`, for `n < 2`, or when `y`
+is omitted for the exact chart.
+
+## References
+
+Barbosa, E. P., Gneri, M. A., and Meneguetti, A. (2013). Range control
+charts revisited: Simpler Tippett-like formulae, its practical
+implementation, and the study of false alarm. *Communications in
+Statistics - Simulation and Computation*, 42(2), 247–262.
+[doi:10.1080/03610918.2011.639967](https://doi.org/10.1080/03610918.2011.639967)
+.
+
+## See also
+
+[`alpha.risk`](https://flaviobarros.github.io/IQCC/reference/alpha.risk.md),
+[`cchart.S`](https://flaviobarros.github.io/IQCC/reference/cchart.S.md),
+[`table.qtukey`](https://flaviobarros.github.io/IQCC/reference/table.qtukey.md)
 
 ## Author
 
@@ -47,28 +80,8 @@ Daniela R. Recchia, Emanuel P. Barbosa
 ## Examples
 
 ``` r
-
 data(pistonrings)
-attach(pistonrings)
-cchart.R(pistonrings[1:25,], 5)
+conventional <- cchart.R(pistonrings[1:25, ], 5)
 
-cchart.R(pistonrings[26:40, ], 5, type = "tukey", pistonrings[1:25, ])
-
-#> List of 11
-#>  $ call      : language qcc(data = x, type = "R", limits = c(qtukey(Q_LOWER, n, Inf) * sd.R(y),      qtukey(Q_UPPER, n, Inf) * sd.R(y)))
-#>  $ type      : chr "R"
-#>  $ data.name : chr "x"
-#>  $ data      : num [1:15, 1:5] 74 74 74 74 74 ...
-#>   ..- attr(*, "dimnames")=List of 2
-#>  $ statistics: Named num [1:15] 0.044 0.025 0.015 0.019 0.017 ...
-#>   ..- attr(*, "names")= chr [1:15] "26" "27" "28" "29" ...
-#>  $ sizes     : Named int [1:15] 5 5 5 5 5 5 5 5 5 5 ...
-#>   ..- attr(*, "names")= chr [1:15] "26" "27" "28" "29" ...
-#>  $ center    : num 0.0245
-#>  $ std.dev   : num 0.0105
-#>  $ nsigmas   : num 3
-#>  $ limits    : num [1, 1:2] 0.00388 0.05262
-#>   ..- attr(*, "dimnames")=List of 2
-#>  $ violations:List of 2
-#>  - attr(*, "class")= chr "qcc"
+exact <- cchart.R(pistonrings[26:40, ], 5, type = "tukey", y = pistonrings[1:25, ])
 ```
