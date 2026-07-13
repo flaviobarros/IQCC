@@ -316,6 +316,10 @@ dsnp_design <- function(
                             weights["ass0"] * candidates$ass0_scaled
 
         candidates <- candidates[order(
+            if(weights["arl1"] > 0)
+                !is.finite(candidates$arl1)
+            else
+                FALSE,
             candidates$score,
             candidates$n1 + candidates$n2,
             candidates$n1,

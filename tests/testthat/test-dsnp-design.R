@@ -620,3 +620,36 @@ test_that("dsnp_design weighted never ranks Inf arl1 before finite arl1", {
   if(length(finite_idx) > 0 && length(inf_idx) > 0)
     expect_true(max(finite_idx) < min(inf_idx))
 })
+
+test_that("weighted ordering: finite ARL1 precedes Inf ARL1 deterministically", {
+  cand <- data.frame(
+    arl1 = c(20, Inf),
+    ass0 = c(5, 1),
+    score = c(0, 1),
+    n1 = c(5L, 5L),
+    n2 = c(8L, 8L),
+    wl_accept = c(1L, 1L),
+    ucl1_reject = c(3L, 3L),
+    ucl2_accept = c(2L, 2L),
+    stringsAsFactors = FALSE
+  )
+  weights <- c(arl1 = 1, ass0 = 1)
+
+  ord <- order(
+      if(weights["arl1"] > 0)
+          !is.finite(cand$arl1)
+      else
+          FALSE,
+      cand$score,
+      cand$n1 + cand$n2,
+      cand$n1,
+      cand$n2,
+      cand$wl_accept,
+      cand$ucl1_reject,
+      cand$ucl2_accept
+  )
+
+  expect_equal(ord, c(1L, 2L))
+  expect_true(is.finite(cand$arl1[ord[1]]))
+  expect_equal(cand$arl1[ord[2]], Inf)
+})
