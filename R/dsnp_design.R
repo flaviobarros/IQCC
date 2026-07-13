@@ -146,8 +146,8 @@ dsnp_design <- function(
     if(length(max_results) != 1 || !is.finite(max_results) ||
        max_results != floor(max_results) || max_results < 1)
         stop("max_results must be a positive integer")
-    if(length(progress) != 1 || !is.logical(progress))
-        stop("progress must be a logical scalar")
+    if(length(progress) != 1 || !is.logical(progress) || is.na(progress))
+        stop("progress must be a logical scalar (TRUE or FALSE)")
 
     # --- Determine effective alpha for dsnp_limits ---
     alpha_for_limits <- if(!is.null(alpha)) alpha else 1 / arl0_min

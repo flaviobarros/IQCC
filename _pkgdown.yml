@@ -81,6 +81,8 @@ reference:
   - dsnp_arl
   - dsnp_ass
   - dsnp_limits
+  - dsnp_design
+  - print.dsnp_design
   - cchart.DSnp
   - print.cchart.DSnp
   - plot.cchart.DSnp

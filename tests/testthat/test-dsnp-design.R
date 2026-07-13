@@ -142,11 +142,14 @@ test_that("dsnp_design respects arl0_min", {
 
 # --- 7. alpha respected ---
 
-test_that("dsnp_design respects alpha", {
+# When alpha is supplied alone (arl0_min = NULL), only p_signal0 <= alpha
+# is enforced. If both alpha and arl0_min are given, both constraints apply.
+test_that("dsnp_design respects alpha alone", {
   res <- dsnp_design(p0 = 0.05, p1 = 0.10,
                      n1_range = 5:6, n2_range = 8:9,
-                     alpha = 0.01, objective = "arl1")
+                     alpha = 0.01, arl0_min = NULL, objective = "arl1")
   expect_true(all(res$candidates$p_signal0 <= 0.01))
+  expect_null(res$parameters$arl0_min)
 })
 
 # --- 8. Simultaneous arl0_min and alpha ---
@@ -239,17 +242,30 @@ test_that("dsnp_design objective=weighted respects weights", {
 # --- 12. Constant scale in weighted normalization ---
 
 test_that("dsnp_design weighted handles constant arl1 or ass0", {
-  # When all feasible candidates have the same arl1, arl1_scaled must be 0
+  # Force constant arl1 by overriding dsnp_limits to return identical arl1
+  real_dsnp_limits <- dsnp_limits
+  mock_dsnp_limits <- function(p0, n1, n2, ...) {
+    res <- real_dsnp_limits(p0 = p0, n1 = n1, n2 = n2, ...)
+    res$candidates$arl1 <- 100
+    res$best <- res$candidates[1, , drop = FALSE]
+    res
+  }
+  testthat::local_mocked_bindings(dsnp_limits = mock_dsnp_limits)
+
   res <- dsnp_design(p0 = 0.05, p1 = 0.10,
-                     n1_range = 5, n2_range = 8,
+                     n1_range = 5:6, n2_range = 8:9,
                      arl0_min = 50, objective = "weighted")
   cand <- res$candidates
-  # With a single (n1, n2) pair, arl1 values can still differ across limits
-  # So test the general property: if min == max, scaled is 0
-  if(min(cand$arl1) == max(cand$arl1))
-    expect_true(all(cand$arl1_scaled == 0))
-  if(min(cand$ass0) == max(cand$ass0))
-    expect_true(all(cand$ass0_scaled == 0))
+
+  # All arl1 values are identical, so arl1_scaled must be 0
+  expect_true(all(cand$arl1 == 100))
+  expect_true(all(cand$arl1_scaled == 0))
+
+  # ass0 still varies, so ass0_scaled is not all zero
+  expect_true(length(unique(cand$ass0)) > 1)
+
+  # score reduces to weight_ass0 * ass0_scaled
+  expect_equal(cand$score, 1 * cand$ass0_scaled, tolerance = 1e-10)
 })
 
 # --- 13. best equals first row of candidates ---
@@ -281,16 +297,32 @@ test_that("dsnp_design max_results limits output, not search", {
 # --- 15. failures recorded without aborting ---
 
 test_that("dsnp_design records failures without aborting", {
-  # Invalid n2 for a single pair in a range; other pairs should succeed
-  # We can't easily force dsnp_limits to fail for specific pairs,
-  # so we verify the failure mechanism exists
+  # Mock dsnp_limits to fail on (n1=6, n2=8) and succeed otherwise
+  real_dsnp_limits <- dsnp_limits
+  mock_dsnp_limits <- function(p0, n1, n2, ...) {
+    if(n1 == 6 && n2 == 8)
+      stop("mock failure for n1=6, n2=8")
+    real_dsnp_limits(p0 = p0, n1 = n1, n2 = n2, ...)
+  }
+  testthat::local_mocked_bindings(dsnp_limits = mock_dsnp_limits)
+
   res <- dsnp_design(p0 = 0.05, p1 = 0.10,
                      n1_range = 5:6, n2_range = 8:9,
                      arl0_min = 50, objective = "arl1")
+
+  # One pair failed, three succeeded
+  expect_equal(res$search$n_failed_pairs, 1L)
+  expect_equal(res$search$n_pairs_evaluated, 4L)
+
+  # failures data.frame has the right structure and content
   expect_s3_class(res$failures, "data.frame")
-  expect_true("n1" %in% names(res$failures))
-  expect_true("n2" %in% names(res$failures))
-  expect_true("message" %in% names(res$failures))
+  expect_equal(nrow(res$failures), 1)
+  expect_equal(res$failures$n1, 6)
+  expect_equal(res$failures$n2, 8)
+  expect_true(grepl("mock failure", res$failures$message))
+
+  # Search still produced results from the other 3 pairs
+  expect_true(nrow(res$candidates) > 0)
 })
 
 # --- 16. Result matches manual enumeration ---
@@ -452,6 +484,17 @@ test_that("dsnp_design errors on invalid max_results", {
                n1_range = 5:6, n2_range = 8:9,
                arl0_min = 50, max_results = 0),
                "max_results must be a positive integer")
+})
+
+test_that("dsnp_design errors on progress = NA", {
+  expect_error(dsnp_design(p0 = 0.05, p1 = 0.10,
+               n1_range = 5:6, n2_range = 8:9,
+               arl0_min = 50, progress = NA),
+               "progress must be a logical scalar")
+  expect_error(dsnp_design(p0 = 0.05, p1 = 0.10,
+               n1_range = 5:6, n2_range = 8:9,
+               arl0_min = 50, progress = NA_real_),
+               "progress must be a logical scalar")
 })
 
 test_that("dsnp_design errors on empty ranges", {
