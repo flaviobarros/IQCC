@@ -8,9 +8,13 @@ test_that("generalized variance chart methods expose a stable summary", {
     expect_equal(s$dimensions, c(n = 6, p = 2))
     expect_equal(s$subgroups[["phase1"]], 5)
     expect_true(all(c("lcl", "center", "ucl") %in% names(s$limits)))
-    expect_silent(print(chart))
-    expect_silent(print(s))
-    expect_identical(invisible(print(chart)), chart)
+
+    expect_output(returned_chart <- print(chart),
+                  "Generalized Variance Control Chart")
+    expect_output(returned_summary <- print(s),
+                  "Generalized Variance Control Chart")
+    expect_identical(returned_chart, chart)
+    expect_identical(returned_summary, s)
 })
 
 test_that("DS-np chart methods summarize stages and signals", {
@@ -34,7 +38,11 @@ test_that("DS-np chart methods summarize stages and signals", {
     expect_equal(nrow(s$signals), sum(chart$data$signal))
     expect_true(all(c("arl0", "ass0", "p_signal0") %in%
                     names(s$performance)))
-    expect_silent(print(chart))
-    expect_silent(print(s))
-    expect_identical(invisible(print(chart)), chart)
+
+    expect_output(returned_chart <- print(chart),
+                  "Double-Sampling np Control Chart")
+    expect_output(returned_summary <- print(s),
+                  "Double-Sampling np Control Chart")
+    expect_identical(returned_chart, chart)
+    expect_identical(returned_summary, s)
 })
