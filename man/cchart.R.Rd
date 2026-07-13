@@ -2,42 +2,22 @@
 % Please edit documentation in R/cchart.R.R
 \name{cchart.R}
 \alias{cchart.R}
-\title{R control chart}
-\usage{
-cchart.R(x, n, type = "norm", y = NULL)
-}
+\title{Range Control Chart}
+\usage{cchart.R(x, n, type = c("norm", "tukey"), y = NULL)}
 \arguments{
-\item{x}{The data to be plotted.}
-
-\item{n}{The sample size.}
-
-\item{type}{The type of R chart to be plotted. The options are "norm"
-(traditional Shewhart R chart) and "tukey" (exact R chart). If not
-specified, a Shewhart R chart will be plotted.}
-
-\item{y}{The data used in phase I to estimate the standard deviation.
-Required when type = "tukey".}
+\item{x}{Phase II subgroup data accepted by \code{qcc::qcc()} for an \code{"R"} chart. Rows represent subgroups and columns observations within subgroups.}
+\item{n}{Integer subgroup size, at least 2.}
+\item{type}{Either \code{"norm"} for the conventional three-sigma chart or \code{"tukey"} for exact equal-tail probability limits.}
+\item{y}{Phase I subgroup data used to estimate \eqn{\sigma} through \code{qcc::sd.R()} when \code{type = "tukey"}.}
 }
-\value{
-Return a R control chart.
-}
-\description{
-This function builds a R control chart.
-}
-\details{
-The Shewhart R chart was designed for phase I (at this moment).  The limits
-of the exact R chart are the alpha/2 and 1-alpha/2 quantiles of the R
-distribution that are calculated as estimated process sd times the quantiles
-of the relative range (W=R/sigma) distribution.
-}
-\examples{
-
-data(pistonrings)
-attach(pistonrings)
-cchart.R(pistonrings[1:25,], 5)
-cchart.R(pistonrings[26:40, ], 5, type = "tukey", pistonrings[1:25, ])
-
-}
-\author{
-Daniela R. Recchia, Emanuel P. Barbosa
-}
+\value{Invisibly, the \code{"qcc"} object returned by \code{qcc::qcc()}. The function also draws the chart.}
+\description{Build a control chart for subgroup ranges using either the conventional three-sigma approximation or exact probability limits from the distribution of the relative range \eqn{W = R / \sigma}.}
+\details{For \code{type = "norm"}, limits are delegated to \code{qcc}. For \code{type = "tukey"}, exact limits are computed from \code{stats::qtukey()} and the Phase I scale estimate \code{qcc::sd.R(y)}. The conventional chart annotates the actual false-alarm risk from \code{alpha.risk(n)}.}
+\section{Phase convention}{The exact chart treats \code{y} as Phase I reference data and \code{x} as the plotted monitoring data.}
+\section{Errors}{An error is raised for an unsupported \code{type}, for \code{n < 2}, or when \code{y} is omitted for the exact chart.}
+\examples{data(pistonrings)
+conventional <- cchart.R(pistonrings[1:25, ], 5)
+exact <- cchart.R(pistonrings[26:40, ], 5, type = "tukey", y = pistonrings[1:25, ])}
+\references{Barbosa, E. P., Gneri, M. A., and Meneguetti, A. (2013). Range control charts revisited: Simpler Tippett-like formulae, its practical implementation, and the study of false alarm. \emph{Communications in Statistics - Simulation and Computation}, 42(2), 247--262. \doi{10.1080/03610918.2011.639967}.}
+\seealso{\code{\link{alpha.risk}}, \code{\link{cchart.S}}, \code{\link{table.qtukey}}}
+\author{Daniela R. Recchia, Emanuel P. Barbosa}
