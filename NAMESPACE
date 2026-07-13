@@ -2,6 +2,12 @@
 
 S3method(plot,cchart.DSnp)
 S3method(plot,cchart.GV)
+S3method(print,cchart.DSnp)
+S3method(print,cchart.GV)
+S3method(print,summary.cchart.DSnp)
+S3method(print,summary.cchart.GV)
+S3method(summary,cchart.DSnp)
+S3method(summary,cchart.GV)
 export(T2.1)
 export(T2.2)
 export(add.data)

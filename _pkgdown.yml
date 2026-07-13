@@ -82,6 +82,7 @@ reference:
   - dsnp_ass
   - dsnp_limits
   - cchart.DSnp
+  - print.cchart.DSnp
   - plot.cchart.DSnp
 
 - title: Multivariate monitoring
@@ -95,6 +96,7 @@ reference:
   - gv_limits
   - gv_alpha_risk
   - cchart.GV
+  - print.cchart.GV
   - plot.cchart.GV
 
 - title: Data preparation and utilities
