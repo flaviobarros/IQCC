@@ -251,6 +251,46 @@ For higher dimensions, IQCC offers simulation using the Bartlett factors. The
 package does not claim a generic Meijer-G implementation. Published exact
 quantiles are used only in explicitly supported dimension-three cases.
 
+# Auxiliary trace chart
+
+The generalized variance chart is sensitive to determinant changes in the
+covariance matrix. A complementary diagnostic monitors the trace of the
+standardized covariance matrix,
+
+\[
+T=(n-1)\operatorname{tr}(\Sigma_0^{-1}S).
+\]
+
+If the process is multivariate normal and \(\Sigma=\Sigma_0\), then
+
+\[
+T\sim\chi^2_{p(n-1)}.
+\]
+
+This gives an exact upper control limit for the trace chart:
+
+```{r trv-limits}
+trv_limits(n = 8, p = 2, alpha = 0.0027)
+```
+
+The trace chart complements `cchart.GV()` because covariance changes can
+preserve the determinant while changing the sum of standardized eigenvalues.
+The following deterministic example has two subgroup covariance matrices with
+the same determinant; `|S|` is unchanged, while `tr(V)` increases.
+
+```{r trv-same-determinant}
+base <- sqrt(3 / 4) * rbind(
+  c(1, 1), c(1, -1), c(-1, 1), c(-1, -1)
+)
+g0 <- base %*% chol(diag(2))
+g1 <- base %*% chol(diag(c(4, 0.25)))
+
+data.frame(
+  generalized_variance = gv_stat(list(g0, g1)),
+  trace_statistic = trv_stat(list(g0, g1), Sigma0 = diag(2))
+)
+```
+
 ```{r execution-marker, results='asis'}
 cat("<!-- IQCC_EXECUTED_FOUNDATIONS -->\n")
 ```
