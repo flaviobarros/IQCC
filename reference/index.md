@@ -62,6 +62,9 @@ monitoring.
   : Double-Sampling np Chart: Average Sample Size
 - [`dsnp_limits()`](https://flaviobarros.github.io/IQCC/reference/dsnp_limits.md)
   : Double-Sampling np Chart: Limit Search
+- [`dsnp_design()`](https://flaviobarros.github.io/IQCC/reference/dsnp_design.md)
+  [`print(`*`<dsnp_design>`*`)`](https://flaviobarros.github.io/IQCC/reference/dsnp_design.md)
+  : Double-Sampling np Chart: Complete Design Search
 - [`cchart.DSnp()`](https://flaviobarros.github.io/IQCC/reference/cchart.DSnp.md)
   : Double-Sampling np Control Chart
 - [`print(`*`<cchart.DSnp>`*`)`](https://flaviobarros.github.io/IQCC/reference/print.cchart.DSnp.md)
