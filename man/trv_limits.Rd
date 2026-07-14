@@ -47,6 +47,15 @@ A list with components \code{lcl}, \code{ucl}, \code{center},
 Compute one-sided upper control limits for the auxiliary trace statistic
 \eqn{T = (n - 1)\operatorname{tr}(\Sigma_0^{-1}S)}.
 }
+\details{
+Table 3 of Barbosa, Gneri, and Meneguetti uses \eqn{N} as the row label,
+although its numerical values correspond to subgroup size \eqn{n} and
+\eqn{p(n - 1)} degrees of freedom. Its printed probability headings also
+appear reversed: the column headed 0.9980 matches the 0.9973 quantile and
+vice versa. This function follows the mathematical definition and evaluates
+\code{qchisq(1 - alpha, df = p * (n - 1))}; it does not interchange tail
+probabilities to reproduce the apparent table-label error.
+}
 \examples{
 trv_limits(n = 8, p = 2)
 trv_limits(n = 8, p = 2, type = "simulation", nsim = 5000, seed = 2026)

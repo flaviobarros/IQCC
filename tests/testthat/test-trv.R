@@ -42,6 +42,118 @@ test_that("trv_limits uses exact chi-square distribution", {
   expect_equal(limits$ucl, stats::qchisq(0.95, df = 12))
 })
 
+test_that("trv_limits reproduces three published Table 3 rows", {
+  published <- data.frame(
+    reference = rep(
+      "Barbosa, Gneri, and Meneguetti, research report",
+      6
+    ),
+    table = rep(3L, 6),
+    line = c(
+      "N = 3, printed column 0.9980", "N = 3, printed column 0.9973",
+      "N = 16, printed column 0.9980", "N = 16, printed column 0.9973",
+      "N = 30, printed column 0.9980", "N = 30, printed column 0.9973"
+    ),
+    p = rep(3L, 6),
+    subgroup_size = rep(c(3L, 16L, 30L), each = 2),
+    df = rep(c(6L, 45L, 87L), each = 2),
+    printed_probability = rep(c(0.9980, 0.9973), 3),
+    nominal_probability = rep(c(0.9973, 0.9980), 3),
+    published_value = c(20.07, 20.79, 75.88, 77.17, 128.18, 129.83),
+    tolerance = rep(0.03, 6),
+    stringsAsFactors = FALSE
+  )
+
+  published$calculated_value <- vapply(
+    seq_len(nrow(published)),
+    function(i) trv_limits(
+      n = published$subgroup_size[i],
+      p = published$p[i],
+      alpha = 1 - published$nominal_probability[i]
+    )$ucl,
+    numeric(1)
+  )
+  published$tolerance_ratio <- abs(
+    published$calculated_value - published$published_value
+  ) / published$tolerance
+
+  expect_equal(
+    published$df,
+    published$p * (published$subgroup_size - 1L)
+  )
+  expect_true(
+    all(published$tolerance_ratio < 1),
+    info = paste(capture.output(print(published)), collapse = "\n")
+  )
+
+  # Probabilities are intentionally not swapped in trv_limits(). The published
+  # values confirm that Table 3's two probability labels are reversed.
+  expect_true(all(published$printed_probability !=
+                  published$nominal_probability))
+})
+
+test_that("published Case B summary matrices are partially reproduced", {
+  case_a_sbar <- matrix(
+    c(4.2366, 1.4773, 1.1929,
+      1.4773, 6.1264, 2.3399,
+      1.1929, 2.3399, 3.9335),
+    nrow = 3, byrow = TRUE
+  )
+  case_b_sbar <- matrix(
+    c(4.0112, 1.7865, 1.2484,
+      1.7865, 5.8933, 1.7188,
+      1.2484, 1.7188, 3.8909),
+    nrow = 3, byrow = TRUE
+  )
+  reproduced <- data.frame(
+    reference = rep(
+      "Barbosa, Gneri, and Meneguetti, research report",
+      2
+    ),
+    case = c("A", "B"),
+    table = c(9L, 10L),
+    line = rep("Mean covariance matrix and determinant", 2),
+    p = rep(3L, 2),
+    subgroup_size = rep(15L, 2),
+    published_value = c(69.8438, 66.1893),
+    calculated_value = c(det(case_a_sbar), det(case_b_sbar)),
+    tolerance = rep(0.003, 2),
+    stringsAsFactors = FALSE
+  )
+  reproduced$tolerance_ratio <- abs(
+    reproduced$calculated_value - reproduced$published_value
+  ) / reproduced$tolerance
+
+  expect_true(
+    all(reproduced$tolerance_ratio < 1),
+    info = paste(capture.output(print(reproduced)), collapse = "\n")
+  )
+  expect_lt(
+    abs(reproduced$published_value[2] /
+        reproduced$published_value[1] - 1),
+    0.06
+  )
+
+  case_b_ucl <- data.frame(
+    reference = "Barbosa, Gneri, and Meneguetti, research report",
+    figure = "9c",
+    p = 3L,
+    subgroup_size = 15L,
+    df = 42L,
+    nominal_probability = 0.9973,
+    published_value = 72.01,
+    calculated_value = trv_limits(n = 15, p = 3, alpha = 0.0027)$ucl,
+    tolerance = 0.03
+  )
+  case_b_ucl$tolerance_ratio <- abs(
+    case_b_ucl$calculated_value - case_b_ucl$published_value
+  ) / case_b_ucl$tolerance
+  expect_lt(case_b_ucl$tolerance_ratio, 1)
+
+  # Only four of the 70 generated subgroup rows are printed. Without the raw
+  # subgroups or simulation seed, the Phase II tr(V) signals cannot be rerun.
+})
+
 test_that("trv_alpha_risk equals nominal risk for chi-square limits", {
   limits <- trv_limits(n = 8, p = 2, alpha = 0.01)
   risk <- trv_alpha_risk(n = 8, p = 2, ucl = limits$ucl)
@@ -90,6 +202,20 @@ test_that("cchart.trV returns phase information and detects trace signal", {
   expect_equal(chart$limits$df, 6)
 })
 
+test_that("cchart.trV signals only strictly above the upper limit", {
+  g_identity <- .covariance_group(diag(2))
+  alpha_at_statistic <- 1 - stats::pchisq(6, df = 6)
+  chart <- cchart.trV(
+    list(g_identity),
+    Sigma0 = diag(2),
+    alpha = alpha_at_statistic,
+    plot = FALSE
+  )
+
+  expect_equal(chart$statistics, chart$limits$ucl, tolerance = 1e-12)
+  expect_length(chart$out.of.control, 0)
+})
+
 test_that("cchart.trV can estimate Sigma0 from Phase I", {
   g_identity <- .covariance_group(diag(2))
   chart <- cchart.trV(list(g_identity, g_identity), plot = FALSE)
@@ -109,6 +235,10 @@ test_that("trv inputs are validated", {
   g_identity <- .covariance_group(diag(2))
   expect_error(trv_stat(list(g_identity), Sigma0 = diag(c(1, 0))),
                "positive definite")
+  expect_error(
+    trv_stat(list(g_identity), Sigma0 = matrix(c(1, 0, 0.1, 1), 2)),
+    "symmetric"
+  )
   expect_error(trv_stat(list(g_identity), Sigma0 = diag(3)),
                "dimension")
   expect_error(trv_alpha_risk(5, 2, ucl = -1), "nonnegative")
