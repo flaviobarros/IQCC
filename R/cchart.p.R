@@ -1,53 +1,3 @@
-#' p-chart
-#'
-#' Build normal, Cornish-Fisher corrected, or standardized p charts.
-#'
-#' For a Phase I chart, \code{n1} and exactly one of \code{x1} or \code{p1}
-#' must be supplied. For a Phase II chart, \code{n2} and exactly one of
-#' \code{x2} or \code{p2} must be supplied, together with Phase I information
-#' or a known \code{phat}.
-#'
-#' When sample sizes vary, the process proportion is estimated by the pooled
-#' binomial estimator, \eqn{sum(x_i) / sum(n_i)}, rather than by the unweighted
-#' mean of subgroup proportions. The plotting wrapper uses two-sided limits;
-#' use \code{pchart_limits()} directly for one-sided upper limits.
-#'
-#' @param x1 Phase I nonconforming counts.
-#' @param n1 Phase I sample size or vector of sample sizes.
-#' @param type Chart type. Accepted values are \code{"normal"}, \code{"cf1"},
-#'   \code{"cf2"}, and \code{"standardized"}. The legacy aliases
-#'   \code{"norm"}, \code{"CF"}, and \code{"std"} remain supported;
-#'   \code{"CF"} maps to \code{"cf1"}.
-#' @param p1 Phase I subgroup proportions. Used instead of \code{x1}.
-#' @param x2 Phase II nonconforming counts.
-#' @param n2 Phase II sample size or vector of sample sizes.
-#' @param phat Known or previously estimated in-control proportion.
-#' @param p2 Phase II subgroup proportions. Used instead of \code{x2}.
-#' @param alpha Nominal two-sided false alarm probability. Defaults to 0.0027.
-#'
-#' @return Invisibly returns the \code{qcc} object used to draw the chart.
-#' @export
-#' @author Daniela R. Recchia, Emanuel P. Barbosa
-#' @references
-#' Montgomery, D. C. (2008). \emph{Introduction to Statistical Quality
-#' Control}. Wiley.
-#'
-#' Joekes, S. and Barbosa, E. P. (2013). An improved attribute control chart
-#' for monitoring non-conforming proportion in high quality processes.
-#' \emph{Control Engineering Practice}, 21, 407--412.
-#' \doi{10.1016/j.conengprac.2012.12.005}.
-#' @importFrom qcc qcc
-#' @examples
-#'
-#' data(binomdata)
-#' cchart.p(x1 = binomdata$Di[1:12], n1 = binomdata$ni[1:12])
-#' cchart.p(x1 = binomdata$Di[1:12], n1 = binomdata$ni[1:12],
-#'          type = "cf2", x2 = binomdata$Di[13:25],
-#'          n2 = binomdata$ni[13:25])
-#' cchart.p(type = "standardized", p2 = binomdata$Di[13:25] /
-#'          binomdata$ni[13:25], n2 = binomdata$ni[13:25],
-#'          phat = 0.1115833)
-#'
 .pchart_type <- function(type)
 {
     if(!is.character(type) || length(type) != 1 || is.na(type))
@@ -147,6 +97,56 @@
     )
 }
 
+#' p-chart
+#'
+#' Build normal, Cornish-Fisher corrected, or standardized p charts.
+#'
+#' For a Phase I chart, \code{n1} and exactly one of \code{x1} or \code{p1}
+#' must be supplied. For a Phase II chart, \code{n2} and exactly one of
+#' \code{x2} or \code{p2} must be supplied, together with Phase I information
+#' or a known \code{phat}.
+#'
+#' When sample sizes vary, the process proportion is estimated by the pooled
+#' binomial estimator, \eqn{sum(x_i) / sum(n_i)}, rather than by the unweighted
+#' mean of subgroup proportions. The plotting wrapper uses two-sided limits;
+#' use \code{pchart_limits()} directly for one-sided upper limits.
+#'
+#' @param x1 Phase I nonconforming counts.
+#' @param n1 Phase I sample size or vector of sample sizes.
+#' @param type Chart type. Accepted values are \code{"normal"}, \code{"cf1"},
+#'   \code{"cf2"}, and \code{"standardized"}. The legacy aliases
+#'   \code{"norm"}, \code{"CF"}, and \code{"std"} remain supported;
+#'   \code{"CF"} maps to \code{"cf1"}.
+#' @param p1 Phase I subgroup proportions. Used instead of \code{x1}.
+#' @param x2 Phase II nonconforming counts.
+#' @param n2 Phase II sample size or vector of sample sizes.
+#' @param phat Known or previously estimated in-control proportion.
+#' @param p2 Phase II subgroup proportions. Used instead of \code{x2}.
+#' @param alpha Nominal two-sided false alarm probability. Defaults to 0.0027.
+#'
+#' @return Invisibly returns the \code{qcc} object used to draw the chart.
+#' @export
+#' @author Daniela R. Recchia, Emanuel P. Barbosa
+#' @references
+#' Montgomery, D. C. (2008). \emph{Introduction to Statistical Quality
+#' Control}. Wiley.
+#'
+#' Joekes, S. and Barbosa, E. P. (2013). An improved attribute control chart
+#' for monitoring non-conforming proportion in high quality processes.
+#' \emph{Control Engineering Practice}, 21, 407--412.
+#' \doi{10.1016/j.conengprac.2012.12.005}.
+#' @importFrom qcc qcc
+#' @examples
+#'
+#' data(binomdata)
+#' cchart.p(x1 = binomdata$Di[1:12], n1 = binomdata$ni[1:12])
+#' cchart.p(x1 = binomdata$Di[1:12], n1 = binomdata$ni[1:12],
+#'          type = "cf2", x2 = binomdata$Di[13:25],
+#'          n2 = binomdata$ni[13:25])
+#' cchart.p(type = "standardized", p2 = binomdata$Di[13:25] /
+#'          binomdata$ni[13:25], n2 = binomdata$ni[13:25],
+#'          phat = 0.1115833)
+#'
 cchart.p <- function(x1 = NULL, n1 = NULL, type = "norm", p1 = NULL,
                      x2 = NULL, n2 = NULL, phat = NULL, p2 = NULL,
                      alpha = ALPHA)
