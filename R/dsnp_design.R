@@ -1,3 +1,27 @@
+# Internal helper: min-max scale a vector that should be minimized.
+# +Inf values (worst case) receive scale 1.  NA, NaN, and -Inf are rejected.
+.scale_minimize <- function(x)
+{
+    if(any(is.na(x) | is.nan(x) | x == -Inf))
+        stop("objective values contain invalid non-finite values")
+
+    finite <- is.finite(x)
+    out <- rep(1, length(x))
+
+    if(!any(finite))
+        return(out)
+
+    xmin <- min(x[finite])
+    xmax <- max(x[finite])
+
+    if(xmax == xmin)
+        out[finite] <- 0
+    else
+        out[finite] <- (x[finite] - xmin) / (xmax - xmin)
+
+    out
+}
+
 #' Double-Sampling np Chart: Complete Design Search
 #'
 #' Perform a joint discrete search over first-stage sample size (n1),
@@ -78,31 +102,6 @@
 #' )
 #' res$best[, c("n1", "n2", "wl", "ucl1", "ucl2", "arl0", "arl1")]
 #' @importFrom utils head
-
-# Internal helper: min-max scale a vector that should be minimized.
-# +Inf values (worst case) receive scale 1.  NA, NaN, and -Inf are rejected.
-.scale_minimize <- function(x)
-{
-    if(any(is.na(x) | is.nan(x) | x == -Inf))
-        stop("objective values contain invalid non-finite values")
-
-    finite <- is.finite(x)
-    out <- rep(1, length(x))
-
-    if(!any(finite))
-        return(out)
-
-    xmin <- min(x[finite])
-    xmax <- max(x[finite])
-
-    if(xmax == xmin)
-        out[finite] <- 0
-    else
-        out[finite] <- (x[finite] - xmin) / (xmax - xmin)
-
-    out
-}
-
 dsnp_design <- function(
     p0,
     p1,
@@ -315,11 +314,14 @@ dsnp_design <- function(
         candidates$score <- weights["arl1"] * candidates$arl1_scaled +
                             weights["ass0"] * candidates$ass0_scaled
 
+        nonfinite_arl1 <- if(weights["arl1"] > 0) {
+            !is.finite(candidates$arl1)
+        } else {
+            rep(FALSE, nrow(candidates))
+        }
+
         candidates <- candidates[order(
-            if(weights["arl1"] > 0)
-                !is.finite(candidates$arl1)
-            else
-                FALSE,
+            nonfinite_arl1,
             candidates$score,
             candidates$n1 + candidates$n2,
             candidates$n1,

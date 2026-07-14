@@ -1,38 +1,3 @@
-#' u-chart
-#'
-#' Build normal, Cornish-Fisher corrected, or standardized u charts.
-#'
-#' For Phase I, supply \code{n1} and exactly one of \code{x1} or \code{u1}.
-#' For Phase II, supply \code{n2} and exactly one of \code{x2} or \code{u2},
-#' together with Phase I information or a known \code{lambda}.
-#'
-#' When inspection sizes vary, the in-control rate is estimated by the pooled
-#' Poisson estimator \eqn{sum(x_i)/sum(n_i)}.
-#'
-#' @param x1 Phase I defect counts.
-#' @param n1 Phase I inspection size or vector of sizes.
-#' @param type Chart type: \code{"normal"}, \code{"cf1"}, \code{"cf2"}, or
-#'   \code{"standardized"}. Legacy aliases \code{"norm"}, \code{"CF"}, and
-#'   \code{"std"} remain supported; \code{"CF"} maps to \code{"cf2"} because
-#'   the historical IQCC formula contains both Cornish-Fisher adjustments.
-#' @param u1 Phase I rates, used instead of \code{x1}.
-#' @param x2 Phase II defect counts.
-#' @param n2 Phase II inspection size or vector of sizes.
-#' @param lambda Known or estimated in-control defect rate.
-#' @param u2 Phase II rates, used instead of \code{x2}.
-#' @param alpha Nominal two-sided false-alarm probability.
-#'
-#' @return Invisibly returns the \code{qcc} object used to draw the chart.
-#' @export
-#' @importFrom qcc qcc
-#' @examples
-#' data(moonroof)
-#' cchart.u(x1 = moonroof$yi[1:17], n1 = moonroof$ni[1:17])
-#' cchart.u(x1 = moonroof$yi[1:17], n1 = moonroof$ni[1:17],
-#'          type = "CF", x2 = moonroof$yi[18:34], n2 = moonroof$ni[18:34])
-#' cchart.u(type = "std", u2 = moonroof$ui[18:34],
-#'          n2 = moonroof$ni[18:34], lambda = 1.4)
-#'
 .uchart_type <- function(type)
 {
     if(!is.character(type) || length(type) != 1 || is.na(type))
@@ -93,6 +58,41 @@
         title = paste0(toupper(type), " u-chart (phase ", phase, ")"))
 }
 
+#' u-chart
+#'
+#' Build normal, Cornish-Fisher corrected, or standardized u charts.
+#'
+#' For Phase I, supply \code{n1} and exactly one of \code{x1} or \code{u1}.
+#' For Phase II, supply \code{n2} and exactly one of \code{x2} or \code{u2},
+#' together with Phase I information or a known \code{lambda}.
+#'
+#' When inspection sizes vary, the in-control rate is estimated by the pooled
+#' Poisson estimator \eqn{sum(x_i)/sum(n_i)}.
+#'
+#' @param x1 Phase I defect counts.
+#' @param n1 Phase I inspection size or vector of sizes.
+#' @param type Chart type: \code{"normal"}, \code{"cf1"}, \code{"cf2"}, or
+#'   \code{"standardized"}. Legacy aliases \code{"norm"}, \code{"CF"}, and
+#'   \code{"std"} remain supported; \code{"CF"} maps to \code{"cf2"} because
+#'   the historical IQCC formula contains both Cornish-Fisher adjustments.
+#' @param u1 Phase I rates, used instead of \code{x1}.
+#' @param x2 Phase II defect counts.
+#' @param n2 Phase II inspection size or vector of sizes.
+#' @param lambda Known or estimated in-control defect rate.
+#' @param u2 Phase II rates, used instead of \code{x2}.
+#' @param alpha Nominal two-sided false-alarm probability.
+#'
+#' @return Invisibly returns the \code{qcc} object used to draw the chart.
+#' @export
+#' @importFrom qcc qcc
+#' @examples
+#' data(moonroof)
+#' cchart.u(x1 = moonroof$yi[1:17], n1 = moonroof$ni[1:17])
+#' cchart.u(x1 = moonroof$yi[1:17], n1 = moonroof$ni[1:17],
+#'          type = "CF", x2 = moonroof$yi[18:34], n2 = moonroof$ni[18:34])
+#' cchart.u(type = "std", u2 = moonroof$ui[18:34],
+#'          n2 = moonroof$ni[18:34], lambda = 1.4)
+#'
 cchart.u <- function(x1 = NULL, n1 = NULL, type = "norm", u1 = NULL,
                      x2 = NULL, n2 = NULL, lambda = NULL, u2 = NULL,
                      alpha = ALPHA)

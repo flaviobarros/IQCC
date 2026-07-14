@@ -570,86 +570,167 @@ test_that(".scale_minimize rejects -Inf", {
                "objective values contain invalid non-finite values")
 })
 
-test_that("dsnp_design weighted produces finite scores with Inf arl1", {
-  # Mock dsnp_limits to inject one candidate with arl1 = Inf
-  real_dsnp_limits <- dsnp_limits
-  mock_dsnp_limits <- function(p0, n1, n2, ...) {
-    res <- real_dsnp_limits(p0 = p0, n1 = n1, n2 = n2, ...)
-    if(n1 == 5 && n2 == 8 && nrow(res$candidates) > 1)
-      res$candidates$arl1[1] <- Inf
-    res$best <- res$candidates[1, , drop = FALSE]
-    res
-  }
-  testthat::local_mocked_bindings(dsnp_limits = mock_dsnp_limits)
+.mock_dsnp_design_candidates <- function(arl1, ass0)
+{
+  n <- length(arl1)
+  p_signal1 <- ifelse(is.finite(arl1), 1 / arl1, 0)
 
-  res <- dsnp_design(p0 = 0.05, p1 = 0.10,
-                     n1_range = 5:6, n2_range = 8:9,
-                     arl0_min = 50, objective = "weighted")
-  cand <- res$candidates
-
-  # No NA or NaN in scores
-  expect_true(all(is.finite(cand$score)))
-  expect_true(all(!is.na(cand$score)))
-  expect_true(all(!is.nan(cand$score)))
-
-  # Inf arl1 candidates get arl1_scaled = 1
-  inf_rows <- cand$arl1 == Inf
-  if(any(inf_rows))
-    expect_true(all(cand$arl1_scaled[inf_rows] == 1))
-})
-
-test_that("dsnp_design weighted never ranks Inf arl1 before finite arl1", {
-  real_dsnp_limits <- dsnp_limits
-  mock_dsnp_limits <- function(p0, n1, n2, ...) {
-    res <- real_dsnp_limits(p0 = p0, n1 = n1, n2 = n2, ...)
-    if(n1 == 5 && n2 == 8 && nrow(res$candidates) > 2)
-      res$candidates$arl1[1] <- Inf
-    res$best <- res$candidates[1, , drop = FALSE]
-    res
-  }
-  testthat::local_mocked_bindings(dsnp_limits = mock_dsnp_limits)
-
-  res <- dsnp_design(p0 = 0.05, p1 = 0.10,
-                     n1_range = 5:6, n2_range = 8:9,
-                     arl0_min = 50, objective = "weighted")
-  cand <- res$candidates
-
-  # With positive arl1 weight, any finite-arl1 candidate must come before Inf-arl1
-  finite_idx <- which(is.finite(cand$arl1))
-  inf_idx <- which(cand$arl1 == Inf)
-  if(length(finite_idx) > 0 && length(inf_idx) > 0)
-    expect_true(max(finite_idx) < min(inf_idx))
-})
-
-test_that("weighted ordering: finite ARL1 precedes Inf ARL1 deterministically", {
-  cand <- data.frame(
-    arl1 = c(20, Inf),
-    ass0 = c(5, 1),
-    score = c(0, 1),
-    n1 = c(5L, 5L),
-    n2 = c(8L, 8L),
-    wl_accept = c(1L, 1L),
-    ucl1_reject = c(3L, 3L),
-    ucl2_accept = c(2L, 2L),
+  data.frame(
+    wl = seq_len(n) - 0.5,
+    ucl1 = seq_len(n) + 1.5,
+    ucl2 = seq_len(n) + 2.5,
+    wl_accept = seq_len(n) - 1L,
+    ucl1_reject = seq_len(n) + 1L,
+    ucl2_accept = seq_len(n) + 2L,
+    pt0 = rep(0.995, n),
+    p_signal0 = rep(0.005, n),
+    arl0 = rep(200, n),
+    ass0 = ass0,
+    feasible = rep(TRUE, n),
+    pt1 = 1 - p_signal1,
+    p_signal1 = p_signal1,
+    arl1 = arl1,
+    ass1 = ass0,
     stringsAsFactors = FALSE
   )
-  weights <- c(arl1 = 1, ass0 = 1)
+}
 
-  ord <- order(
-      if(weights["arl1"] > 0)
-          !is.finite(cand$arl1)
-      else
-          FALSE,
-      cand$score,
-      cand$n1 + cand$n2,
-      cand$n1,
-      cand$n2,
-      cand$wl_accept,
-      cand$ucl1_reject,
-      cand$ucl2_accept
+.mock_dsnp_limits_factory <- function(candidates)
+{
+  force(candidates)
+  function(p0, n1, n2, ...) {
+    list(
+      best = candidates[1, , drop = FALSE],
+      candidates = candidates
+    )
+  }
+}
+
+test_that("dsnp_design weighted handles zero arl1 weight with real candidates", {
+  res <- dsnp_design(p0 = 0.05, p1 = 0.10,
+                     n1_range = 5:6, n2_range = 8:9,
+                     arl0_min = 50, objective = "weighted",
+                     weights = c(arl1 = 0, ass0 = 1),
+                     max_results = 1000)
+  cand <- res$candidates
+
+  expect_gt(res$search$n_feasible, 1L)
+  expect_equal(nrow(cand), res$search$n_feasible)
+  expect_true(all(is.finite(cand$score)))
+  expect_equal(cand$score, cand$ass0_scaled, tolerance = 1e-10)
+  expect_true(!is.unsorted(cand$score))
+})
+
+test_that("dsnp_design weighted supports zero and positive weight combinations", {
+  candidates <- .mock_dsnp_design_candidates(
+    arl1 = c(10, 30, 50),
+    ass0 = c(20, 10, 12)
+  )
+  testthat::local_mocked_bindings(
+    dsnp_limits = .mock_dsnp_limits_factory(candidates)
   )
 
-  expect_equal(ord, c(1L, 2L))
-  expect_true(is.finite(cand$arl1[ord[1]]))
-  expect_equal(cand$arl1[ord[2]], Inf)
+  arl1_only <- dsnp_design(p0 = 0.05, p1 = 0.10,
+                           n1_range = 5, n2_range = 8,
+                           arl0_min = 50, objective = "weighted",
+                           weights = c(arl1 = 1, ass0 = 0))
+  ass0_only <- dsnp_design(p0 = 0.05, p1 = 0.10,
+                           n1_range = 5, n2_range = 8,
+                           arl0_min = 50, objective = "weighted",
+                           weights = c(arl1 = 0, ass0 = 1))
+  both <- dsnp_design(p0 = 0.05, p1 = 0.10,
+                      n1_range = 5, n2_range = 8,
+                      arl0_min = 50, objective = "weighted",
+                      weights = c(arl1 = 1, ass0 = 1))
+
+  expect_equal(arl1_only$best$arl1, 10)
+  expect_equal(ass0_only$best$ass0, 10)
+  expect_equal(both$best$arl1, 30)
+  expect_equal(both$best$ass0, 10)
+})
+
+test_that("dsnp_design weighted with zero arl1 weight does not penalize Inf arl1", {
+  candidates <- .mock_dsnp_design_candidates(
+    arl1 = c(100, Inf),
+    ass0 = c(10, 1)
+  )
+  testthat::local_mocked_bindings(
+    dsnp_limits = .mock_dsnp_limits_factory(candidates)
+  )
+
+  res <- dsnp_design(p0 = 0.05, p1 = 0.10,
+                     n1_range = 5, n2_range = 8,
+                     arl0_min = 50, objective = "weighted",
+                     weights = c(arl1 = 0, ass0 = 1),
+                     max_results = 10)
+
+  expect_equal(nrow(res$candidates), 2)
+  expect_equal(res$search$n_feasible, 2L)
+  expect_equal(res$best$arl1, Inf)
+  expect_equal(res$best$ass0, 1)
+  expect_true(all(is.finite(res$candidates$score)))
+})
+
+test_that("dsnp_design weighted keeps finite arl1 before Inf arl1", {
+  candidates <- .mock_dsnp_design_candidates(
+    arl1 = c(100, Inf),
+    ass0 = c(10, 1)
+  )
+  testthat::local_mocked_bindings(
+    dsnp_limits = .mock_dsnp_limits_factory(candidates)
+  )
+
+  res <- dsnp_design(p0 = 0.05, p1 = 0.10,
+                     n1_range = 5, n2_range = 8,
+                     arl0_min = 50, objective = "weighted",
+                     weights = c(arl1 = 0.1, ass0 = 1),
+                     max_results = 10)
+  cand <- res$candidates
+
+  expect_equal(nrow(cand), 2)
+  expect_true(is.finite(cand$arl1[1]))
+  expect_equal(cand$arl1[2], Inf)
+  expect_gt(cand$score[1], cand$score[2])
+})
+
+test_that("dsnp_design weighted handles max_results one", {
+  candidates <- .mock_dsnp_design_candidates(
+    arl1 = c(10, 30, 50),
+    ass0 = c(20, 10, 12)
+  )
+  testthat::local_mocked_bindings(
+    dsnp_limits = .mock_dsnp_limits_factory(candidates)
+  )
+
+  res <- dsnp_design(p0 = 0.05, p1 = 0.10,
+                     n1_range = 5, n2_range = 8,
+                     arl0_min = 50, objective = "weighted",
+                     weights = c(arl1 = 1, ass0 = 1),
+                     max_results = 1)
+
+  expect_equal(nrow(res$candidates), 1)
+  expect_equal(res$search$n_feasible, 3L)
+  expect_equal(res$best, res$candidates[1, , drop = FALSE])
+})
+
+test_that("dsnp_design weighted permits all arl1 values to be Inf", {
+  candidates <- .mock_dsnp_design_candidates(
+    arl1 = c(Inf, Inf),
+    ass0 = c(5, 1)
+  )
+  testthat::local_mocked_bindings(
+    dsnp_limits = .mock_dsnp_limits_factory(candidates)
+  )
+
+  res <- dsnp_design(p0 = 0.05, p1 = 0.10,
+                     n1_range = 5, n2_range = 8,
+                     arl0_min = 50, objective = "weighted",
+                     weights = c(arl1 = 1, ass0 = 1),
+                     max_results = 10)
+
+  expect_equal(nrow(res$candidates), 2)
+  expect_true(all(res$candidates$arl1 == Inf))
+  expect_true(all(is.finite(res$candidates$score)))
+  expect_true(!is.unsorted(res$candidates$score))
+  expect_equal(res$best$ass0, 1)
 })
