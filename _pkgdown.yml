@@ -14,10 +14,12 @@ navbar:
   components:
     get_started:
       text: Get started
-      href: articles/iqcc-positioning.html
+      href: articles/getting-started-with-iqcc.html
     articles:
       text: Articles
       menu:
+      - text: Getting started with IQCC
+        href: articles/getting-started-with-iqcc.html
       - text: Package overview and positioning
         href: articles/iqcc-positioning.html
       - text: High-quality processes and rare nonconformities
@@ -39,6 +41,7 @@ articles:
 - title: Overview
   navbar: ~
   contents:
+  - getting-started-with-iqcc
   - iqcc-positioning
 - title: Statistical methods
   contents:
