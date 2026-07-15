@@ -9,6 +9,8 @@
   `gv_alpha_risk()`, and `cchart.GV()`.
 - Support normal, Cornish-Fisher, selected exact, and simulation-based limits
   for generalized variance charts.
+- Add auxiliary multivariate variability monitoring based on `tr(V)` through
+  `trv_stat()`, `trv_limits()`, `trv_alpha_risk()`, and `cchart.trV()`.
 - Add pure numerical u-chart functions `uchart_limits()` and
   `uchart_alpha_risk()`.
 - Add pure numerical p-chart functions `pchart_limits()` and
@@ -40,6 +42,9 @@
   three.
 - Add independent numerical oracles for discrete DS-np probabilities and
   exact dimension-two generalized variance risk.
+- Add property tests for `tr(V)`, including its exact chi-square distribution,
+  false-alarm risk, RNG preservation, linear-transformation invariance, and a
+  same-determinant covariance change that is visible to the trace statistic.
 - Add regression tests for scaling, monotonicity, boundary cases, invalid
   inputs, random-number-state preservation, and legacy aliases.
 

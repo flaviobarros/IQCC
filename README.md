@@ -17,7 +17,8 @@ The package is motivated by a recurring practical problem in classical Shewhart-
 - **Univariate control charts**: X-bar, R, S, p, and u charts.
 - **Improved probability limits**: exact, Cornish-Fisher corrected, standardized, and simulation-based limits.
 - **High-quality processes**: corrected p charts and double-sampling np charts for rare nonconformities.
-- **Multivariate monitoring**: Hotelling T² charts and generalized variance charts.
+- **Multivariate monitoring**: Hotelling T² charts, generalized variance
+  charts, and auxiliary `tr(V)` variability charts.
 - **False-alarm diagnostics**: exact binomial, Poisson, range-chart, and generalized variance risk calculations where available.
 - **Phase I and Phase II support**: retrospective estimation and prospective monitoring.
 - **Research-oriented numerical layer**: pure functions separated from plotting interfaces for validation and simulation studies.
@@ -34,6 +35,7 @@ The package is motivated by a recurring practical problem in classical Shewhart-
 | Nonconformities per unit | `uchart_limits()`, `uchart_alpha_risk()`, `cchart.u()` | Normal, CF1, CF2, and standardized u charts | Includes exact Poisson risk and pooled rate estimation. |
 | Multivariate mean vector | `T2.1()`, `T2.2()`, `cchart.T2.1()`, `cchart.T2.2()` | Hotelling T² charts for Phase I and Phase II | Supports individual and subgroup observations. |
 | Multivariate variability | `gv_stat()`, `gv_limits()`, `gv_alpha_risk()`, `cchart.GV()` | Normal, Cornish-Fisher, selected exact, and simulation-based generalized variance charts | Exact dimension-two limits and selected published dimension-three quantiles. |
+| Multivariate variability structure | `trv_stat()`, `trv_limits()`, `trv_alpha_risk()`, `cchart.trV()` | Exact chi-square and simulation-based trace-statistic charts | Complements `|S|` by detecting standardized trace changes that may preserve determinant. |
 | Relative range constants | `d2()`, `d3()` | Numerical integration using Tukey distribution functions | Used by exact R-chart calculations. |
 | False-alarm risk for R charts | `alpha.risk()` | Exact false-alarm probability for the classical three-sigma R chart | Diagnoses inflated false-alarm risk. |
 
@@ -104,6 +106,11 @@ gv_limits(
   det_sigma = 0.5320,
   type = "exact"
 )
+
+# Auxiliary trace chart for covariance-structure changes
+set.seed(123)
+phase1 <- array(rnorm(6 * 8 * 2), dim = c(6, 8, 2))
+cchart.trV(phase1, Sigma0 = diag(2), plot = FALSE)
 ```
 
 ## Learning more
@@ -133,7 +140,8 @@ Important methodological themes include:
 - exact range-chart limits through the relative range distribution;
 - double-sampling designs for rare nonconformities;
 - Hotelling T² monitoring for multivariate process means;
-- generalized variance monitoring through products of chi-square variables and Bartlett decomposition.
+- generalized variance monitoring through products of chi-square variables and Bartlett decomposition;
+- auxiliary `tr(V)` monitoring through the trace of a standardized Wishart matrix.
 
 ## Development roadmap
 
@@ -142,7 +150,7 @@ Important methodological themes include:
 | Double-sampling np chart | Nonconforming proportion in high-quality processes | `dsnp_limits()`, `cchart.DSnp()` | Implemented and validated |
 | Generalized variance chart | Multivariate process variability using `|S|` | `gv_limits()`, `cchart.GV()` | Implemented and validated |
 | Cornish-Fisher generalized variance limits | Corrected limits for skewed `|S|` distribution | `gv_limits(type = "cf")` | Implemented |
-| Auxiliary trace chart | Complementary monitoring using `tr(V)` | `trv_limits()`, `cchart.trV()` | Planned |
+| Auxiliary trace chart | Complementary monitoring using `tr(V)` | `trv_limits()`, `cchart.trV()` | Implemented |
 | Full DS-np sample-size optimization | Joint design over sample sizes and limits | future API | Planned |
 | Generic exact generalized variance quantiles | Meijer-G or another validated numerical approach | future API | Research stage |
 | Numerical validation catalogue | Centralized published fixtures and metadata | `tests/testthat/` and documentation | In progress |

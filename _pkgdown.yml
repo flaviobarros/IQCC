@@ -98,6 +98,10 @@ reference:
   - gv_limits
   - gv_alpha_risk
   - cchart.GV
+  - trv_stat
+  - trv_limits
+  - trv_alpha_risk
+  - cchart.trV
   - print.cchart.GV
   - plot.cchart.GV
 

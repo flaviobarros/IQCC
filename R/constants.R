@@ -18,6 +18,8 @@
 #' \code{\link{dsnp_limits}}, \code{\link{gv_limits}},
 #' \code{\link{cchart.R}}, \code{\link{cchart.DSnp}},
 #' \code{\link{cchart.GV}}
+#' @importFrom graphics legend
+#' @importFrom stats dbinom
 "_PACKAGE"
 
 # Alpha risk for 3-sigma control limits
