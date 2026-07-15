@@ -13,11 +13,13 @@
 \method{print}{summary.cchart.GV}(x, digits = max(3L, getOption("digits") - 3L), ...)
 }
 \arguments{
-\item{x}{An object of class \code{"cchart.GV"} or \code{"summary.cchart.GV"}.}
+\item{x}{An object of class \code{"cchart.GV"} or
+\code{"summary.cchart.GV"}.}
 
 \item{digits}{Number of significant digits used for numerical output.}
 
-\item{...}{Additional arguments passed to the summary print method; otherwise currently unused.}
+\item{...}{Additional arguments passed to the summary print method;
+otherwise currently unused.}
 
 \item{object}{An object of class \code{"cchart.GV"}.}
 }
@@ -29,10 +31,10 @@
 return their input invisibly.
 }
 \description{
-Display or construct a compact statistical summary of a generalized variance
-chart, including design dimensions, Phase I and Phase II subgroup counts,
-control-limit method, covariance source, descriptive statistics, and signaled
-subgroups.
+Display or construct a compact statistical summary of a generalized
+variance chart, including design dimensions, Phase I and Phase II subgroup
+counts, control-limit method, covariance source, descriptive statistics,
+and signaled subgroups.
 }
 \seealso{
 \code{\link{cchart.GV}}, \code{\link{plot.cchart.GV}}

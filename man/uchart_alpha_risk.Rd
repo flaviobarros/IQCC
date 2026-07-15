@@ -8,13 +8,23 @@ uchart_alpha_risk(lambda, n, lcl, ucl)
 }
 \arguments{
 \item{lambda}{In-control defect rate per inspection unit.}
+
 \item{n}{Positive inspection size or vector of inspection sizes.}
+
 \item{lcl}{Lower control limit or vector of limits.}
+
 \item{ucl}{Upper control limit or vector of limits.}
 }
-\value{A numeric vector of exact false-alarm probabilities.}
-\description{Compute the actual false-alarm probability under \eqn{X \sim Poisson(lambda n)}, with a signal when \eqn{X/n < LCL} or \eqn{X/n > UCL}.}
+\value{
+A numeric vector of exact false-alarm probabilities.
+}
+\description{
+Compute the actual false-alarm probability under
+\eqn{X \sim Poisson(lambda n)}, with a signal when
+\eqn{X/n < LCL} or \eqn{X/n > UCL}.
+}
 \examples{
 limits <- uchart_limits(1.4, 10, type = "cf2")
 uchart_alpha_risk(1.4, 10, limits$lcl, limits$ucl)
+
 }

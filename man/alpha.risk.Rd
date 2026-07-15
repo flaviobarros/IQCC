@@ -3,14 +3,62 @@
 \name{alpha.risk}
 \alias{alpha.risk}
 \title{False-Alarm Probability for the Three-Sigma R Chart}
-\usage{alpha.risk(n)}
-\arguments{\item{n}{Numeric vector of integer subgroup sizes, each at least 2.}}
-\value{A numeric vector with the same length and order as \code{n}, containing the exact in-control false-alarm probability of the conventional three-sigma R chart.}
-\description{Compute the actual in-control false-alarm probability of the conventional three-sigma range chart under the exact distribution of the relative range statistic \eqn{W = R / \sigma}.}
-\details{The conventional limits use \eqn{D_1=\max\{0,d_2(n)-3d_3(n)\}} and \eqn{D_2=d_2(n)+3d_3(n)}. The returned risk is \eqn{1-\{F_W(D_2)-F_W(D_1)\}}, evaluated with \code{stats::ptukey()}. For small subgroup sizes this risk can be substantially larger than 0.0027.}
-\section{Errors}{An error is raised when any subgroup size is smaller than 2.}
-\examples{alpha.risk(5)
-alpha.risk(c(3, 5, 10, 15))}
-\references{Barbosa, E. P., Gneri, M. A., and Meneguetti, A. (2013). Range control charts revisited: Simpler Tippett-like formulae, its practical implementation, and the study of false alarm. \emph{Communications in Statistics - Simulation and Computation}, 42(2), 247--262. \doi{10.1080/03610918.2011.639967}.}
-\seealso{\code{\link{cchart.R}}, \code{\link{d2}}, \code{\link{d3}}, \code{\link{table.qtukey}}}
-\author{Daniela R. Recchia, Emanuel P. Barbosa}
+\usage{
+alpha.risk(n)
+}
+\arguments{
+\item{n}{Numeric vector of integer subgroup sizes, each at least 2.}
+}
+\value{
+A numeric vector with the same length and order as \code{n}.
+Element \eqn{i} is
+\deqn{1 - \{F_W(D_2;n_i) - F_W(D_1;n_i)\},}
+where \eqn{F_W} is evaluated with \code{stats::ptukey()} using infinite
+denominator degrees of freedom.
+}
+\description{
+Compute the actual in-control false-alarm probability of the conventional
+three-sigma range chart under the exact distribution of the relative range
+statistic \eqn{W = R / \sigma}.
+}
+\details{
+The conventional limits are
+\deqn{D_1\sigma = \max\{0, d_2(n) - 3d_3(n)\}\sigma}
+and
+\deqn{D_2\sigma = \{d_2(n) + 3d_3(n)\}\sigma.}
+Because the relative range is not normally distributed for the small
+subgroup sizes commonly used in practice, the resulting false-alarm
+probability can be substantially larger than 0.0027.
+}
+\section{Interpretation}{
+
+The result is the probability that an in-control subgroup falls below the
+conventional lower limit or above the conventional upper limit. It is not
+the nominal value requested by an exact probability-limit design.
+}
+
+\section{Errors}{
+
+An error is raised when any subgroup size is smaller than 2. The underlying
+\code{d2()} and \code{d3()} calculations also require finite admissible
+subgroup sizes.
+}
+
+\examples{
+alpha.risk(5)
+alpha.risk(c(3, 5, 10, 15))
+}
+\references{
+Barbosa, E. P., Gneri, M. A., and Meneguetti, A. (2013). Range control
+charts revisited: Simpler Tippett-like formulae, its practical
+implementation, and the study of false alarm. \emph{Communications in
+Statistics - Simulation and Computation}, 42(2), 247--262.
+\doi{10.1080/03610918.2011.639967}.
+}
+\seealso{
+\code{\link{cchart.R}}, \code{\link{d2}}, \code{\link{d3}},
+\code{\link{table.qtukey}}
+}
+\author{
+Daniela R. Recchia, Emanuel P. Barbosa
+}

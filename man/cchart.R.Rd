@@ -3,21 +3,80 @@
 \name{cchart.R}
 \alias{cchart.R}
 \title{Range Control Chart}
-\usage{cchart.R(x, n, type = c("norm", "tukey"), y = NULL)}
-\arguments{
-\item{x}{Phase II subgroup data accepted by \code{qcc::qcc()} for an \code{"R"} chart. Rows represent subgroups and columns observations within subgroups.}
-\item{n}{Integer subgroup size, at least 2.}
-\item{type}{Either \code{"norm"} for the conventional three-sigma chart or \code{"tukey"} for exact equal-tail probability limits.}
-\item{y}{Phase I subgroup data used to estimate \eqn{\sigma} through \code{qcc::sd.R()} when \code{type = "tukey"}.}
+\usage{
+cchart.R(x, n, type = c("norm", "tukey"), y = NULL)
 }
-\value{Invisibly, the \code{"qcc"} object returned by \code{qcc::qcc()}. The function also draws the chart.}
-\description{Build a control chart for subgroup ranges using either the conventional three-sigma approximation or exact probability limits from the distribution of the relative range \eqn{W = R / \sigma}.}
-\details{For \code{type = "norm"}, limits are delegated to \code{qcc}. For \code{type = "tukey"}, exact limits are computed from \code{stats::qtukey()} and the Phase I scale estimate \code{qcc::sd.R(y)}. The conventional chart annotates the actual false-alarm risk from \code{alpha.risk(n)}.}
-\section{Phase convention}{The exact chart treats \code{y} as Phase I reference data and \code{x} as the plotted monitoring data.}
-\section{Errors}{An error is raised for an unsupported \code{type}, for \code{n < 2}, or when \code{y} is omitted for the exact chart.}
-\examples{data(pistonrings)
+\arguments{
+\item{x}{Phase II subgroup data accepted by \code{qcc::qcc()} for an
+\code{"R"} chart. Rows represent subgroups and columns observations within
+subgroups.}
+
+\item{n}{Integer subgroup size, at least 2. It is used to evaluate the actual
+false-alarm probability of the conventional chart and to obtain Tukey
+relative-range quantiles for the exact chart.}
+
+\item{type}{Either \code{"norm"} for the conventional three-sigma chart or
+\code{"tukey"} for exact equal-tail probability limits.}
+
+\item{y}{Phase I subgroup data used to estimate \eqn{\sigma} through
+\code{qcc::sd.R()} when \code{type = "tukey"}. It must be supplied for that
+method and have the same subgroup structure as \code{x}.}
+}
+\value{
+Invisibly, the \code{"qcc"} object returned by \code{qcc::qcc()}.
+The function also draws the chart. For \code{type = "norm"}, a message is
+added below the plot showing the actual false-alarm probability returned by
+\code{alpha.risk(n)}.
+}
+\description{
+Build a control chart for subgroup ranges using either the conventional
+three-sigma approximation or exact probability limits from the distribution
+of the relative range \eqn{W = R / \sigma}.
+}
+\details{
+For \code{type = "norm"}, limits are delegated to the standard
+\code{qcc} range-chart implementation. For \code{type = "tukey"}, the
+lower and upper limits are
+\deqn{\hat\sigma F_W^{-1}(0.00135;n)}
+and
+\deqn{\hat\sigma F_W^{-1}(0.99865;n),}
+where \eqn{\hat\sigma} is estimated from \code{y} and the quantiles are
+obtained with \code{stats::qtukey()}.
+}
+\section{Phase convention}{
+
+The exact chart treats \code{y} as Phase I reference data and \code{x} as
+the plotted monitoring data. The conventional chart uses the standard
+estimation behavior of \code{qcc::qcc()} on \code{x}.
+}
+
+\section{Errors}{
+
+An error is raised for an unsupported \code{type}, for \code{n < 2}, or
+when \code{y} is omitted for the exact chart. Additional data validation is
+performed by \code{qcc::qcc()} and \code{qcc::sd.R()}.
+}
+
+\examples{
+data(pistonrings)
 conventional <- cchart.R(pistonrings[1:25, ], 5)
-exact <- cchart.R(pistonrings[26:40, ], 5, type = "tukey", y = pistonrings[1:25, ])}
-\references{Barbosa, E. P., Gneri, M. A., and Meneguetti, A. (2013). Range control charts revisited: Simpler Tippett-like formulae, its practical implementation, and the study of false alarm. \emph{Communications in Statistics - Simulation and Computation}, 42(2), 247--262. \doi{10.1080/03610918.2011.639967}.}
-\seealso{\code{\link{alpha.risk}}, \code{\link{cchart.S}}, \code{\link{table.qtukey}}}
-\author{Daniela R. Recchia, Emanuel P. Barbosa}
+exact <- cchart.R(
+    pistonrings[26:40, ], 5,
+    type = "tukey",
+    y = pistonrings[1:25, ]
+)
+}
+\references{
+Barbosa, E. P., Gneri, M. A., and Meneguetti, A. (2013). Range control
+charts revisited: Simpler Tippett-like formulae, its practical
+implementation, and the study of false alarm. \emph{Communications in
+Statistics - Simulation and Computation}, 42(2), 247--262.
+\doi{10.1080/03610918.2011.639967}.
+}
+\seealso{
+\code{\link{alpha.risk}}, \code{\link{cchart.S}},
+\code{\link{table.qtukey}}
+}
+\author{
+Daniela R. Recchia, Emanuel P. Barbosa
+}

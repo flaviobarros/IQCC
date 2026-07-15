@@ -1,19 +1,36 @@
 #' Double-Sampling np Chart: Average Run Length
 #'
-#' Compute the Average Run Length for the double-sampling np chart.
+#' Compute the average run length for the double-sampling np chart as the
+#' reciprocal of the signal probability at each supplied nonconforming
+#' proportion.
 #'
-#' @param p Nonconforming proportion, scalar or vector in [0, 1].
-#' @param n1 First-stage sample size.
-#' @param n2 Second-stage sample size.
-#' @param wl Fractional warning limit.
-#' @param ucl1 Fractional first-stage upper control limit.
-#' @param ucl2 Fractional combined upper control limit.
-#' @return A list containing ARL, acceptance and signal probabilities, and
-#' chart parameters.
+#' For signal probability \eqn{1 - P_T(p)}, the ARL is
+#' \eqn{1 / (1 - P_T(p))}. It is infinite when the signal probability is zero.
+#'
+#' @param p Nonconforming proportion to evaluate, a finite numeric scalar or
+#' vector in \eqn{[0, 1]}.
+#' @param n1 First-stage sample size, a positive integer.
+#' @param n2 Second-stage sample size, a positive integer.
+#' @param wl Finite fractional warning limit.
+#' @param ucl1 Finite fractional first-stage upper control limit greater than
+#' \code{wl}.
+#' @param ucl2 Finite fractional combined upper control limit greater than
+#' \code{wl}.
+#' @return A list with \code{arl}, the average run length; \code{pt}, total
+#' acceptance probability; \code{p_signal}, signal probability; and the
+#' validated chart parameters \code{n1}, \code{n2}, \code{wl}, \code{ucl1},
+#' and \code{ucl2}.
 #' @export
+#' @author Daniela R. Recchia, Emanuel P. Barbosa
+#' @references Joekes, S., Smrekar, M. and Barbosa, E. P. (2015). Extending a
+#' double sampling control chart for non-conforming proportion in high quality
+#' processes to the case of small samples. \emph{Statistical Methodology}, 23,
+#' 35--49.
 #' @seealso \link{dsnp_prob_accept}, \link{dsnp_ass}
 #' @examples
-#' dsnp_arl(0.005, 34, 162, 1.5, 2.5, 4.5)$arl
+#' arl0 <- dsnp_arl(0.005, 34, 162, 1.5, 2.5, 4.5)$arl
+#' arl1 <- dsnp_arl(0.0075, 34, 162, 1.5, 2.5, 4.5)$arl
+#' c(arl0 = arl0, arl1 = arl1)
 #'
 dsnp_arl <- function(p, n1, n2, wl, ucl1, ucl2)
 {

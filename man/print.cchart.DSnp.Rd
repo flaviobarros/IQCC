@@ -13,11 +13,13 @@
 \method{print}{summary.cchart.DSnp}(x, digits = max(3L, getOption("digits") - 3L), ...)
 }
 \arguments{
-\item{x}{An object of class \code{"cchart.DSnp"} or \code{"summary.cchart.DSnp"}.}
+\item{x}{An object of class \code{"cchart.DSnp"} or
+\code{"summary.cchart.DSnp"}.}
 
 \item{digits}{Number of significant digits used for numerical output.}
 
-\item{...}{Additional arguments passed to the summary print method; otherwise currently unused.}
+\item{...}{Additional arguments passed to the summary print method;
+otherwise currently unused.}
 
 \item{object}{An object of class \code{"cchart.DSnp"}.}
 }
@@ -25,8 +27,8 @@
 \code{summary.cchart.DSnp()} returns an object of class
 \code{"summary.cchart.DSnp"}. The returned list contains \code{call},
 \code{observations}, \code{parameters}, \code{limits}, \code{performance},
-\code{stage_counts}, and \code{signals}. The print methods return their input
-invisibly.
+\code{stage_counts}, and \code{signals}. The print methods return their
+input invisibly.
 }
 \description{
 Display or construct a compact summary of a double-sampling np chart,

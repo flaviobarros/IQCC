@@ -21,50 +21,104 @@ gv_alpha_risk(
 
 \item{p}{Integer process dimension, at least 2.}
 
-\item{det_sigma}{Positive finite scalar equal to \eqn{|\Sigma|}, the determinant of the in-control covariance matrix. Control limits scale linearly with this value.}
+\item{det_sigma}{Positive finite scalar equal to \eqn{|\Sigma|}, the
+determinant of the in-control covariance matrix. Control limits scale
+linearly with this value.}
 
-\item{alpha}{Nominal probability of a false alarm per subgroup, strictly between 0 and 1. For \code{side = "upper"}, all probability is placed in the upper tail. For \code{side = "two.sided"}, \code{alpha / 2} is placed in each tail.}
+\item{alpha}{Nominal probability of a false alarm per subgroup, strictly
+between 0 and 1. For \code{side = "upper"}, all probability is placed in
+the upper tail. For \code{side = "two.sided"}, \code{alpha / 2} is placed
+in each tail.}
 
-\item{type}{Character string selecting the limit calculation: \code{"normal"}, \code{"cf"}, \code{"exact"}, or \code{"simulation"}. See \code{\link{gv_limits}} for the exact scope of each method.}
+\item{type}{Character string selecting the limit calculation:
+\describe{
+  \item{\code{"normal"}}{Moment-matched Gaussian quantiles using the exact
+    mean and variance of \eqn{|S|}.}
+  \item{\code{"cf"}}{Cornish-Fisher corrected Gaussian quantiles using
+    skewness, and optionally excess kurtosis.}
+  \item{\code{"exact"}}{Closed-form chi-square quantiles for \eqn{p=2}, or
+    the published upper-limit table for \eqn{p=3}, \eqn{n=4,\ldots,15}, and
+    \code{alpha} equal to 0.0020 or 0.0027.}
+  \item{\code{"simulation"}}{Monte Carlo quantiles from the Bartlett
+    product-of-chi-squares representation.}
+}
+Partial matching is not used.}
 
-\item{side}{Either \code{"upper"} or \code{"two.sided"}.}
+\item{side}{Either \code{"upper"} or \code{"two.sided"}. Since generalized
+variance is nonnegative, the lower limit for an upper chart is zero. Any
+negative approximated lower limit for a two-sided chart is also truncated
+to zero.}
 
-\item{cf_order}{Integer 1 or 2 controlling the Cornish-Fisher correction when \code{type = "cf"}.}
+\item{cf_order}{Integer 1 or 2. Order 1 uses the skewness correction. Order
+2 additionally uses excess kurtosis and the squared-skewness term. It is
+used only when \code{type = "cf"}.}
 
-\item{nsim}{Integer number of Monte Carlo draws, at least 1000.}
+\item{nsim}{Integer number of Monte Carlo draws, at least 1000. It is used
+by \code{type = "simulation"} and stored in the returned object for all
+methods.}
 
-\item{seed}{\code{NULL} or a finite numeric scalar used as the Monte Carlo seed.}
+\item{seed}{\code{NULL} or a finite numeric scalar used as the Monte Carlo
+seed. A supplied seed makes simulated limits reproducible and the caller's
+existing \code{.Random.seed} is restored on exit.}
 }
 \value{
 A list with components:
 \describe{
-  \item{\code{alpha}}{Actual or Monte Carlo estimated false-alarm probability.}
+  \item{\code{alpha}}{Actual or Monte Carlo estimated false-alarm
+    probability.}
   \item{\code{nominal_alpha}}{The requested nominal value.}
-  \item{\code{arl0}}{Zero-state in-control average run length, \code{1 / alpha}; \code{Inf} if no simulated crossing is observed.}
-  \item{\code{limits}}{The complete object returned by \code{gv_limits()}.}
-  \item{\code{method}}{Either \code{"exact evaluation"} for \eqn{p=2} or \code{"simulation"} for higher dimensions.}
+  \item{\code{arl0}}{Zero-state in-control average run length,
+    \code{1 / alpha}; \code{Inf} if no simulated crossing is observed.}
+  \item{\code{limits}}{The complete object returned by
+    \code{gv_limits()}.}
+  \item{\code{method}}{Either \code{"exact evaluation"} for \eqn{p=2} or
+    \code{"simulation"} for higher dimensions.}
 }
 }
 \description{
-Evaluate the actual in-control probability that the generalized variance statistic crosses limits produced by \code{gv_limits()}, and report the corresponding zero-state in-control average run length.
+Evaluate the actual in-control probability that the generalized variance
+statistic crosses limits produced by \code{gv_limits()}, and report the
+corresponding zero-state in-control average run length.
 }
 \details{
-The diagnostic is useful because Gaussian and Cornish-Fisher limits are approximations and therefore need not attain the requested nominal risk exactly. For dimension \eqn{p=2}, the crossing probability is evaluated from the exact chi-square representation of \eqn{|S|}. For \eqn{p>2}, it is estimated independently by Monte Carlo simulation from Bartlett's product-of-chi-squares representation.
+The diagnostic is useful because Gaussian and Cornish-Fisher limits are
+approximations and therefore need not attain the requested nominal risk
+exactly. For dimension \eqn{p=2}, the crossing probability is evaluated
+from the exact chi-square representation of \eqn{|S|}. For \eqn{p>2}, it is
+estimated independently by Monte Carlo simulation from Bartlett's
+product-of-chi-squares representation.
 
-The function first calls \code{gv_limits()} using the requested \code{type}. It then evaluates
+
+The function first calls \code{gv_limits()} using the requested
+\code{type}. It then evaluates
 \deqn{P(|S| > UCL)}
 for an upper chart, or
 \deqn{P(|S| < LCL) + P(|S| > UCL)}
-for a two-sided chart. The inequalities are strict, matching the signaling rule used by \code{cchart.GV()}.
+for a two-sided chart. The inequalities are strict, matching the signaling
+rule used by \code{cchart.GV()}.
 
-For \eqn{p>2}, \code{nsim} controls both any simulation used to construct the limits and the independent simulation used to evaluate their risk. If \code{seed} is supplied, the limits use that seed and the risk evaluation uses \code{seed + 1}; each seeded simulation restores the caller's previous random-number state on exit. With \code{seed = NULL}, the global RNG state advances normally.
+For \eqn{p>2}, \code{nsim} controls both any simulation used to construct
+the limits and the independent simulation used to evaluate their risk. If
+\code{seed} is supplied, the limits use that seed and the risk evaluation
+uses \code{seed + 1}; each seeded simulation restores the caller's previous
+random-number state on exit. With \code{seed = NULL}, the global RNG state
+advances normally.
 }
 \section{Monte Carlo uncertainty}{
-For \eqn{p>2}, the reported risk is a binomial proportion based on \code{nsim} draws. Its approximate Monte Carlo standard error is \eqn{\sqrt{\hat\alpha(1-\hat\alpha)/nsim}}. Very small false-alarm risks therefore require substantially more simulations than routine examples.
+
+For \eqn{p>2}, the reported risk is a binomial proportion based on
+\code{nsim} draws. Its approximate Monte Carlo standard error is
+\eqn{\sqrt{\hat\alpha(1-\hat\alpha)/nsim}}. Very small false-alarm risks
+therefore require substantially more simulations than routine examples.
 }
+
 \section{Errors}{
-Input and exact-method restrictions are inherited from \code{gv_limits()}. In addition, simulation requires an integer \code{nsim} of at least 1000 and a valid optional seed.
+
+Input and exact-method restrictions are inherited from \code{gv_limits()}.
+In addition, simulation requires an integer \code{nsim} of at least 1000
+and a valid optional seed.
 }
+
 \examples{
 # Exact evaluation shows that exact p = 2 limits attain the nominal risk.
 exact_risk <- gv_alpha_risk(10, 2, type = "exact")
@@ -80,8 +134,12 @@ gv_alpha_risk(8, 3, type = "cf", nsim = 10000, seed = 2026)
 }
 }
 \references{
-Barbosa, E. P., Gneri, M. A., and Meneguetti, A. \emph{Improving Shewhart-type Generalized Variance Control Charts for Multivariate Process Variability Monitoring using Cornish-Fisher Quantile Correction, Meijer-G Function and Other Tools}. Research report.
+Barbosa, E. P., Gneri, M. A., and Meneguetti, A. \emph{Improving
+Shewhart-type Generalized Variance Control Charts for Multivariate Process
+Variability Monitoring using Cornish-Fisher Quantile Correction, Meijer-G
+Function and Other Tools}. Research report.
 }
 \seealso{
-\code{\link{gv_limits}}, \code{\link{gv_stat}}, \code{\link{cchart.GV}}
+\code{\link{gv_limits}}, \code{\link{gv_stat}},
+\code{\link{cchart.GV}}
 }

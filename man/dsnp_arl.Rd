@@ -7,53 +7,47 @@
 dsnp_arl(p, n1, n2, wl, ucl1, ucl2)
 }
 \arguments{
-\item{p}{The nonconforming proportion to evaluate. Can be a scalar or
-numeric vector, with values in [0, 1].}
+\item{p}{Nonconforming proportion to evaluate, a finite numeric scalar or
+vector in \eqn{[0, 1]}.}
 
-\item{n1}{The first-stage sample size (positive integer).}
+\item{n1}{First-stage sample size, a positive integer.}
 
-\item{n2}{The second-stage sample size (positive integer).}
+\item{n2}{Second-stage sample size, a positive integer.}
 
-\item{wl}{The fractional warning limit. Must be less than ucl1.}
+\item{wl}{Finite fractional warning limit.}
 
-\item{ucl1}{The fractional upper control limit for the first stage.}
+\item{ucl1}{Finite fractional first-stage upper control limit greater than
+\code{wl}.}
 
-\item{ucl2}{The fractional upper control limit for the combined samples.}
+\item{ucl2}{Finite fractional combined upper control limit greater than
+\code{wl}.}
 }
 \value{
-A list with the following elements:
-\describe{
-  \item{arl}{The Average Run Length: 1 / p_signal.}
-  \item{pt}{Total acceptance probability from \code{dsnp_prob_accept}.}
-  \item{p_signal}{Total signaling probability.}
-  \item{n1, n2, wl, ucl1, ucl2}{The input chart parameters.}
-}
+A list with \code{arl}, the average run length; \code{pt}, total
+acceptance probability; \code{p_signal}, signal probability; and the
+validated chart parameters \code{n1}, \code{n2}, \code{wl}, \code{ucl1},
+and \code{ucl2}.
 }
 \description{
-Compute the Average Run Length (ARL) for the double-sampling np chart
-at a given nonconforming proportion p.
+Compute the average run length for the double-sampling np chart as the
+reciprocal of the signal probability at each supplied nonconforming
+proportion.
 }
 \details{
-The ARL is defined as the expected number of samples before the chart
-signals. For a given proportion p, ARL = 1 / (1 - PT(p)), where PT(p)
-is the total acceptance probability computed by \code{dsnp_prob_accept}.
+For signal probability \eqn{1 - P_T(p)}, the ARL is
+\eqn{1 / (1 - P_T(p))}. It is infinite when the signal probability is zero.
 }
 \examples{
-
-# Published example from Joekes et al. (2015)
-res0 <- dsnp_arl(0.005, n1 = 34, n2 = 162,
-                 wl = 1.5, ucl1 = 2.5, ucl2 = 4.5)
-res0$arl  # approximately 803.41
-
-res1 <- dsnp_arl(0.0075, n1 = 34, n2 = 162,
-                 wl = 1.5, ucl1 = 2.5, ucl2 = 4.5)
-res1$arl  # approximately 193.22
+arl0 <- dsnp_arl(0.005, 34, 162, 1.5, 2.5, 4.5)$arl
+arl1 <- dsnp_arl(0.0075, 34, 162, 1.5, 2.5, 4.5)$arl
+c(arl0 = arl0, arl1 = arl1)
 
 }
 \references{
-Joekes, S., Smrekar, M. and Barbosa, E. (2015). Extending a
+Joekes, S., Smrekar, M. and Barbosa, E. P. (2015). Extending a
 double sampling control chart for non-conforming proportion in high quality
-processes to the case of small samples.
+processes to the case of small samples. \emph{Statistical Methodology}, 23,
+35--49.
 }
 \seealso{
 \link{dsnp_prob_accept}, \link{dsnp_ass}

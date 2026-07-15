@@ -4,23 +4,57 @@
 \alias{uchart_limits}
 \title{Probability Limits for u Charts}
 \usage{
-uchart_limits(lambda, n, alpha = ALPHA,
+uchart_limits(
+  lambda,
+  n,
+  alpha = ALPHA,
   type = c("normal", "cf1", "cf2"),
-  sides = c("two.sided", "upper"), truncate = TRUE)
+  sides = c("two.sided", "upper"),
+  truncate = TRUE
+)
 }
 \arguments{
 \item{lambda}{In-control defect rate per inspection unit. A positive scalar.}
+
 \item{n}{Positive inspection size or vector of inspection sizes.}
+
 \item{alpha}{Nominal false-alarm probability. Defaults to 0.0027.}
+
 \item{type}{Limit method: \code{"normal"}, \code{"cf1"}, or \code{"cf2"}.}
+
 \item{sides}{Either \code{"two.sided"} or \code{"upper"}.}
+
 \item{truncate}{Logical. If \code{TRUE}, negative lower limits are set to 0.}
 }
-\value{A list containing \code{center}, \code{lcl}, \code{ucl}, \code{n}, \code{alpha}, \code{type}, \code{sides}, and \code{mean_count}.}
-\description{Compute normal or Cornish-Fisher probability limits for a u chart without constructing a plot. The model is \eqn{X \sim Poisson(lambda n)} and the monitored rate is \eqn{U = X/n}.}
-\details{For \eqn{U}, the standardized third and fourth cumulants are \eqn{gamma_1 = 1/sqrt(lambda n)} and \eqn{gamma_2 = 1/(lambda n)}. Consequently, the first Cornish-Fisher correction is \eqn{(z^2 - 1)/(6n)} and the second-order correction reduces to \eqn{z(1-z^2)/(72 n sqrt(lambda n))}. With \eqn{z=3}, the CF2 upper limit recovers the historical IQCC formula.}
+\value{
+A list containing \code{center}, \code{lcl}, \code{ucl},
+  \code{n}, \code{alpha}, \code{type}, \code{sides}, and \code{mean_count}.
+}
+\description{
+Compute normal or Cornish-Fisher probability limits for a u chart without
+constructing a plot. The model is \eqn{X \sim Poisson(lambda n)} and the
+monitored rate is \eqn{U = X/n}.
+}
+\details{
+For \eqn{U}, the standardized third and fourth cumulants are
+\eqn{gamma_1 = 1/sqrt(lambda n)} and \eqn{gamma_2 = 1/(lambda n)}.
+Consequently, the first Cornish-Fisher correction is
+\eqn{(z^2 - 1)/(6n)} and the second-order correction reduces to
+\eqn{z(1-z^2)/(72 n sqrt(lambda n))}.
+
+With \eqn{z=3}, the CF2 upper limit recovers the historical IQCC formula
+\deqn{lambda + 3 sqrt(lambda/n) + 4/(3n) -
+      1/(3 n sqrt(lambda n)).}
+
+For two-sided CF2 limits, the operational convention used here evaluates
+the second adjustment with the positive upper-tail quantile and applies it
+with the same sign to both limits. This is consistent with the historical
+IQCC formula and with the operational convention used for the corrected
+p chart.
+}
 \examples{
 uchart_limits(1.4, 10, type = "normal")
 uchart_limits(1.4, 10, type = "cf1")
 uchart_limits(1.4, 10, type = "cf2")
+
 }

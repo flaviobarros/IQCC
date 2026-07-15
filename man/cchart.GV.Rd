@@ -23,69 +23,140 @@ cchart.GV(
 \method{plot}{cchart.GV}(x, ...)
 }
 \arguments{
-\item{x1}{Phase I subgroup data in any format accepted by \code{gv_stat()}: a list of equal-sized numeric matrices, a subgroup-by-observation-by-variable array, or a numeric matrix containing consecutive subgroups.}
+\item{x1}{Phase I subgroup data in any format accepted by
+\code{gv_stat()}: a list of equal-sized numeric matrices, a
+subgroup-by-observation-by-variable array, or a numeric matrix containing
+consecutive subgroups.}
 
-\item{size}{Positive integer subgroup size when \code{x1} or \code{x2} is a stacked matrix. It is ignored for list and array input.}
+\item{size}{Positive integer subgroup size when \code{x1} or \code{x2} is a
+stacked matrix. It is ignored for list and array input.}
 
-\item{x2}{Optional Phase II subgroup data in a format accepted by \code{gv_stat()}. Phase II subgroups must have the same number of observations and variables as the Phase I subgroups.}
+\item{x2}{Optional Phase II subgroup data in a format accepted by
+\code{gv_stat()}. Phase II subgroups must have the same number of
+observations and variables as the Phase I subgroups.}
 
-\item{Sigma}{Optional finite symmetric positive-definite \eqn{p \times p} in-control covariance matrix. If supplied, its determinant defines the chart limits. If omitted, the function averages the Phase I covariance matrices and estimates
+\item{Sigma}{Optional finite symmetric positive-definite \eqn{p \times p}
+in-control covariance matrix. If supplied, its determinant defines the
+chart limits. If omitted, the function averages the Phase I covariance
+matrices and estimates
 \deqn{|\Sigma| = |\bar S| / b_3,}
-where \eqn{b_3} is the finite-Phase-I determinant bias correction based on the number of Phase I subgroups, subgroup size, and dimension.}
+where \eqn{b_3} is the finite-Phase-I determinant bias correction based on
+the number of Phase I subgroups, subgroup size, and dimension.}
 
-\item{alpha}{Nominal probability of a false alarm per subgroup, strictly between 0 and 1.}
+\item{alpha}{Nominal probability of a false alarm per subgroup, strictly
+between 0 and 1. For \code{side = "upper"}, all probability is placed in
+the upper tail. For \code{side = "two.sided"}, \code{alpha / 2} is placed
+in each tail.}
 
-\item{type}{Character string selecting \code{"normal"}, \code{"cf"}, \code{"exact"}, or \code{"simulation"} limits. See \code{\link{gv_limits}}.}
+\item{type}{Character string selecting the limit calculation:
+\describe{
+  \item{\code{"normal"}}{Moment-matched Gaussian quantiles using the exact
+    mean and variance of \eqn{|S|}.}
+  \item{\code{"cf"}}{Cornish-Fisher corrected Gaussian quantiles using
+    skewness, and optionally excess kurtosis.}
+  \item{\code{"exact"}}{Closed-form chi-square quantiles for \eqn{p=2}, or
+    the published upper-limit table for \eqn{p=3}, \eqn{n=4,\ldots,15}, and
+    \code{alpha} equal to 0.0020 or 0.0027.}
+  \item{\code{"simulation"}}{Monte Carlo quantiles from the Bartlett
+    product-of-chi-squares representation.}
+}
+Partial matching is not used.}
 
-\item{side}{Either \code{"upper"} or \code{"two.sided"}.}
+\item{side}{Either \code{"upper"} or \code{"two.sided"}. Since generalized
+variance is nonnegative, the lower limit for an upper chart is zero. Any
+negative approximated lower limit for a two-sided chart is also truncated
+to zero.}
 
-\item{cf_order}{Integer 1 or 2 controlling the Cornish-Fisher correction when \code{type = "cf"}.}
+\item{cf_order}{Integer 1 or 2. Order 1 uses the skewness correction. Order
+2 additionally uses excess kurtosis and the squared-skewness term. It is
+used only when \code{type = "cf"}.}
 
-\item{nsim}{Integer number of Monte Carlo draws, at least 1000, when simulated limits are requested.}
+\item{nsim}{Integer number of Monte Carlo draws, at least 1000. It is used
+by \code{type = "simulation"} and stored in the returned object for all
+methods.}
 
-\item{seed}{\code{NULL} or a finite numeric scalar used as the Monte Carlo seed.}
+\item{seed}{\code{NULL} or a finite numeric scalar used as the Monte Carlo
+seed. A supplied seed makes simulated limits reproducible and the caller's
+existing \code{.Random.seed} is restored on exit.}
 
-\item{plot}{Logical scalar. If \code{TRUE}, draw the chart before returning the result. If \code{FALSE}, construct the object without plotting.}
+\item{plot}{Logical scalar. If \code{TRUE}, draw the chart before returning
+the result. If \code{FALSE}, construct the object without plotting.}
 
-\item{...}{Additional graphical arguments passed to \code{plot.cchart.GV()} and then to \code{graphics::plot()}.}
+\item{...}{Additional graphical arguments passed to
+\code{plot.cchart.GV()} and then to \code{graphics::plot()}.}
 
 \item{x}{An object of class \code{"cchart.GV"}.}
 }
 \value{
-\code{cchart.GV()} returns an object of class \code{"cchart.GV"}, a list with components:
+An object of class \code{"cchart.GV"}, a list with components:
 \describe{
-  \item{\code{statistics}}{Generalized variances for all Phase I followed by all Phase II subgroups.}
-  \item{\code{phase1}, \code{phase2}}{Integer indices identifying the two phases in \code{statistics}.}
+  \item{\code{statistics}}{Generalized variances for all Phase I followed
+    by all Phase II subgroups.}
+  \item{\code{phase1}, \code{phase2}}{Integer indices identifying the two
+    phases in \code{statistics}.}
   \item{\code{limits}}{The complete list returned by \code{gv_limits()}.}
-  \item{\code{out.of.control}}{Indices for which \code{statistics < lcl} or \code{statistics > ucl}. Equality to a limit does not signal.}
-  \item{\code{Sbar}}{The average Phase I covariance matrix when \code{Sigma} is estimated, otherwise \code{NULL}.}
-  \item{\code{Sigma}}{The supplied in-control covariance matrix, or \code{NULL} when the determinant is estimated from Phase I.}
-  \item{\code{b3}}{The determinant bias-correction factor when Phase I estimation is used, otherwise \code{NA_real_}.}
+  \item{\code{out.of.control}}{Indices for which
+    \code{statistics < lcl} or \code{statistics > ucl}. Equality to a limit
+    does not signal.}
+  \item{\code{Sbar}}{The average Phase I covariance matrix when
+    \code{Sigma} is estimated, otherwise \code{NULL}.}
+  \item{\code{Sigma}}{The supplied in-control covariance matrix, or
+    \code{NULL} when the determinant is estimated from Phase I.}
+  \item{\code{b3}}{The determinant bias-correction factor when Phase I
+    estimation is used, otherwise \code{NA_real_}.}
   \item{\code{n}, \code{p}}{Subgroup size and process dimension.}
   \item{\code{call}}{The matched function call.}
 }
 
-\code{plot.cchart.GV()} returns \code{x} invisibly.
+For \code{plot.cchart.GV()}, \code{x} invisibly.
 }
 \description{
-Construct and optionally plot a Shewhart-type chart for multivariate process variability based on the generalized variance statistic \eqn{|S|}, the determinant of each subgroup sample covariance matrix.
+Construct and optionally plot a Shewhart-type chart for multivariate process
+variability based on the generalized variance statistic \eqn{|S|}, the
+determinant of each subgroup sample covariance matrix.
 }
 \details{
-Phase I subgroups define the chart design and, unless \code{Sigma} is supplied, estimate the in-control generalized variance. Optional Phase II subgroups are then evaluated using the same subgroup size, process dimension, and fixed control limits.
+Phase I subgroups define the chart design and, unless \code{Sigma} is
+supplied, estimate the in-control generalized variance. Optional Phase II
+subgroups are then evaluated using the same subgroup size, process
+dimension, and fixed control limits.
 
-Each subgroup must contain finite observations on at least two variables, and the subgroup size must exceed the process dimension. When \code{Sigma = NULL}, the average Phase I covariance matrix must itself be positive definite. The control-line center is the exact in-control mean of \eqn{|S|}, not generally \eqn{|\Sigma|}.
 
-\code{plot.cchart.GV()} displays subgroup generalized variances, the center line, lower and upper limits, a vertical separator before Phase II, and solid points at signaled subgroups.
+Each subgroup must contain finite observations on at least two variables,
+and the subgroup size must exceed the process dimension. When
+\code{Sigma = NULL}, the average Phase I covariance matrix must itself be
+positive definite. The control-line center is the exact in-control mean of
+\eqn{|S|}, not generally \eqn{|\Sigma|}.
+
+\code{plot.cchart.GV()} displays subgroup generalized variances, the center
+line, lower and upper limits, a vertical separator before Phase II, and
+solid points at signaled subgroups. The plot method returns its input
+invisibly.
 }
 \section{Phase I and Phase II convention}{
-Phase I data are used both as historical plotted points and, when \code{Sigma} is absent, to estimate the in-control determinant. Phase II data do not alter the estimate or the limits. For a strict prospective chart with known parameters, supply \code{Sigma}.
+
+Phase I data are used both as historical plotted points and, when
+\code{Sigma} is absent, to estimate the in-control determinant. Phase II
+data do not alter the estimate or the limits. For a strict prospective
+chart with known parameters, supply \code{Sigma}.
 }
+
 \section{Simulated limits}{
-When \code{type = "simulation"}, \code{nsim} and \code{seed} are passed to \code{gv_limits()}. A supplied seed makes the result reproducible and the caller's existing random-number state is restored.
+
+When \code{type = "simulation"}, \code{nsim} and \code{seed} are passed to
+\code{gv_limits()}. A supplied seed makes the result reproducible and the
+caller's existing random-number state is restored.
 }
+
 \section{Errors}{
-Errors are raised for invalid subgroup representations, unequal subgroup dimensions, non-finite observations, \eqn{n <= p}, an invalid or non-positive-definite \code{Sigma}, a singular Phase I average covariance matrix, and any unsupported limit configuration documented in \code{gv_limits()}.
+
+Errors are raised for invalid subgroup representations, unequal subgroup
+dimensions, non-finite observations, \eqn{n <= p}, an invalid or
+non-positive-definite \code{Sigma}, a singular Phase I average covariance
+matrix, and any unsupported limit configuration documented in
+\code{gv_limits()}.
 }
+
 \examples{
 set.seed(123)
 phase1 <- array(rnorm(6 * 8 * 2), dim = c(6, 8, 2))
@@ -111,10 +182,16 @@ estimated <- cchart.GV(
 estimated$phase2
 }
 \references{
-Barbosa, E. P., Gneri, M. A., and Meneguetti, A. \emph{Improving Shewhart-type Generalized Variance Control Charts for Multivariate Process Variability Monitoring using Cornish-Fisher Quantile Correction, Meijer-G Function and Other Tools}. Research report.
+Barbosa, E. P., Gneri, M. A., and Meneguetti, A. \emph{Improving
+Shewhart-type Generalized Variance Control Charts for Multivariate Process
+Variability Monitoring using Cornish-Fisher Quantile Correction, Meijer-G
+Function and Other Tools}. Research report.
 
-Alt, F. B. (1984). Multivariate quality control. In Johnson, N. L. and Kotz, S. (eds.), \emph{Encyclopedia of Statistical Sciences}, Vol. 6, 110--122. Wiley.
+Alt, F. B. (1984). Multivariate quality control. In Johnson, N. L. and
+Kotz, S. (eds.), \emph{Encyclopedia of Statistical Sciences}, Vol. 6,
+110--122. Wiley.
 }
 \seealso{
-\code{\link{gv_stat}}, \code{\link{gv_limits}}, \code{\link{gv_alpha_risk}}, \code{\link{print.cchart.GV}}
+\code{\link{gv_stat}}, \code{\link{gv_limits}},
+\code{\link{gv_alpha_risk}}, \code{\link{print.cchart.GV}}
 }
