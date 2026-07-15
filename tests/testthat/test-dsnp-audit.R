@@ -45,8 +45,24 @@ test_that("Joekes et al. Table 2 first design is reproduced", {
 
 test_that("Joekes et al. Table 5 selected designs are reproduced", {
   cases <- data.frame(
+    reference = rep(
+      paste(
+        "Joekes, Smrekar and Barbosa (2015),",
+        "Statistical Methodology 23, 35-49"
+      ),
+      3
+    ),
+    table = rep(5L, 3),
+    row = c(
+      "p0=0.5%, p1=1%, n=60",
+      "p0=1%, p1=2%, n=30",
+      "p0=2%, p1=4%, n=25"
+    ),
     p0 = c(0.005, 0.01, 0.02),
     p1 = c(0.01, 0.02, 0.04),
+    gamma = rep(2, 3),
+    arl0_min = rep(200, 3),
+    ass0_max = c(60, 30, 25),
     n1 = c(50, 25, 20),
     n2 = c(242, 118, 73),
     wl = c(1.5, 1.5, 1.5),
@@ -54,22 +70,47 @@ test_that("Joekes et al. Table 5 selected designs are reproduced", {
     ucl2 = c(4.5, 4.5, 5.5),
     ass0 = c(55.83, 27.81, 24.33),
     arl0 = c(200.04, 212.94, 205.27),
-    arl1 = c(21.37, 22.24, 13.04)
+    arl1 = c(21.37, 22.24, 13.04),
+    tolerance = rep(0.005, 3),
+    tolerance_reason = rep(
+      "Published values are rounded to two decimal places",
+      3
+    )
   )
 
   for(i in seq_len(nrow(cases))) {
     g <- cases[i, ]
-    expect_identical(
-      round(dsnp_ass(g$p0, g$n1, g$n2, g$wl, g$ucl1)$ass, 2),
-      g$ass0
+    calculated <- c(
+      ass0 = dsnp_ass(g$p0, g$n1, g$n2, g$wl, g$ucl1)$ass,
+      arl0 = dsnp_arl(g$p0, g$n1, g$n2, g$wl, g$ucl1, g$ucl2)$arl,
+      arl1 = dsnp_arl(g$p1, g$n1, g$n2, g$wl, g$ucl1, g$ucl2)$arl
     )
-    expect_identical(
-      round(dsnp_arl(g$p0, g$n1, g$n2, g$wl, g$ucl1, g$ucl2)$arl, 2),
-      g$arl0
+    published <- c(ass0 = g$ass0, arl0 = g$arl0, arl1 = g$arl1)
+    evidence <- data.frame(
+      reference = g$reference,
+      table = g$table,
+      row = g$row,
+      p0 = g$p0,
+      p1 = g$p1,
+      gamma = g$gamma,
+      arl0_min = g$arl0_min,
+      ass0_max = g$ass0_max,
+      n1 = g$n1,
+      n2 = g$n2,
+      wl = g$wl,
+      ucl1 = g$ucl1,
+      ucl2 = g$ucl2,
+      metric = names(published),
+      published = unname(published),
+      calculated = unname(calculated),
+      tolerance = g$tolerance,
+      tolerance_ratio = abs(calculated - published) / g$tolerance,
+      tolerance_reason = g$tolerance_reason
     )
-    expect_identical(
-      round(dsnp_arl(g$p1, g$n1, g$n2, g$wl, g$ucl1, g$ucl2)$arl, 2),
-      g$arl1
+
+    expect_true(
+      all(evidence$tolerance_ratio <= 1),
+      info = paste(capture.output(print(evidence)), collapse = "\n")
     )
   }
 })

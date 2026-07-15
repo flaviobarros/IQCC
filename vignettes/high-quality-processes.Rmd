@@ -88,6 +88,8 @@ IQCC provides the complete DS-np workflow:
 - `dsnp_arl()` computes average run length;
 - `dsnp_ass()` computes average sample size;
 - `dsnp_limits()` searches and ranks feasible limits;
+- `dsnp_design()` searches sample sizes and limits under explicit ARL and ASS
+  constraints;
 - `cchart.DSnp()` classifies observations and constructs the chart.
 
 ## Inspecting a published plan
@@ -133,6 +135,35 @@ lim <- dsnp_limits(
 lim$best[, c("wl", "ucl1", "ucl2", "p_signal0",
              "arl0", "arl1", "ass0")]
 ```
+
+## Searching a complete design
+
+Joekes, Smrekar and Barbosa (2015) formulate the DS-np design problem as
+minimizing out-of-control `ARL1`, subject to a minimum `ARL0` and a maximum
+in-control average sample size `ASS0`. The shift is written in the paper as
+`p1 = gamma * p0`. In IQCC, the corresponding bound is `ass0_max`:
+
+```{r dsnp-design}
+design <- dsnp_design(
+  p0 = 0.05,
+  p1 = 0.10,
+  n1_range = 5:6,
+  n2_range = 8:10,
+  arl0_min = 50,
+  ass0_max = 6,
+  objective = "arl1",
+  max_results = 5
+)
+design$best[, c("n1", "n2", "wl", "ucl1", "ucl2",
+                "ass0", "arl0", "arl1")]
+```
+
+Setting `ass0_max = NULL` preserves the unconstrained search. The ASS used by
+`dsnp_ass()` and `dsnp_design()` is equation (15) of the paper: whenever the
+first-stage count enters the warning region, all `n2` units are counted. The
+paper also describes stopping second-stage inspection as soon as rejection is
+certain, but it does not provide the corresponding expected-inspection
+formula; IQCC does not label that curtailed quantity as the current ASS.
 
 ## Interpreting fractional limits
 

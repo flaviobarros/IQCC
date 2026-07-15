@@ -41,6 +41,12 @@
 #' \code{dsnp_limits()}, but final feasibility is checked against the
 #' explicit \code{arl0 >= arl0_min} condition.
 #'
+#' The published design problem minimizes out-of-control ARL subject to
+#' \code{ass0 <= ass0_max} and \code{arl0 >= arl0_min}. Setting
+#' \code{ass0_max = NULL} omits only the ASS constraint and preserves the
+#' behavior of earlier IQCC versions. The argument is appended to the function
+#' signature so existing positional calls retain their meaning.
+#'
 #' @param p0 In-control nonconforming proportion. Scalar in (0, 1).
 #' @param p1 Out-of-control nonconforming proportion. Scalar in (0, 1).
 #'   Must be greater than \code{p0}.
@@ -66,6 +72,11 @@
 #'   Positive integer.
 #' @param progress Logical. If \code{TRUE}, print progress messages during
 #'   the search.
+#' @param ass0_max Optional maximum in-control average sample size. When
+#'   supplied, it must be a finite positive scalar and candidates must satisfy
+#'   \code{ass0 <= ass0_max}. The current ASS calculation follows equation
+#'   (15) of Joekes et al. (2015) and assumes complete inspection of the second
+#'   sample whenever the first-stage count is in the warning region.
 #' @return An object of class \code{"dsnp_design"} with the following
 #' elements:
 #' \describe{
@@ -89,9 +100,10 @@
 #' @author Daniela R. Recchia, Emanuel P. Barbosa
 #' @seealso \link{dsnp_limits}, \link{dsnp_prob_accept}, \link{dsnp_arl},
 #'   \link{dsnp_ass}
-#' @references Joekes, S., Smrekar, M. and Barbosa, E. (2015). Extending a
+#' @references Joekes, S., Smrekar, M. and Barbosa, E. P. (2015). Extending a
 #' double sampling control chart for non-conforming proportion in high quality
-#' processes to the case of small samples.
+#' processes to the case of small samples. Statistical Methodology, 23, 35-49.
+#' \doi{10.1016/j.stamet.2014.09.003}.
 #' @examples
 #'
 #' # Small example for fast execution
@@ -113,7 +125,8 @@ dsnp_design <- function(
     weights = c(arl1 = 1, ass0 = 1),
     allow_empty_warning = FALSE,
     max_results = 20,
-    progress = FALSE
+    progress = FALSE,
+    ass0_max = NULL
 )
 {
     # --- Validate p0 and p1 ---
@@ -151,6 +164,13 @@ dsnp_design <- function(
     {
         if(length(alpha) != 1 || !is.finite(alpha) || alpha <= 0 || alpha >= 1)
             stop("alpha must be NULL or a finite scalar in (0, 1)")
+    }
+
+    if(!is.null(ass0_max))
+    {
+        if(!is.numeric(ass0_max) || length(ass0_max) != 1 ||
+           !is.finite(ass0_max) || ass0_max <= 0)
+            stop("ass0_max must be NULL or a finite positive scalar")
     }
 
     # --- Validate n1_range and n2_range ---
@@ -241,14 +261,17 @@ dsnp_design <- function(
 
     # --- Check total failures ---
     n_candidates_total <- pair_idx
+    ass0_constraint <- if(is.null(ass0_max)) "NULL" else format(ass0_max)
 
     if(n_failed == n_candidates_total)
         stop("dsnp_limits() failed for all (n1, n2) pairs. ",
-             n_failed, " failure(s) recorded.")
+             n_failed, " failure(s) recorded; ass0_max = ",
+             ass0_constraint, ".")
 
     if(length(all_results) == 0)
         stop("No candidates found for any (n1, n2) pair. ",
-             n_failed, " pair(s) failed.")
+             n_failed, " pair(s) failed; ass0_max = ",
+             ass0_constraint, ".")
 
     # --- Combine all candidates ---
     combined <- do.call(rbind, all_results)
@@ -263,15 +286,20 @@ dsnp_design <- function(
     if(!is.null(alpha))
         feasible <- feasible & combined$p_signal0 <= alpha
 
+    if(!is.null(ass0_max))
+        feasible <- feasible & combined$ass0 <= ass0_max
+
     combined$feasible <- feasible
     n_feasible <- sum(feasible)
 
     if(n_feasible == 0)
-        stop("No feasible candidates found. ",
-             "Consider relaxing arl0_min or alpha, ",
+        stop("No feasible candidates found for arl0_min = ", arl0_min,
+             ", alpha = ", alpha, ", ass0_max = ", ass0_constraint, ". ",
+             "Consider relaxing arl0_min, alpha, or ass0_max, ",
              "or expanding n1_range / n2_range. ",
              "Best approximation: arl0 = ", max(combined$arl0),
-             ", p_signal0 = ", min(combined$p_signal0), ".")
+             ", p_signal0 = ", min(combined$p_signal0),
+             ", ass0 = ", min(combined$ass0), ".")
 
     # --- Extract feasible candidates only ---
     candidates <- combined[feasible, , drop = FALSE]
@@ -350,6 +378,7 @@ dsnp_design <- function(
             n2_range = n2_range,
             arl0_min = arl0_min,
             alpha = alpha,
+            ass0_max = ass0_max,
             objective = objective,
             weights = weights,
             allow_empty_warning = allow_empty_warning,
@@ -382,6 +411,9 @@ print.dsnp_design <- function(x, ...)
     cat("  p1 =", x$parameters$p1, "\n")
     cat("  arl0_min =", x$parameters$arl0_min, "\n")
     cat("  alpha =", x$parameters$alpha, "\n")
+    cat("  ass0_max =",
+        if(is.null(x$parameters$ass0_max)) "NULL" else x$parameters$ass0_max,
+        "\n")
     cat("  objective =", x$parameters$objective, "\n")
     cat("  n1_range:", min(x$parameters$n1_range), "-",
         max(x$parameters$n1_range), "\n")
