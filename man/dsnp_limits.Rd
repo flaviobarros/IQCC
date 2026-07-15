@@ -16,79 +16,56 @@ dsnp_limits(
 )
 }
 \arguments{
-\item{p0}{The in-control nonconforming proportion. Must be in [0, 1].}
+\item{p0}{In-control nonconforming proportion in \eqn{[0, 1]}.}
 
-\item{n1}{The first-stage sample size (positive integer).}
+\item{n1}{First-stage positive integer sample size.}
 
-\item{n2}{The second-stage sample size (positive integer).}
+\item{n2}{Second-stage positive integer sample size.}
 
-\item{alpha}{The maximum desired false alarm probability at p0. Must be
-in (0, 1). When \code{conservative = TRUE}, candidates with
-p_signal0 <= alpha are preferred.}
+\item{alpha}{Maximum desired false-alarm probability in \eqn{(0, 1)}.}
 
-\item{p1}{Optional out-of-control proportion. When provided, candidates
-are ranked by ARL1 (lower is better).}
+\item{p1}{Optional out-of-control proportion in \eqn{[0, 1]} used for
+ranking.}
 
-\item{conservative}{Logical. If \code{TRUE} (default), feasible
-candidates (p_signal0 <= alpha) are ranked first. If \code{FALSE},
-all candidates are returned ordered by proximity to alpha.}
+\item{conservative}{Logical; prefer candidates with false-alarm probability
+no greater than \code{alpha}.}
 
-\item{allow_empty_warning}{Logical. If \code{FALSE} (default), discard
-candidates with no integer in the warning zone (ucl1_reject <=
-wl_accept + 1). This avoids single-sample disguised as DS-np.}
+\item{allow_empty_warning}{Logical; allow a degenerate single-sample scheme.}
 
-\item{max_results}{Maximum number of candidates to return. Must be a
-positive integer.}
+\item{max_results}{Positive integer maximum number of returned candidates.}
 }
 \value{
-A list with the following elements:
-\describe{
-  \item{best}{The first row of candidates (a data.frame row).}
-  \item{candidates}{A data.frame with all evaluated candidates,
-  sorted by the ranking criteria. Columns include wl, ucl1, ucl2,
-  wl_accept, ucl1_reject, ucl2_accept, pt0, p_signal0, arl0, ass0,
-  feasible, and (if p1 is provided) pt1, p_signal1, arl1, ass1.}
-  \item{p0, p1, n1, n2, alpha}{The input parameters.}
-  \item{conservative, allow_empty_warning}{The input flags.}
-}
+A list with \code{best}, the first row of the ranked candidates;
+\code{candidates}, the ranked candidate table; the input parameters
+\code{p0}, \code{p1}, \code{n1}, \code{n2}, and \code{alpha}; and the flags
+\code{conservative} and \code{allow_empty_warning}.
 }
 \description{
 Search for feasible fractional control limits for the double-sampling np
-chart by enumerating integer threshold combinations and evaluating each
-candidate using the numeric core functions \code{dsnp_prob_accept},
-\code{dsnp_arl}, and \code{dsnp_ass}.
+chart by enumerating integer threshold combinations. This function searches
+limits only; it does not optimize the complete sampling design over sample
+sizes.
 }
 \details{
-The function enumerates all valid combinations of integer thresholds
-(wl_accept, ucl1_reject, ucl2_accept), converts them to fractional
-limits compatible with \code{dsnp_prob_accept}, and evaluates each
-candidate's performance at the in-control proportion p0. When p1 is
-supplied, out-of-control metrics are also computed and used for ranking.
-
-When the warning zone is empty (ucl1_reject = wl_accept + 1), the
-chart degenerates to a single-sample scheme and probabilities are
-computed directly via \code{pbinom} without calling the core functions.
+Integer threshold combinations are converted to fractional limits and
+evaluated with the shared DS-np numerical core. When \code{p1} is supplied,
+out-of-control performance is included in the ranking. An empty warning zone
+degenerates to a single-sample scheme and is excluded by default.
 }
 \examples{
-
-# Small example for fast execution
-res <- dsnp_limits(p0 = 0.05, n1 = 5, n2 = 10, alpha = 0.05)
-res$best
-nrow(res$candidates)
-
-# With out-of-control proportion for ranking
-res <- dsnp_limits(p0 = 0.05, n1 = 5, n2 = 10, alpha = 0.05,
-                   p1 = 0.10)
-res$best[, c("wl", "ucl1", "ucl2", "arl0", "arl1", "ass0")]
+limits <- dsnp_limits(0.05, 5, 10, alpha = 0.05, p1 = 0.10)
+limits$best
 
 }
 \references{
-Joekes, S., Smrekar, M. and Barbosa, E. (2015). Extending a
+Joekes, S., Smrekar, M. and Barbosa, E. P. (2015). Extending a
 double sampling control chart for non-conforming proportion in high quality
-processes to the case of small samples.
+processes to the case of small samples. \emph{Statistical Methodology}, 23,
+35--49.
 }
 \seealso{
-\link{dsnp_prob_accept}, \link{dsnp_arl}, \link{dsnp_ass}
+\code{\link{dsnp_prob_accept}}, \code{\link{dsnp_arl}},
+\code{\link{dsnp_ass}}
 }
 \author{
 Daniela R. Recchia, Emanuel P. Barbosa

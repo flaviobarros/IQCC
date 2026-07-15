@@ -7,7 +7,7 @@
 #' "stats"(that calculate the auxiliary statistics involved in the T2 formula)
 #' and the function "data.2" (or other way to supply the data).
 #' 
-#' @param datum2 The data set for the phase II. Shoul be a vector.
+#' @param datum2 The data set for the phase II. Should be a vector.
 #' @param estat The values of the auxiliary statistics. Should be a list with a
 #' matrix with the means, mean of the means and mean of the standard deviation.
 #' @param n The size of each sample used previously in data.2. If they are

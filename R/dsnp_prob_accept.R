@@ -3,20 +3,30 @@
 #' Compute the total probability that the double-sampling np chart accepts
 #' (does not signal) at a given nonconforming proportion.
 #'
-#' @param p Nonconforming proportion, scalar or vector in [0, 1].
-#' @param n1 First-stage sample size.
-#' @param n2 Second-stage sample size.
-#' @param wl Fractional warning limit.
-#' @param ucl1 Fractional first-stage upper control limit.
-#' @param ucl2 Fractional combined upper control limit.
+#' A subgroup is accepted immediately when the first-stage count is at or
+#' below \code{floor(wl)}. Counts in the warning region continue to the second
+#' stage and are accepted when the combined count is at or below
+#' \code{floor(ucl2)}. The signal probability is one minus total acceptance.
+#'
+#' @param p Nonconforming proportion, scalar or vector in \eqn{[0, 1]}.
+#' @param n1 First-stage positive integer sample size.
+#' @param n2 Second-stage positive integer sample size.
+#' @param wl Finite fractional warning limit.
+#' @param ucl1 Finite fractional first-stage upper control limit greater than
+#' \code{wl}.
+#' @param ucl2 Finite fractional combined upper control limit greater than
+#' \code{wl}.
 #' @return A list with first- and second-stage acceptance probabilities,
 #' total acceptance and signal probabilities, second-stage probability,
 #' and integer decision thresholds.
 #' @export
+#' @author Daniela R. Recchia, Emanuel P. Barbosa
 #' @references Joekes, S., Smrekar, M. and Barbosa, E. P. (2015).
 #' Extending a double sampling control chart for non-conforming proportion in
 #' high quality processes to the case of small samples. Statistical Methodology,
 #' 23, 35-49.
+#' @seealso \code{\link{dsnp_arl}}, \code{\link{dsnp_ass}},
+#' \code{\link{dsnp_limits}}
 #' @examples
 #' dsnp_prob_accept(0.005, 34, 162, 1.5, 2.5, 4.5)
 #'

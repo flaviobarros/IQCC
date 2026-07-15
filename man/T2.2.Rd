@@ -7,7 +7,7 @@
 T2.2(datum2, estat, n)
 }
 \arguments{
-\item{datum2}{The data set for the phase II. Shoul be a vector.}
+\item{datum2}{The data set for the phase II. Should be a vector.}
 
 \item{estat}{The values of the auxiliary statistics. Should be a list with a
 matrix with the means, mean of the means and mean of the standard deviation.}

@@ -1,22 +1,40 @@
 #' Double-Sampling np Chart: Limit Search
 #'
-#' Enumerate feasible fractional decision limits for fixed \code{n1} and
-#' \code{n2}. This function searches limits only; it does not optimize the
-#' complete sampling design over sample sizes.
+#' Search for feasible fractional control limits for the double-sampling np
+#' chart by enumerating integer threshold combinations. This function searches
+#' limits only; it does not optimize the complete sampling design over sample
+#' sizes.
 #'
-#' @param p0 In-control nonconforming proportion.
-#' @param n1 First-stage sample size.
-#' @param n2 Second-stage sample size.
-#' @param alpha Maximum desired false-alarm probability.
-#' @param p1 Optional out-of-control proportion used for ranking.
-#' @param conservative Prefer candidates with false-alarm probability no
-#' greater than \code{alpha}.
-#' @param allow_empty_warning Allow a degenerate single-sample scheme.
-#' @param max_results Maximum number of returned candidates.
-#' @return A list with the best candidate and ranked candidate table.
+#' Integer threshold combinations are converted to fractional limits and
+#' evaluated with the shared DS-np numerical core. When \code{p1} is supplied,
+#' out-of-control performance is included in the ranking. An empty warning zone
+#' degenerates to a single-sample scheme and is excluded by default.
+#'
+#' @param p0 In-control nonconforming proportion in \eqn{[0, 1]}.
+#' @param n1 First-stage positive integer sample size.
+#' @param n2 Second-stage positive integer sample size.
+#' @param alpha Maximum desired false-alarm probability in \eqn{(0, 1)}.
+#' @param p1 Optional out-of-control proportion in \eqn{[0, 1]} used for
+#' ranking.
+#' @param conservative Logical; prefer candidates with false-alarm probability
+#' no greater than \code{alpha}.
+#' @param allow_empty_warning Logical; allow a degenerate single-sample scheme.
+#' @param max_results Positive integer maximum number of returned candidates.
+#' @return A list with \code{best}, the first row of the ranked candidates;
+#' \code{candidates}, the ranked candidate table; the input parameters
+#' \code{p0}, \code{p1}, \code{n1}, \code{n2}, and \code{alpha}; and the flags
+#' \code{conservative} and \code{allow_empty_warning}.
 #' @export
+#' @author Daniela R. Recchia, Emanuel P. Barbosa
+#' @references Joekes, S., Smrekar, M. and Barbosa, E. P. (2015). Extending a
+#' double sampling control chart for non-conforming proportion in high quality
+#' processes to the case of small samples. \emph{Statistical Methodology}, 23,
+#' 35--49.
+#' @seealso \code{\link{dsnp_prob_accept}}, \code{\link{dsnp_arl}},
+#' \code{\link{dsnp_ass}}
 #' @examples
-#' dsnp_limits(0.05, 5, 10, alpha = 0.05)$best
+#' limits <- dsnp_limits(0.05, 5, 10, alpha = 0.05, p1 = 0.10)
+#' limits$best
 #'
 dsnp_limits <- function(p0, n1, n2, alpha = 0.0027,
                         p1 = NULL,

@@ -13,27 +13,31 @@
 \method{print}{summary.cchart.GV}(x, digits = max(3L, getOption("digits") - 3L), ...)
 }
 \arguments{
-\item{x}{An object of class \code{"cchart.GV"} or \code{"summary.cchart.GV"}.}
+\item{x}{An object of class \code{"cchart.GV"} or
+\code{"summary.cchart.GV"}.}
 
 \item{digits}{Number of significant digits used for numerical output.}
 
-\item{...}{Additional arguments passed to the summary print method; otherwise currently unused.}
+\item{...}{Currently unused.}
 
 \item{object}{An object of class \code{"cchart.GV"}.}
 }
 \value{
-\code{summary.cchart.GV()} returns an object of class
-\code{"summary.cchart.GV"}. The returned list contains \code{call},
-\code{dimensions}, \code{subgroups}, \code{method}, \code{limits},
-\code{covariance}, \code{statistics}, and \code{signals}. The print methods
-return their input invisibly.
+\code{x}, invisibly.
+
+An object of class \code{"summary.cchart.GV"}. The returned list
+contains \code{call}, \code{dimensions}, \code{subgroups}, \code{method},
+\code{limits}, \code{covariance}, \code{statistics}, and \code{signals}.
+The \code{signals} component is a data frame with subgroup index, phase, and
+generalized variance for every point outside the control limits.
+
+\code{x}, invisibly.
 }
 \description{
-Display or construct a compact statistical summary of a generalized variance
-chart, including design dimensions, Phase I and Phase II subgroup counts,
-control-limit method, covariance source, descriptive statistics, and signaled
-subgroups.
-}
-\seealso{
-\code{\link{cchart.GV}}, \code{\link{plot.cchart.GV}}
+Display the chart design, Phase I and Phase II subgroup counts, control
+limits, and the number of signaled subgroups.
+
+Construct a compact statistical summary of a generalized variance chart,
+including its design, limit method, covariance source, descriptive summary
+of the plotted statistics, and signaled subgroups.
 }

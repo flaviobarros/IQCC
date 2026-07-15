@@ -16,12 +16,17 @@ pchart_alpha_risk(p, n, lcl, ucl)
 \item{ucl}{Upper control limit or vector of limits.}
 }
 \value{
-A numeric vector with the exact false-alarm probability for each sample size and pair of limits.
+A numeric vector with the exact false-alarm probability for each
+  sample size and pair of limits.
 }
 \description{
-Compute the actual false-alarm probability of p-chart limits under the in-control binomial model. The calculation respects the discreteness of \eqn{X \sim Binomial(n, p)} and treats a signal as \eqn{X/n < LCL} or \eqn{X/n > UCL}.
+Compute the actual false-alarm probability of p-chart limits under the
+in-control binomial model. The calculation respects the discreteness of
+\eqn{X \sim Binomial(n, p)} and treats a signal as
+\eqn{X/n < LCL} or \eqn{X/n > UCL}.
 }
 \examples{
 limits <- pchart_limits(0.015, 20, type = "cf2")
 pchart_alpha_risk(0.015, 20, limits$lcl, limits$ucl)
+
 }

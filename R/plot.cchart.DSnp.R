@@ -4,6 +4,11 @@
 #' that the first-stage count and combined count are shown on their proper
 #' scales.
 #'
+#' The upper panel displays \code{x1}, the warning limit, and the first-stage
+#' upper control limit. The lower panel displays \code{x1 + x2} only for
+#' observations that reached the second stage, together with the second-stage
+#' upper control limit.
+#'
 #' @param x An object of class \code{"cchart.DSnp"}.
 #' @param ... Additional graphical parameters passed to the first panel.
 #' @return Invisible \code{x}.

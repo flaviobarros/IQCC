@@ -18,6 +18,13 @@
 #' \code{\link{dsnp_limits}}, \code{\link{gv_limits}},
 #' \code{\link{cchart.R}}, \code{\link{cchart.DSnp}},
 #' \code{\link{cchart.GV}}
+#' @section Useful links:
+#' \itemize{
+#'   \item \url{https://github.com/flaviobarros/IQCC}
+#'   \item \url{https://flaviobarros.github.io/IQCC/}
+#'   \item Report bugs at
+#'   \url{https://github.com/flaviobarros/IQCC/issues}
+#' }
 #' @importFrom graphics legend
 #' @importFrom stats dbinom
 "_PACKAGE"

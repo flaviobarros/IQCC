@@ -1,15 +1,24 @@
 #' Double-Sampling np Chart: Average Sample Size
 #'
-#' Compute the Average Sample Size for the double-sampling np chart.
+#' Compute the average sample size for the double-sampling np chart under
+#' complete inspection of every second-stage sample that is requested.
 #'
-#' @param p Nonconforming proportion, scalar or vector in [0, 1].
-#' @param n1 First-stage sample size.
-#' @param n2 Second-stage sample size.
-#' @param wl Fractional warning limit.
-#' @param ucl1 Fractional first-stage upper control limit.
+#' The returned value is \eqn{n_1 + n_2 P(second stage)}. It does not use
+#' curtailed inspection within the second-stage sample.
+#'
+#' @param p Nonconforming proportion, scalar or vector in \eqn{[0, 1]}.
+#' @param n1 First-stage positive integer sample size.
+#' @param n2 Second-stage positive integer sample size.
+#' @param wl Finite fractional warning limit.
+#' @param ucl1 Finite fractional first-stage upper control limit.
 #' @return A list containing ASS, second-stage probability, and chart
 #' parameters.
 #' @export
+#' @author Daniela R. Recchia, Emanuel P. Barbosa
+#' @references Joekes, S., Smrekar, M. and Barbosa, E. P. (2015). Extending a
+#' double sampling control chart for non-conforming proportion in high quality
+#' processes to the case of small samples. \emph{Statistical Methodology}, 23,
+#' 35--49.
 #' @seealso \link{dsnp_prob_accept}, \link{dsnp_arl}
 #' @examples
 #' dsnp_ass(0.005, 34, 162, 1.5, 2.5)$ass

@@ -13,26 +13,31 @@
 \method{print}{summary.cchart.DSnp}(x, digits = max(3L, getOption("digits") - 3L), ...)
 }
 \arguments{
-\item{x}{An object of class \code{"cchart.DSnp"} or \code{"summary.cchart.DSnp"}.}
+\item{x}{An object of class \code{"cchart.DSnp"} or
+\code{"summary.cchart.DSnp"}.}
 
 \item{digits}{Number of significant digits used for numerical output.}
 
-\item{...}{Additional arguments passed to the summary print method; otherwise currently unused.}
+\item{...}{Currently unused.}
 
 \item{object}{An object of class \code{"cchart.DSnp"}.}
 }
 \value{
-\code{summary.cchart.DSnp()} returns an object of class
-\code{"summary.cchart.DSnp"}. The returned list contains \code{call},
-\code{observations}, \code{parameters}, \code{limits}, \code{performance},
-\code{stage_counts}, and \code{signals}. The print methods return their input
-invisibly.
+\code{x}, invisibly.
+
+An object of class \code{"summary.cchart.DSnp"}. The returned list
+contains \code{call}, \code{observations}, \code{parameters},
+\code{limits}, \code{performance}, \code{stage_counts}, and
+\code{signals}. The \code{signals} component contains the observations
+that signaled at either sampling stage.
+
+\code{x}, invisibly.
 }
 \description{
-Display or construct a compact summary of a double-sampling np chart,
-including sample sizes, decision thresholds, operating characteristics,
-stage outcomes, and signaled observations.
-}
-\seealso{
-\code{\link{cchart.DSnp}}, \code{\link{plot.cchart.DSnp}}
+Display the sampling plan, integer decision thresholds, operating
+characteristics, stage decisions, and number of signaled observations.
+
+Construct a compact summary of the sampling plan, decision thresholds,
+in-control and optional out-of-control performance, stage outcomes, and
+signaled observations.
 }
