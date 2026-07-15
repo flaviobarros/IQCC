@@ -19,9 +19,9 @@ simulation seed required to rerun it.
 | Item | Status | Evidence | Release impact |
 |---|---|---|---|
 | PR #58, DS-np design search | Squash-merged into `origin/master` | Commit `f92e2f5`; `dsnp_design()` and deterministic ranking tests are on master | The implementation portion of #51 is merged |
-| PR #60, `tr(V)` chart | Ready for review; all eight GitHub checks pass | Head `ba5178b`; exact and simulated limits, risk, Phase I/II chart, published Table 3 tests, and partial Case B reproduction | Advances #8 but does not close it because the complete published Case B signal sequence cannot be rerun |
-| PR #61, release audit | Ready for review after this update; GitHub checks pass | Branch `agent/release-080-audit`; this audit file is the only changed path | Must be reviewed after #60 and before new parallel deliveries |
-| Issue #8 | Open | Core API and documentation are in ready PR #60; Table 3 is reproduced; Case B is partial | Review/merge #60, then decide whether missing raw Case B data keeps #8 open |
+| PR #60, `tr(V)` chart | Squash-merged into `origin/master`; all eight GitHub checks passed | Commit `6b67554e`; exact and simulated limits, risk, Phase I/II chart, published Table 3 tests, and partial Case B reproduction | Core implementation is on master; #8 remains open because the complete published Case B signal sequence cannot be rerun |
+| PR #61, release audit | Ready for review after this update; GitHub checks pass | Branch `agent/release-080-audit`; this audit file is the only changed path | Must be reviewed and merged before new parallel deliveries |
+| Issue #8 | Open | Core API and documentation were merged via PR #60; Table 3 is reproduced; Case B is partial | Decide whether missing raw Case B data keeps #8 open for the 0.8.0 gate |
 | Issue #51 | Open | `dsnp_design()` is merged; the DS-np paper is locally available | Still needs published-table reproduction and the published `ASS0` constraint formulation |
 
 ## Scientific sources
@@ -47,7 +47,7 @@ point for point without inventing observations.
 | DS-np curtailed inspection | Signal probability and ARL are implemented; current ASS assumes a full second sample in the continuation region | Determine whether the paper requires curtailed expected inspection and, if so, encode it explicitly | Decision pending source audit, not source availability | Separate ASS semantics PR only if required |
 | R and S charts | Existing charts, constants, exact-risk diagnostics, tests, and documentation | Add source-tagged published reproduction and thematic documentation | Not an immediate implementation blocker | Validation/docs PR scoped to #45 or #10 |
 | Generalized variance `|S|` | `gv_stat()`, `gv_limits()`, `gv_alpha_risk()`, and `cchart.GV()` implement normal, CF, selected exact, and simulated paths | Generic Meijer-G quantiles are not claimed; the primary report is now available | #7 body is substantially outdated | Update/close #7 and split generic Meijer-G into a research issue if still desired |
-| Auxiliary `tr(V)` | PR #60 is ready with full API, tests, documentation, exact chi-square contract, RNG preservation, Phase I/II, and plug-in-limit caveat | Table 3 is reproduced for N = 3, 16, 30; Case B matrices, determinants, and UCL are reproduced, but raw Phase II signals are unavailable | Awaiting review; #8 remains open as `Part of #8` | No new implementation PR before #60 review |
+| Auxiliary `tr(V)` | PR #60 is merged with full API, tests, documentation, exact chi-square contract, RNG preservation, Phase I/II, and plug-in-limit caveat | Table 3 is reproduced for N = 3, 16, 30; Case B matrices, determinants, and UCL are reproduced, but raw Phase II signals are unavailable | Implementation is on master; #8 remains open because Case B is partial | No new implementation PR unless raw Case B data become available |
 | Hotelling T-squared | Legacy Phase I/II functions exist | Audit the available robustness paper before changing assumptions or limits | Documentation/research follow-up, not a current code claim | Theorem/provenance documentation after source review |
 | Release engineering | Version 0.8.0, CI matrix, coverage, URL checks, and pkgdown workflows exist | Final release candidate, revdep/CRAN notes, and scientific gate decisions remain | #27 is open and its body is outdated | Release-only PR after #8/#51 decisions |
 | Documentation/JSS | README, NEWS, pkgdown, and three executable vignettes exist | Getting-started, thematic dispersion/multivariate material, replication, and long-term QA remain | #50 remains useful as an umbrella but its diagnosis is partly stale | Keep #43/#45/#49 separate and defer them until current PR review |
@@ -78,7 +78,7 @@ same-determinant example remains clearly labeled synthetic.
 | Issue | Current assessment | Recommended action |
 |---|---|---|
 | #7 | Open body still says generalized variance is absent | Mark implemented except for an explicitly separate generic Meijer-G research scope |
-| #8 | Acceptance checkboxes do not reflect ready PR #60 | Update after review; keep open unless partial Case B evidence is accepted |
+| #8 | Acceptance checkboxes do not reflect merged PR #60 | Mark implemented criteria complete; keep open unless partial Case B evidence is accepted |
 | #10 | Validation epic omits completed/advanced p, R, GV, and `tr(V)` fixtures | Refresh checkboxes and remaining source-tagged validation tasks |
 | #13 | Roadmap still schedules #7/#8 after work that is already implemented | Reorder phases and remove completed prerequisites |
 | #27 | Body still says version 0.7 and single-platform CI | Rewrite the gate around remaining scientific validation and final CRAN/revdep work |
@@ -86,13 +86,13 @@ same-determinant example remains clearly labeled synthetic.
 | #51 | Objective text reads as if joint design search is absent; comments also say PDFs are unavailable | Record #58 as merged; retain published fixtures and `ass0_max` as the remaining scope |
 
 Issues #43, #45, and #49 remain valid future documentation tasks. They are not
-outdated, but they should not start in parallel before PRs #60 and #61 are
-reviewed and merged.
+outdated, but they should not start in parallel before PR #61 is reviewed and
+merged.
 
 ## Real release blockers
 
-1. Review and merge PR #60, then decide whether the partial Case B reproduction
-   is sufficient for 0.8.0 or whether #8 must remain open pending raw data.
+1. Decide whether the partial Case B reproduction merged in PR #60 is sufficient
+   for 0.8.0 or whether #8 must remain open pending raw data.
 2. Complete one focused #51 follow-up using the available DS-np PDF: published
    table fixtures plus the optional `ass0_max` formulation.
 3. Resolve the DS-np curtailed-inspection ASS convention only if the paper audit
@@ -103,8 +103,8 @@ reviewed and merged.
 
 ## Minimum next PR sequence
 
-1. Review and merge #60 and #61; do not create the #43/#45/#49/#51 worktrees
-   before that review cycle is complete.
+1. Review and merge #61; do not create the #43/#45/#49/#51 worktrees before
+   that review cycle is complete.
 2. #51 follow-up: add optional `ass0_max` and reproduce at least three published
    DS-np table rows with explicit source, parameters, values, and tolerances.
 3. A documentation-only issue cleanup for #7/#8/#10/#13/#27/#50/#51.
