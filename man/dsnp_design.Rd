@@ -16,7 +16,8 @@ dsnp_design(
   weights = c(arl1 = 1, ass0 = 1),
   allow_empty_warning = FALSE,
   max_results = 20,
-  progress = FALSE
+  progress = FALSE,
+  ass0_max = NULL
 )
 
 \method{print}{dsnp_design}(x, ...)
@@ -57,6 +58,12 @@ Positive integer.}
 
 \item{progress}{Logical. If \code{TRUE}, print progress messages during
 the search.}
+
+\item{ass0_max}{Optional maximum in-control average sample size. When
+supplied, it must be a finite positive scalar and candidates must satisfy
+\code{ass0 <= ass0_max}. The current ASS calculation follows equation
+(15) of Joekes et al. (2015) and assumes complete inspection of the second
+sample whenever the first-stage count is in the warning region.}
 
 \item{x}{An object of class \code{"dsnp_design"}.}
 
@@ -101,6 +108,12 @@ When \code{alpha} is \code{NULL} and \code{arl0_min} is provided, an
 effective alpha of \code{1 / arl0_min} is used to guide
 \code{dsnp_limits()}, but final feasibility is checked against the
 explicit \code{arl0 >= arl0_min} condition.
+
+The published design problem minimizes out-of-control ARL subject to
+\code{ass0 <= ass0_max} and \code{arl0 >= arl0_min}. Setting
+\code{ass0_max = NULL} omits only the ASS constraint and preserves the
+behavior of earlier IQCC versions. The argument is appended to the function
+signature so existing positional calls retain their meaning.
 }
 \examples{
 
@@ -113,9 +126,10 @@ res <- dsnp_design(
 res$best[, c("n1", "n2", "wl", "ucl1", "ucl2", "arl0", "arl1")]
 }
 \references{
-Joekes, S., Smrekar, M. and Barbosa, E. (2015). Extending a
+Joekes, S., Smrekar, M. and Barbosa, E. P. (2015). Extending a
 double sampling control chart for non-conforming proportion in high quality
-processes to the case of small samples.
+processes to the case of small samples. Statistical Methodology, 23, 35-49.
+\doi{10.1016/j.stamet.2014.09.003}.
 }
 \seealso{
 \link{dsnp_limits}, \link{dsnp_prob_accept}, \link{dsnp_arl},

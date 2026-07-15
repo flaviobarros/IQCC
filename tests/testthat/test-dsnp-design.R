@@ -40,11 +40,12 @@ test_that("dsnp_design parameters stores all inputs", {
                      objective = "weighted",
                      weights = c(arl1 = 2, ass0 = 1),
                      allow_empty_warning = TRUE,
-                     max_results = 5)
+                     max_results = 5, ass0_max = 7)
   expect_equal(res$parameters$p0, 0.05)
   expect_equal(res$parameters$p1, 0.10)
   expect_equal(res$parameters$arl0_min, 100)
   expect_equal(res$parameters$alpha, 0.01)
+  expect_equal(res$parameters$ass0_max, 7)
   expect_equal(res$parameters$objective, "weighted")
   expect_equal(res$parameters$weights, c(arl1 = 2, ass0 = 1))
   expect_true(res$parameters$allow_empty_warning)
@@ -161,6 +162,44 @@ test_that("dsnp_design respects both arl0_min and alpha simultaneously", {
                      objective = "arl1")
   expect_true(all(res$candidates$arl0 >= 100))
   expect_true(all(res$candidates$p_signal0 <= 0.01))
+})
+
+test_that("dsnp_design ass0_max filters candidates and is recorded", {
+  unrestricted <- dsnp_design(
+    p0 = 0.05, p1 = 0.10,
+    n1_range = 5:6, n2_range = 8:9,
+    arl0_min = 50, max_results = 100
+  )
+  explicit_null <- dsnp_design(
+    p0 = 0.05, p1 = 0.10,
+    n1_range = 5:6, n2_range = 8:9,
+    arl0_min = 50, ass0_max = NULL, max_results = 100
+  )
+  constrained <- dsnp_design(
+    p0 = 0.05, p1 = 0.10,
+    n1_range = 5:6, n2_range = 8:9,
+    arl0_min = 50, ass0_max = 5.4, max_results = 100
+  )
+
+  expect_null(unrestricted$parameters$ass0_max)
+  expect_equal(explicit_null$candidates, unrestricted$candidates)
+  expect_equal(explicit_null$search, unrestricted$search)
+  expect_equal(constrained$parameters$ass0_max, 5.4)
+  expect_true(all(constrained$candidates$ass0 <= 5.4))
+  expect_lt(constrained$search$n_feasible, unrestricted$search$n_feasible)
+})
+
+test_that("dsnp_design combines ass0_max with arl0_min and alpha", {
+  res <- dsnp_design(
+    p0 = 0.05, p1 = 0.10,
+    n1_range = 5:7, n2_range = 8:10,
+    arl0_min = 100, alpha = 0.01, ass0_max = 6.2,
+    max_results = 100
+  )
+
+  expect_true(all(res$candidates$arl0 >= 100))
+  expect_true(all(res$candidates$p_signal0 <= 0.01))
+  expect_true(all(res$candidates$ass0 <= 6.2))
 })
 
 # --- 9. objective = arl1 returns lowest arl1 ---
@@ -365,6 +404,105 @@ test_that("dsnp_design matches manual dsnp_limits enumeration", {
   expect_equal(res$search$n_feasible, as.integer(nrow(manual_feasible)))
 })
 
+test_that("dsnp_design matches an independent small-sample enumeration", {
+  direct_performance <- function(p, n1, n2, a, b, c) {
+    acceptance <- 0
+    p_second <- 0
+
+    for(d1 in 0:n1) {
+      p_d1 <- dbinom(d1, n1, p)
+      if(d1 <= a) {
+        acceptance <- acceptance + p_d1
+      } else if(d1 < b) {
+        p_second <- p_second + p_d1
+        for(d2 in 0:n2) {
+          if(d1 + d2 <= c)
+            acceptance <- acceptance + p_d1 * dbinom(d2, n2, p)
+        }
+      }
+    }
+
+    p_signal <- min(1, max(0, 1 - acceptance))
+    c(
+      arl = if(p_signal == 0) Inf else 1 / p_signal,
+      ass = n1 + n2 * p_second,
+      p_signal = p_signal
+    )
+  }
+
+  p0 <- 0.05
+  p1 <- 0.15
+  arl0_min <- 47.3
+  ass0_max <- 4.25
+  rows <- list()
+
+  for(n1 in 3:4) {
+    for(n2 in 4:5) {
+      for(a in 0:n1) {
+        b_min <- a + 2L
+        b_max <- n1 + 1L
+        if(b_min > b_max)
+          next
+
+        for(b in seq.int(b_min, b_max)) {
+          for(c in seq.int(a + 1L, n1 + n2)) {
+            perf0 <- direct_performance(p0, n1, n2, a, b, c)
+            perf1 <- direct_performance(p1, n1, n2, a, b, c)
+            rows[[length(rows) + 1L]] <- data.frame(
+              n1 = n1,
+              n2 = n2,
+              wl = a + 0.5,
+              ucl1 = b - 0.5,
+              ucl2 = c + 0.5,
+              wl_accept = a,
+              ucl1_reject = b,
+              ucl2_accept = c,
+              arl0 = unname(perf0["arl"]),
+              ass0 = unname(perf0["ass"]),
+              p_signal0 = unname(perf0["p_signal"]),
+              arl1 = unname(perf1["arl"])
+            )
+          }
+        }
+      }
+    }
+  }
+
+  direct <- do.call(rbind, rows)
+  direct <- direct[
+    direct$arl0 >= arl0_min & direct$ass0 <= ass0_max,
+    , drop = FALSE
+  ]
+  direct <- direct[order(
+    direct$arl1,
+    direct$ass0,
+    -direct$arl0,
+    direct$n1 + direct$n2,
+    direct$n1,
+    direct$n2,
+    direct$wl_accept,
+    direct$ucl1_reject,
+    direct$ucl2_accept
+  ), , drop = FALSE]
+  rownames(direct) <- NULL
+
+  design <- dsnp_design(
+    p0 = p0,
+    p1 = p1,
+    n1_range = 3:4,
+    n2_range = 4:5,
+    arl0_min = arl0_min,
+    ass0_max = ass0_max,
+    objective = "arl1",
+    max_results = 1000
+  )
+
+  keys <- c("n1", "n2", "wl", "ucl1", "ucl2", "arl0", "arl1", "ass0")
+  expect_gt(nrow(direct), 0)
+  expect_equal(design$search$n_feasible, as.integer(nrow(direct)))
+  expect_equal(design$best[, keys], direct[1, keys], tolerance = 1e-12)
+})
+
 # --- 17. Each line consistent with direct core calls ---
 
 test_that("dsnp_design each candidate is consistent with direct core calls", {
@@ -453,6 +591,43 @@ test_that("dsnp_design errors on invalid alpha", {
                n1_range = 5:6, n2_range = 8:9,
                alpha = 1),
                "alpha must be NULL or a finite scalar in \\(0, 1\\)")
+})
+
+test_that("dsnp_design errors on invalid ass0_max", {
+  invalid <- list(0, -1, Inf, NA_real_, NaN, c(5, 6), "5")
+
+  for(value in invalid) {
+    expect_error(
+      dsnp_design(
+        p0 = 0.05, p1 = 0.10,
+        n1_range = 5:6, n2_range = 8:9,
+        arl0_min = 50, ass0_max = value
+      ),
+      "ass0_max must be NULL or a finite positive scalar"
+    )
+  }
+})
+
+test_that("dsnp_design infeasibility reports ass0_max", {
+  expect_error(
+    dsnp_design(
+      p0 = 0.05, p1 = 0.10,
+      n1_range = 5:6, n2_range = 8:9,
+      arl0_min = 50, ass0_max = 1
+    ),
+    "ass0_max = 1"
+  )
+})
+
+test_that("dsnp_design infeasibility reports NULL constraints explicitly", {
+  expect_error(
+    dsnp_design(
+      p0 = 0.05, p1 = 0.10,
+      n1_range = 5:6, n2_range = 8:9,
+      arl0_min = NULL, alpha = 0.01, ass0_max = 1
+    ),
+    "arl0_min = NULL, alpha = 0.01, ass0_max = 1"
+  )
 })
 
 test_that("dsnp_design errors on invalid objective", {
