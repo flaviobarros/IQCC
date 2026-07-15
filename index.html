@@ -72,7 +72,7 @@
 <li>
 <strong>High-quality processes</strong>: corrected p charts and double-sampling np charts for rare nonconformities.</li>
 <li>
-<strong>Multivariate monitoring</strong>: Hotelling T² charts and generalized variance charts.</li>
+<strong>Multivariate monitoring</strong>: Hotelling T² charts, generalized variance charts, and auxiliary <code>tr(V)</code> variability charts.</li>
 <li>
 <strong>False-alarm diagnostics</strong>: exact binomial, Poisson, range-chart, and generalized variance risk calculations where available.</li>
 <li>
@@ -159,6 +159,14 @@
 <td>Exact dimension-two limits and selected published dimension-three quantiles.</td>
 </tr>
 <tr>
+<td>Multivariate variability structure</td>
+<td>
+<code><a href="reference/trv_stat.html">trv_stat()</a></code>, <code><a href="reference/trv_limits.html">trv_limits()</a></code>, <code><a href="reference/trv_alpha_risk.html">trv_alpha_risk()</a></code>, <code><a href="reference/cchart.trV.html">cchart.trV()</a></code>
+</td>
+<td>Exact chi-square and simulation-based trace-statistic charts</td>
+<td>Complements <code>|S|</code> by detecting standardized trace changes that may preserve determinant.</td>
+</tr>
+<tr>
 <td>Relative range constants</td>
 <td>
 <code><a href="reference/d2.html">d2()</a></code>, <code><a href="reference/d3.html">d3()</a></code>
@@ -238,7 +246,12 @@
 <span>  p <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>  det_sigma <span class="op">=</span> <span class="fl">0.5320</span>,</span>
 <span>  type <span class="op">=</span> <span class="st">"exact"</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Auxiliary trace chart for covariance-structure changes</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
+<span><span class="va">phase1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/array.html" class="external-link">array</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">6</span> <span class="op">*</span> <span class="fl">8</span> <span class="op">*</span> <span class="fl">2</span><span class="op">)</span>, dim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">6</span>, <span class="fl">8</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/cchart.trV.html">cchart.trV</a></span><span class="op">(</span><span class="va">phase1</span>, Sigma0 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span>, plot <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="learning-more">Learning more<a class="anchor" aria-label="anchor" href="#learning-more"></a>
@@ -269,7 +282,8 @@
 <li>exact range-chart limits through the relative range distribution;</li>
 <li>double-sampling designs for rare nonconformities;</li>
 <li>Hotelling T² monitoring for multivariate process means;</li>
-<li>generalized variance monitoring through products of chi-square variables and Bartlett decomposition.</li>
+<li>generalized variance monitoring through products of chi-square variables and Bartlett decomposition;</li>
+<li>auxiliary <code>tr(V)</code> monitoring through the trace of a standardized Wishart matrix.</li>
 </ul>
 </div>
 <div class="section level2">
@@ -317,9 +331,9 @@
 <td>Complementary monitoring using <code>tr(V)</code>
 </td>
 <td>
-<code>trv_limits()</code>, <code>cchart.trV()</code>
+<code><a href="reference/trv_limits.html">trv_limits()</a></code>, <code><a href="reference/cchart.trV.html">cchart.trV()</a></code>
 </td>
-<td>Planned</td>
+<td>Implemented</td>
 </tr>
 <tr>
 <td>Full DS-np sample-size optimization</td>

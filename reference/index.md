@@ -95,6 +95,18 @@ Hotelling T-squared and generalized variance charts.
 - [`cchart.GV()`](https://flaviobarros.github.io/IQCC/reference/cchart.GV.md)
   [`plot(`*`<cchart.GV>`*`)`](https://flaviobarros.github.io/IQCC/reference/cchart.GV.md)
   : Generalized Variance Control Chart
+- [`trv_stat()`](https://flaviobarros.github.io/IQCC/reference/trv_stat.md)
+  : Trace Statistic for Multivariate Variability
+- [`trv_limits()`](https://flaviobarros.github.io/IQCC/reference/trv_limits.md)
+  : Trace-Statistic Control Limits
+- [`trv_alpha_risk()`](https://flaviobarros.github.io/IQCC/reference/trv_alpha_risk.md)
+  : False-Alarm Risk for Trace-Statistic Charts
+- [`cchart.trV()`](https://flaviobarros.github.io/IQCC/reference/cchart.trV.md)
+  [`plot(`*`<cchart.trV>`*`)`](https://flaviobarros.github.io/IQCC/reference/cchart.trV.md)
+  [`print(`*`<cchart.trV>`*`)`](https://flaviobarros.github.io/IQCC/reference/cchart.trV.md)
+  [`summary(`*`<cchart.trV>`*`)`](https://flaviobarros.github.io/IQCC/reference/cchart.trV.md)
+  [`print(`*`<summary.cchart.trV>`*`)`](https://flaviobarros.github.io/IQCC/reference/cchart.trV.md)
+  : Trace-Statistic Control Chart
 - [`print(`*`<cchart.GV>`*`)`](https://flaviobarros.github.io/IQCC/reference/print.cchart.GV.md)
   [`summary(`*`<cchart.GV>`*`)`](https://flaviobarros.github.io/IQCC/reference/print.cchart.GV.md)
   [`print(`*`<summary.cchart.GV>`*`)`](https://flaviobarros.github.io/IQCC/reference/print.cchart.GV.md)

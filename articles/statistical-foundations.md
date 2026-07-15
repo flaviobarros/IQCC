@@ -263,6 +263,178 @@ factors. The package does not claim a generic Meijer-G implementation.
 Published exact quantiles are used only in explicitly supported
 dimension-three cases.
 
+## Auxiliary trace chart
+
+The generalized variance chart is sensitive to determinant changes in
+the covariance matrix. A complementary diagnostic monitors the trace of
+the standardized covariance matrix,
+
+``` math
+T=(n-1)\operatorname{tr}(\Sigma_0^{-1}S).
+```
+
+If the process is multivariate normal and $`\Sigma=\Sigma_0`$, then
+
+``` math
+T\sim\chi^2_{p(n-1)}.
+```
+
+This gives an exact upper control limit for the trace chart:
+
+``` r
+
+trv_limits(n = 8, p = 2, alpha = 0.0027)
+#> $lcl
+#> [1] 0
+#> 
+#> $ucl
+#> [1] 33.19518
+#> 
+#> $center
+#> [1] 14
+#> 
+#> $type
+#> [1] "chisq"
+#> 
+#> $alpha
+#> [1] 0.0027
+#> 
+#> $n
+#> [1] 8
+#> 
+#> $p
+#> [1] 2
+#> 
+#> $df
+#> [1] 14
+#> 
+#> $nsim
+#> [1] 1e+05
+#> 
+#> $seed
+#> NULL
+```
+
+### Published Table 3
+
+The report defines $`N=n-1`$ in Section 3.3, but the numerical rows of
+its Table 3 use the displayed $`N`$ as subgroup size $`n`$. The
+probability headings also appear to be reversed: the values printed
+under 0.9980 match exact 0.9973 chi-square quantiles, while those under
+0.9973 match exact 0.9980 quantiles. IQCC keeps the mathematical tail
+convention rather than reproducing the apparent label error.
+
+``` r
+
+table3 <- data.frame(
+  report_row = rep(c(3, 16, 30), each = 2),
+  printed_heading = rep(c(0.9980, 0.9973), 3),
+  nominal_probability = rep(c(0.9973, 0.9980), 3),
+  published = c(20.07, 20.79, 75.88, 77.17, 128.18, 129.83)
+)
+table3$df <- 3 * (table3$report_row - 1)
+table3$calculated <- vapply(
+  seq_len(nrow(table3)),
+  function(i) trv_limits(
+    n = table3$report_row[i],
+    p = 3,
+    alpha = 1 - table3$nominal_probability[i]
+  )$ucl,
+  numeric(1)
+)
+table3$tolerance <- 0.03
+table3$tolerance_ratio <- abs(
+  table3$calculated - table3$published
+) / table3$tolerance
+table3
+#>   report_row printed_heading nominal_probability published df calculated
+#> 1          3          0.9980              0.9973     20.07  6   20.06190
+#> 2          3          0.9973              0.9980     20.79  6   20.79117
+#> 3         16          0.9980              0.9973     75.88 45   75.89011
+#> 4         16          0.9973              0.9980     77.17 45   77.17949
+#> 5         30          0.9980              0.9973    128.18 87  128.19861
+#> 6         30          0.9973              0.9980    129.83 87  129.83960
+#>   tolerance tolerance_ratio
+#> 1      0.03      0.26993425
+#> 2      0.03      0.03892391
+#> 3      0.03      0.33696773
+#> 4      0.03      0.31639022
+#> 5      0.03      0.62024948
+#> 6      0.03      0.32005572
+```
+
+### Published Case B: partial reproduction
+
+The report’s three-dimensional bolt example uses $`n=15`$, 30 Phase I
+subgroups, and 40 Phase II subgroups. In Case B, the covariance
+parameters in the last row of Table 8 are increased by 20% for Phase II.
+Tables 9 and 10 publish rounded Phase I mean covariance matrices whose
+generalized variances remain close:
+
+``` r
+
+case_a_sbar <- matrix(
+  c(4.2366, 1.4773, 1.1929,
+    1.4773, 6.1264, 2.3399,
+    1.1929, 2.3399, 3.9335),
+  nrow = 3, byrow = TRUE
+)
+case_b_sbar <- matrix(
+  c(4.0112, 1.7865, 1.2484,
+    1.7865, 5.8933, 1.7188,
+    1.2484, 1.7188, 3.8909),
+  nrow = 3, byrow = TRUE
+)
+data.frame(
+  case = c("A", "B"),
+  published_determinant = c(69.8438, 66.1893),
+  determinant_from_rounded_matrix = c(det(case_a_sbar), det(case_b_sbar))
+)
+#>   case published_determinant determinant_from_rounded_matrix
+#> 1    A               69.8438                        69.84308
+#> 2    B               66.1893                        66.19151
+data.frame(
+  figure = "9c",
+  published_trv_ucl = 72.01,
+  calculated_trv_ucl = trv_limits(n = 15, p = 3, alpha = 0.0027)$ucl
+)
+#>   figure published_trv_ucl calculated_trv_ucl
+#> 1     9c             72.01           71.99455
+```
+
+The published Case B figure shows that the generalized-variance chart
+does not cross its exact or Cornish-Fisher limit, whereas the auxiliary
+`tr(V)` chart has Phase II signals. This is a partial, qualitative
+reproduction: the report prints only subgroup rows 1, 2, 3, and 30 plus
+summaries, not all 70 generated subgroups or an RNG seed. Consequently,
+the published signal sequence cannot be recomputed without inventing
+observations. The deterministic example below is therefore retained and
+explicitly labeled synthetic.
+
+The trace chart complements
+[`cchart.GV()`](https://flaviobarros.github.io/IQCC/reference/cchart.GV.md)
+because covariance changes can preserve the determinant while changing
+the sum of standardized eigenvalues. The following synthetic
+deterministic example has two subgroup covariance matrices with the same
+determinant; `|S|` is unchanged, while `tr(V)` increases.
+
+``` r
+
+base <- sqrt(3 / 4) * rbind(
+  c(1, 1), c(1, -1), c(-1, 1), c(-1, -1)
+)
+g0 <- base %*% chol(diag(2))
+g1 <- base %*% chol(diag(c(4, 0.25)))
+
+data.frame(
+  generalized_variance = gv_stat(list(g0, g1)),
+  trace_statistic = trv_stat(list(g0, g1), Sigma0 = diag(2))
+)
+#>   generalized_variance trace_statistic
+#> 1                    1            6.00
+#> 2                    1           12.75
+```
+
 ``` r
 
 cat("<!-- IQCC_EXECUTED_FOUNDATIONS -->\n")

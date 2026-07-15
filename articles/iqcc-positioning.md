@@ -43,7 +43,9 @@ The current package includes:
   [`cchart.u()`](https://flaviobarros.github.io/IQCC/reference/cchart.u.md);
 - the DS-np design and monitoring family;
 - Hotelling T-squared Phase I and Phase II functions;
-- generalized-variance limits, risk diagnostics, and charts.
+- generalized-variance limits, risk diagnostics, and charts;
+- auxiliary `tr(V)` trace-statistic limits, risk diagnostics, and
+  charts.
 
 ## Executed example: corrected p-chart limits
 

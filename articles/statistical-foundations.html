@@ -63,7 +63,7 @@
                         <h4 data-toc-skip class="author">Flavio Barros
 and contributors</h4>
             
-            <h4 data-toc-skip class="date">2026-07-14</h4>
+            <h4 data-toc-skip class="date">2026-07-15</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/flaviobarros/IQCC/blob/master/vignettes/statistical-foundations.Rmd" class="external-link"><code>vignettes/statistical-foundations.Rmd</code></a></small>
       <div class="d-none name"><code>statistical-foundations.Rmd</code></div>
@@ -303,9 +303,172 @@ G\overset{d}{=}
 factors. The package does not claim a generic Meijer-G implementation.
 Published exact quantiles are used only in explicitly supported
 dimension-three cases.</p>
+</div>
+<div class="section level2">
+<h2 id="auxiliary-trace-chart">Auxiliary trace chart<a class="anchor" aria-label="anchor" href="#auxiliary-trace-chart"></a>
+</h2>
+<p>The generalized variance chart is sensitive to determinant changes in
+the covariance matrix. A complementary diagnostic monitors the trace of
+the standardized covariance matrix,</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>T</mi><mo>=</mo><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><mrow><mi mathvariant="normal">tr</mi><mo>⁡</mo></mrow><mo stretchy="false" form="prefix">(</mo><msubsup><mi mathvariant="normal">Σ</mi><mn>0</mn><mrow><mi>−</mi><mn>1</mn></mrow></msubsup><mi>S</mi><mo stretchy="false" form="postfix">)</mo><mi>.</mi></mrow><annotation encoding="application/x-tex">
+T=(n-1)\operatorname{tr}(\Sigma_0^{-1}S).
+</annotation></semantics></math></p>
+<p>If the process is multivariate normal and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Σ</mi><mo>=</mo><msub><mi mathvariant="normal">Σ</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">\Sigma=\Sigma_0</annotation></semantics></math>,
+then</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>T</mi><mo>∼</mo><msubsup><mi>χ</mi><mrow><mi>p</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><mn>2</mn></msubsup><mi>.</mi></mrow><annotation encoding="application/x-tex">
+T\sim\chi^2_{p(n-1)}.
+</annotation></semantics></math></p>
+<p>This gives an exact upper control limit for the trace chart:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/trv_limits.html">trv_limits</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">8</span>, p <span class="op">=</span> <span class="fl">2</span>, alpha <span class="op">=</span> <span class="fl">0.0027</span><span class="op">)</span></span>
+<span><span class="co">#&gt; $lcl</span></span>
+<span><span class="co">#&gt; [1] 0</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $ucl</span></span>
+<span><span class="co">#&gt; [1] 33.19518</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $center</span></span>
+<span><span class="co">#&gt; [1] 14</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $type</span></span>
+<span><span class="co">#&gt; [1] "chisq"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $alpha</span></span>
+<span><span class="co">#&gt; [1] 0.0027</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $n</span></span>
+<span><span class="co">#&gt; [1] 8</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $p</span></span>
+<span><span class="co">#&gt; [1] 2</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $df</span></span>
+<span><span class="co">#&gt; [1] 14</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $nsim</span></span>
+<span><span class="co">#&gt; [1] 1e+05</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $seed</span></span>
+<span><span class="co">#&gt; NULL</span></span></code></pre></div>
+<div class="section level3">
+<h3 id="published-table-3">Published Table 3<a class="anchor" aria-label="anchor" href="#published-table-3"></a>
+</h3>
+<p>The report defines
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mo>=</mo><mi>n</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">N=n-1</annotation></semantics></math>
+in Section 3.3, but the numerical rows of its Table 3 use the displayed
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math>
+as subgroup size
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>.
+The probability headings also appear to be reversed: the values printed
+under 0.9980 match exact 0.9973 chi-square quantiles, while those under
+0.9973 match exact 0.9980 quantiles. IQCC keeps the mathematical tail
+convention rather than reproducing the apparent label error.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">table3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  report_row <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">16</span>, <span class="fl">30</span><span class="op">)</span>, each <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>,</span>
+<span>  printed_heading <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.9980</span>, <span class="fl">0.9973</span><span class="op">)</span>, <span class="fl">3</span><span class="op">)</span>,</span>
+<span>  nominal_probability <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.9973</span>, <span class="fl">0.9980</span><span class="op">)</span>, <span class="fl">3</span><span class="op">)</span>,</span>
+<span>  published <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">20.07</span>, <span class="fl">20.79</span>, <span class="fl">75.88</span>, <span class="fl">77.17</span>, <span class="fl">128.18</span>, <span class="fl">129.83</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">table3</span><span class="op">$</span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fl">3</span> <span class="op">*</span> <span class="op">(</span><span class="va">table3</span><span class="op">$</span><span class="va">report_row</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="va">table3</span><span class="op">$</span><span class="va">calculated</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">vapply</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">table3</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="fu"><a href="../reference/trv_limits.html">trv_limits</a></span><span class="op">(</span></span>
+<span>    n <span class="op">=</span> <span class="va">table3</span><span class="op">$</span><span class="va">report_row</span><span class="op">[</span><span class="va">i</span><span class="op">]</span>,</span>
+<span>    p <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>    alpha <span class="op">=</span> <span class="fl">1</span> <span class="op">-</span> <span class="va">table3</span><span class="op">$</span><span class="va">nominal_probability</span><span class="op">[</span><span class="va">i</span><span class="op">]</span></span>
+<span>  <span class="op">)</span><span class="op">$</span><span class="va">ucl</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">table3</span><span class="op">$</span><span class="va">tolerance</span> <span class="op">&lt;-</span> <span class="fl">0.03</span></span>
+<span><span class="va">table3</span><span class="op">$</span><span class="va">tolerance_ratio</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span></span>
+<span>  <span class="va">table3</span><span class="op">$</span><span class="va">calculated</span> <span class="op">-</span> <span class="va">table3</span><span class="op">$</span><span class="va">published</span></span>
+<span><span class="op">)</span> <span class="op">/</span> <span class="va">table3</span><span class="op">$</span><span class="va">tolerance</span></span>
+<span><span class="va">table3</span></span>
+<span><span class="co">#&gt;   report_row printed_heading nominal_probability published df calculated</span></span>
+<span><span class="co">#&gt; 1          3          0.9980              0.9973     20.07  6   20.06190</span></span>
+<span><span class="co">#&gt; 2          3          0.9973              0.9980     20.79  6   20.79117</span></span>
+<span><span class="co">#&gt; 3         16          0.9980              0.9973     75.88 45   75.89011</span></span>
+<span><span class="co">#&gt; 4         16          0.9973              0.9980     77.17 45   77.17949</span></span>
+<span><span class="co">#&gt; 5         30          0.9980              0.9973    128.18 87  128.19861</span></span>
+<span><span class="co">#&gt; 6         30          0.9973              0.9980    129.83 87  129.83960</span></span>
+<span><span class="co">#&gt;   tolerance tolerance_ratio</span></span>
+<span><span class="co">#&gt; 1      0.03      0.26993425</span></span>
+<span><span class="co">#&gt; 2      0.03      0.03892391</span></span>
+<span><span class="co">#&gt; 3      0.03      0.33696773</span></span>
+<span><span class="co">#&gt; 4      0.03      0.31639022</span></span>
+<span><span class="co">#&gt; 5      0.03      0.62024948</span></span>
+<span><span class="co">#&gt; 6      0.03      0.32005572</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="published-case-b-partial-reproduction">Published Case B: partial reproduction<a class="anchor" aria-label="anchor" href="#published-case-b-partial-reproduction"></a>
+</h3>
+<p>The report’s three-dimensional bolt example uses
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>=</mo><mn>15</mn></mrow><annotation encoding="application/x-tex">n=15</annotation></semantics></math>,
+30 Phase I subgroups, and 40 Phase II subgroups. In Case B, the
+covariance parameters in the last row of Table 8 are increased by 20%
+for Phase II. Tables 9 and 10 publish rounded Phase I mean covariance
+matrices whose generalized variances remain close:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">case_a_sbar</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4.2366</span>, <span class="fl">1.4773</span>, <span class="fl">1.1929</span>,</span>
+<span>    <span class="fl">1.4773</span>, <span class="fl">6.1264</span>, <span class="fl">2.3399</span>,</span>
+<span>    <span class="fl">1.1929</span>, <span class="fl">2.3399</span>, <span class="fl">3.9335</span><span class="op">)</span>,</span>
+<span>  nrow <span class="op">=</span> <span class="fl">3</span>, byrow <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">case_b_sbar</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4.0112</span>, <span class="fl">1.7865</span>, <span class="fl">1.2484</span>,</span>
+<span>    <span class="fl">1.7865</span>, <span class="fl">5.8933</span>, <span class="fl">1.7188</span>,</span>
+<span>    <span class="fl">1.2484</span>, <span class="fl">1.7188</span>, <span class="fl">3.8909</span><span class="op">)</span>,</span>
+<span>  nrow <span class="op">=</span> <span class="fl">3</span>, byrow <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  case <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span><span class="op">)</span>,</span>
+<span>  published_determinant <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">69.8438</span>, <span class="fl">66.1893</span><span class="op">)</span>,</span>
+<span>  determinant_from_rounded_matrix <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/det.html" class="external-link">det</a></span><span class="op">(</span><span class="va">case_a_sbar</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/det.html" class="external-link">det</a></span><span class="op">(</span><span class="va">case_b_sbar</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt;   case published_determinant determinant_from_rounded_matrix</span></span>
+<span><span class="co">#&gt; 1    A               69.8438                        69.84308</span></span>
+<span><span class="co">#&gt; 2    B               66.1893                        66.19151</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  figure <span class="op">=</span> <span class="st">"9c"</span>,</span>
+<span>  published_trv_ucl <span class="op">=</span> <span class="fl">72.01</span>,</span>
+<span>  calculated_trv_ucl <span class="op">=</span> <span class="fu"><a href="../reference/trv_limits.html">trv_limits</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">15</span>, p <span class="op">=</span> <span class="fl">3</span>, alpha <span class="op">=</span> <span class="fl">0.0027</span><span class="op">)</span><span class="op">$</span><span class="va">ucl</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt;   figure published_trv_ucl calculated_trv_ucl</span></span>
+<span><span class="co">#&gt; 1     9c             72.01           71.99455</span></span></code></pre></div>
+<p>The published Case B figure shows that the generalized-variance chart
+does not cross its exact or Cornish-Fisher limit, whereas the auxiliary
+<code>tr(V)</code> chart has Phase II signals. This is a partial,
+qualitative reproduction: the report prints only subgroup rows 1, 2, 3,
+and 30 plus summaries, not all 70 generated subgroups or an RNG seed.
+Consequently, the published signal sequence cannot be recomputed without
+inventing observations. The deterministic example below is therefore
+retained and explicitly labeled synthetic.</p>
+<p>The trace chart complements <code><a href="../reference/cchart.GV.html">cchart.GV()</a></code> because
+covariance changes can preserve the determinant while changing the sum
+of standardized eigenvalues. The following synthetic deterministic
+example has two subgroup covariance matrices with the same determinant;
+<code>|S|</code> is unchanged, while <code>tr(V)</code> increases.</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">base</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fl">3</span> <span class="op">/</span> <span class="fl">4</span><span class="op">)</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="op">-</span><span class="fl">1</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="op">-</span><span class="fl">1</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">g0</span> <span class="op">&lt;-</span> <span class="va">base</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/chol.html" class="external-link">chol</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">g1</span> <span class="op">&lt;-</span> <span class="va">base</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/chol.html" class="external-link">chol</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">0.25</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  generalized_variance <span class="op">=</span> <span class="fu"><a href="../reference/gv_stat.html">gv_stat</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">g0</span>, <span class="va">g1</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  trace_statistic <span class="op">=</span> <span class="fu"><a href="../reference/trv_stat.html">trv_stat</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">g0</span>, <span class="va">g1</span><span class="op">)</span>, Sigma0 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt;   generalized_variance trace_statistic</span></span>
+<span><span class="co">#&gt; 1                    1            6.00</span></span>
+<span><span class="co">#&gt; 2                    1           12.75</span></span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"&lt;!-- IQCC_EXECUTED_FOUNDATIONS --&gt;\n"</span><span class="op">)</span></span></code></pre></div>
 <!-- IQCC_EXECUTED_FOUNDATIONS -->
+</div>
 </div>
 <div class="section level2">
 <h2 id="validation-strategy">Validation strategy<a class="anchor" aria-label="anchor" href="#validation-strategy"></a>
