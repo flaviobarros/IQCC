@@ -158,6 +158,12 @@ design$best[, c("n1", "n2", "wl", "ucl1", "ucl2",
                 "ass0", "arl0", "arl1")]
 ```
 
+The published tables report selected plans but not the complete bounds used for
+the searches over `n1` and `n2` or every tie-breaking rule. IQCC tests recover a
+published Table 5 plan over an explicitly recorded local grid and validate the
+exhaustive algorithm independently on a small grid; this evidence should not be
+described as a reproduction of undocumented global search settings.
+
 Setting `ass0_max = NULL` preserves the unconstrained search. The ASS used by
 `dsnp_ass()` and `dsnp_design()` is equation (15) of the paper: whenever the
 first-stage count enters the warning region, all `n2` units are counted. The

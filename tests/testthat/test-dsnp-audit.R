@@ -115,6 +115,87 @@ test_that("Joekes et al. Table 5 selected designs are reproduced", {
   }
 })
 
+test_that("dsnp_design recovers a Table 5 plan on a documented local grid", {
+  fixture <- list(
+    reference = paste(
+      "Joekes, Smrekar and Barbosa (2015),",
+      "Statistical Methodology 23, 35-49"
+    ),
+    table = 5L,
+    row = "p0=2%, p1=4%, n=15",
+    p0 = 0.02,
+    p1 = 0.04,
+    gamma = 2,
+    arl0_min = 200,
+    ass0_max = 15,
+    n1_range = 12:13,
+    n2_range = 55:56,
+    n1 = 13,
+    n2 = 56,
+    wl = 1.5,
+    ucl1 = 2.5,
+    ucl2 = 4.5,
+    ass0 = 14.40,
+    arl0 = 221.64,
+    arl1 = 22.45,
+    tolerance = 0.005
+  )
+
+  # The paper publishes the selected plan but not the complete search bounds or
+  # tie-breaking code. This test demonstrates recovery over an explicit local
+  # grid; it does not claim an unverifiable global-optimality reproduction.
+  design <- dsnp_design(
+    p0 = fixture$p0,
+    p1 = fixture$p1,
+    n1_range = fixture$n1_range,
+    n2_range = fixture$n2_range,
+    arl0_min = fixture$arl0_min,
+    ass0_max = fixture$ass0_max,
+    objective = "arl1",
+    max_results = 1
+  )
+
+  plan_fields <- c("n1", "n2", "wl", "ucl1", "ucl2")
+  published_plan <- data.frame(
+    n1 = fixture$n1,
+    n2 = fixture$n2,
+    wl = fixture$wl,
+    ucl1 = fixture$ucl1,
+    ucl2 = fixture$ucl2
+  )
+  expect_equal(design$best[, plan_fields], published_plan)
+
+  published <- c(
+    ass0 = fixture$ass0,
+    arl0 = fixture$arl0,
+    arl1 = fixture$arl1
+  )
+  calculated <- unlist(design$best[1, names(published)], use.names = TRUE)
+  evidence <- data.frame(
+    reference = fixture$reference,
+    table = fixture$table,
+    row = fixture$row,
+    p0 = fixture$p0,
+    p1 = fixture$p1,
+    gamma = fixture$gamma,
+    arl0_min = fixture$arl0_min,
+    ass0_max = fixture$ass0_max,
+    n1_range = paste(range(fixture$n1_range), collapse = ":"),
+    n2_range = paste(range(fixture$n2_range), collapse = ":"),
+    metric = names(published),
+    published = unname(published),
+    calculated = unname(calculated),
+    tolerance = fixture$tolerance,
+    tolerance_ratio = abs(calculated - published) / fixture$tolerance,
+    tolerance_reason = "Published values are rounded to two decimal places"
+  )
+
+  expect_true(
+    all(evidence$tolerance_ratio <= 1),
+    info = paste(capture.output(print(evidence)), collapse = "\n")
+  )
+})
+
 test_that("second-stage probability equals the warning-zone probability", {
   p <- seq(0, 1, length.out = 11)
   res <- dsnp_prob_accept(p, 10, 20, 1.5, 3.5, 5.5)

@@ -619,6 +619,17 @@ test_that("dsnp_design infeasibility reports ass0_max", {
   )
 })
 
+test_that("dsnp_design infeasibility reports NULL constraints explicitly", {
+  expect_error(
+    dsnp_design(
+      p0 = 0.05, p1 = 0.10,
+      n1_range = 5:6, n2_range = 8:9,
+      arl0_min = NULL, alpha = 0.01, ass0_max = 1
+    ),
+    "arl0_min = NULL, alpha = 0.01, ass0_max = 1"
+  )
+})
+
 test_that("dsnp_design errors on invalid objective", {
   expect_error(dsnp_design(p0 = 0.05, p1 = 0.10,
                n1_range = 5:6, n2_range = 8:9,

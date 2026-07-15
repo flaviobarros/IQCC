@@ -261,6 +261,8 @@ dsnp_design <- function(
 
     # --- Check total failures ---
     n_candidates_total <- pair_idx
+    arl0_constraint <- if(is.null(arl0_min)) "NULL" else format(arl0_min)
+    alpha_constraint <- if(is.null(alpha)) "NULL" else format(alpha)
     ass0_constraint <- if(is.null(ass0_max)) "NULL" else format(ass0_max)
 
     if(n_failed == n_candidates_total)
@@ -293,13 +295,15 @@ dsnp_design <- function(
     n_feasible <- sum(feasible)
 
     if(n_feasible == 0)
-        stop("No feasible candidates found for arl0_min = ", arl0_min,
-             ", alpha = ", alpha, ", ass0_max = ", ass0_constraint, ". ",
+        stop("No feasible candidates found for arl0_min = ", arl0_constraint,
+             ", alpha = ", alpha_constraint,
+             ", ass0_max = ", ass0_constraint, ". ",
              "Consider relaxing arl0_min, alpha, or ass0_max, ",
              "or expanding n1_range / n2_range. ",
-             "Best approximation: arl0 = ", max(combined$arl0),
-             ", p_signal0 = ", min(combined$p_signal0),
-             ", ass0 = ", min(combined$ass0), ".")
+             "Observed extrema (not necessarily the same candidate): ",
+             "max arl0 = ", max(combined$arl0),
+             ", min p_signal0 = ", min(combined$p_signal0),
+             ", min ass0 = ", min(combined$ass0), ".")
 
     # --- Extract feasible candidates only ---
     candidates <- combined[feasible, , drop = FALSE]
@@ -409,8 +413,12 @@ print.dsnp_design <- function(x, ...)
     cat("Parameters:\n")
     cat("  p0 =", x$parameters$p0, "\n")
     cat("  p1 =", x$parameters$p1, "\n")
-    cat("  arl0_min =", x$parameters$arl0_min, "\n")
-    cat("  alpha =", x$parameters$alpha, "\n")
+    cat("  arl0_min =",
+        if(is.null(x$parameters$arl0_min)) "NULL" else x$parameters$arl0_min,
+        "\n")
+    cat("  alpha =",
+        if(is.null(x$parameters$alpha)) "NULL" else x$parameters$alpha,
+        "\n")
     cat("  ass0_max =",
         if(is.null(x$parameters$ass0_max)) "NULL" else x$parameters$ass0_max,
         "\n")
