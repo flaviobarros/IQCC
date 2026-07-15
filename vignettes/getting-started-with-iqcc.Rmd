@@ -167,7 +167,7 @@ The p-chart workflow below estimates the in-control proportion from Phase I,
 computes the Phase II limits explicitly, and then constructs the Phase II
 chart. This makes the sequence from reference data to monitoring data visible.
 
-```{r p-chart, fig.show='hold'}
+```{r p-chart, fig.show='hold', fig.alt='Phase II corrected p chart'}
 p_phase1_counts <- c(1, 0, 1, 2, 0, 1, 1, 0)
 p_phase1_sizes <- rep(50, length(p_phase1_counts))
 p_phase1_estimate <- sum(p_phase1_counts) / sum(p_phase1_sizes)
@@ -194,7 +194,7 @@ c(
 The u chart uses a known rate and direct rate input to demonstrate the
 prospective alternative.
 
-```{r u-chart, fig.show='hold'}
+```{r u-chart, fig.show='hold', fig.alt='Phase II standardized u chart'}
 u_chart <- cchart.u(
   type = "standardized",
   u2 = u_rates,
@@ -262,7 +262,7 @@ range chart offers conventional (`"norm"`) and exact relative-range
 (`"tukey"`) limits. The S chart offers normalized (`"n"`) and exact
 chi-square (`"e"`) limits.
 
-```{r range-chart}
+```{r range-chart, fig.alt='Exact range chart for piston-ring subgroups'}
 data(pistonrings)
 r_chart <- cchart.R(
   x = pistonrings[26:32, ],
@@ -273,7 +273,7 @@ r_chart <- cchart.R(
 class(r_chart)
 ```
 
-```{r s-chart}
+```{r s-chart, fig.alt='Exact S chart for soft-drink subgroups'}
 data(softdrink)
 s_chart <- cchart.S(softdrink, type = "e", m = 10)
 class(s_chart)
@@ -291,7 +291,7 @@ T-squared statistic for each subgroup, and evaluates later subgroups against
 the Phase II design. Its simulation helpers return arrays in
 observation-by-variable-by-subgroup order.
 
-```{r hotelling, fig.show='hold'}
+```{r hotelling, fig.show='hold', fig.alt='Phase I Hotelling T-squared chart'}
 set.seed(2026)
 hotelling_phase1 <- data.1(
   m = 8,
