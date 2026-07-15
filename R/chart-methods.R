@@ -1,15 +1,23 @@
 #' Print and Summarize a Generalized Variance Control Chart
 #'
-#' Display the chart design, Phase I and Phase II subgroup counts, control
-#' limits, and the number of signaled subgroups.
+#' Display or construct a compact statistical summary of a generalized
+#' variance chart, including design dimensions, Phase I and Phase II subgroup
+#' counts, control-limit method, covariance source, descriptive statistics,
+#' and signaled subgroups.
 #'
 #' @param x An object of class \code{"cchart.GV"} or
 #' \code{"summary.cchart.GV"}.
 #' @param digits Number of significant digits used for numerical output.
 #' @param ... Additional arguments passed to the summary print method;
 #' otherwise currently unused.
+#' @param object An object of class \code{"cchart.GV"}.
 #'
-#' @return \code{x}, invisibly.
+#' @return \code{summary.cchart.GV()} returns an object of class
+#' \code{"summary.cchart.GV"}. The returned list contains \code{call},
+#' \code{dimensions}, \code{subgroups}, \code{method}, \code{limits},
+#' \code{covariance}, \code{statistics}, and \code{signals}. The print methods
+#' return their input invisibly.
+#' @seealso \code{\link{cchart.GV}}, \code{\link{plot.cchart.GV}}
 #' @method print cchart.GV
 #' @export
 print.cchart.GV <- function(x,
@@ -20,20 +28,6 @@ print.cchart.GV <- function(x,
     invisible(x)
 }
 
-#' Summarize a Generalized Variance Control Chart
-#'
-#' Construct a compact statistical summary of a generalized variance chart,
-#' including its design, limit method, covariance source, descriptive summary
-#' of the plotted statistics, and signaled subgroups.
-#'
-#' @param object An object of class \code{"cchart.GV"}.
-#' @param ... Currently unused.
-#'
-#' @return An object of class \code{"summary.cchart.GV"}. The returned list
-#' contains \code{call}, \code{dimensions}, \code{subgroups}, \code{method},
-#' \code{limits}, \code{covariance}, \code{statistics}, and \code{signals}.
-#' The \code{signals} component is a data frame with subgroup index, phase, and
-#' generalized variance for every point outside the control limits.
 #' @rdname print.cchart.GV
 #' @method summary cchart.GV
 #' @export
@@ -87,7 +81,6 @@ summary.cchart.GV <- function(object, ...)
     result
 }
 
-#' @return \code{x}, invisibly.
 #' @rdname print.cchart.GV
 #' @method print summary.cchart.GV
 #' @export
@@ -115,16 +108,23 @@ print.summary.cchart.GV <- function(x,
 
 #' Print and Summarize a Double-Sampling np Control Chart
 #'
-#' Display the sampling plan, integer decision thresholds, operating
-#' characteristics, stage decisions, and number of signaled observations.
+#' Display or construct a compact summary of a double-sampling np chart,
+#' including sample sizes, decision thresholds, operating characteristics,
+#' stage outcomes, and signaled observations.
 #'
 #' @param x An object of class \code{"cchart.DSnp"} or
 #' \code{"summary.cchart.DSnp"}.
 #' @param digits Number of significant digits used for numerical output.
 #' @param ... Additional arguments passed to the summary print method;
 #' otherwise currently unused.
+#' @param object An object of class \code{"cchart.DSnp"}.
 #'
-#' @return \code{x}, invisibly.
+#' @return \code{summary.cchart.DSnp()} returns an object of class
+#' \code{"summary.cchart.DSnp"}. The returned list contains \code{call},
+#' \code{observations}, \code{parameters}, \code{limits}, \code{performance},
+#' \code{stage_counts}, and \code{signals}. The print methods return their
+#' input invisibly.
+#' @seealso \code{\link{cchart.DSnp}}, \code{\link{plot.cchart.DSnp}}
 #' @method print cchart.DSnp
 #' @export
 print.cchart.DSnp <- function(x,
@@ -135,20 +135,6 @@ print.cchart.DSnp <- function(x,
     invisible(x)
 }
 
-#' Summarize a Double-Sampling np Control Chart
-#'
-#' Construct a compact summary of the sampling plan, decision thresholds,
-#' in-control and optional out-of-control performance, stage outcomes, and
-#' signaled observations.
-#'
-#' @param object An object of class \code{"cchart.DSnp"}.
-#' @param ... Currently unused.
-#'
-#' @return An object of class \code{"summary.cchart.DSnp"}. The returned list
-#' contains \code{call}, \code{observations}, \code{parameters},
-#' \code{limits}, \code{performance}, \code{stage_counts}, and
-#' \code{signals}. The \code{signals} component contains the observations
-#' that signaled at either sampling stage.
 #' @rdname print.cchart.DSnp
 #' @method summary cchart.DSnp
 #' @export
@@ -177,7 +163,6 @@ summary.cchart.DSnp <- function(object, ...)
     result
 }
 
-#' @return \code{x}, invisibly.
 #' @rdname print.cchart.DSnp
 #' @method print summary.cchart.DSnp
 #' @export

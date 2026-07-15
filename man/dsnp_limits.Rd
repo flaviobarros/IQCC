@@ -16,45 +16,73 @@ dsnp_limits(
 )
 }
 \arguments{
-\item{p0}{In-control nonconforming proportion in \eqn{[0, 1]}.}
+\item{p0}{In-control nonconforming proportion, a finite scalar in
+\eqn{[0, 1]}.}
 
-\item{n1}{First-stage positive integer sample size.}
+\item{n1}{First-stage sample size, a positive integer.}
 
-\item{n2}{Second-stage positive integer sample size.}
+\item{n2}{Second-stage sample size, a positive integer.}
 
-\item{alpha}{Maximum desired false-alarm probability in \eqn{(0, 1)}.}
+\item{alpha}{Maximum desired false-alarm probability, a finite scalar in
+\eqn{(0, 1)}.}
 
-\item{p1}{Optional out-of-control proportion in \eqn{[0, 1]} used for
-ranking.}
+\item{p1}{Optional out-of-control proportion, a finite scalar in
+\eqn{[0, 1]}. When supplied, ARL1 is the primary performance ranking.}
 
-\item{conservative}{Logical; prefer candidates with false-alarm probability
-no greater than \code{alpha}.}
+\item{conservative}{Logical. If \code{TRUE}, candidates satisfying
+\code{p_signal0 <= alpha} are ranked before infeasible candidates.}
 
-\item{allow_empty_warning}{Logical; allow a degenerate single-sample scheme.}
+\item{allow_empty_warning}{Logical. If \code{FALSE}, discard candidates
+with no integer count in the warning zone.}
 
-\item{max_results}{Positive integer maximum number of returned candidates.}
+\item{max_results}{Positive integer maximum number of ranked candidates to
+retain.}
 }
 \value{
-A list with \code{best}, the first row of the ranked candidates;
-\code{candidates}, the ranked candidate table; the input parameters
-\code{p0}, \code{p1}, \code{n1}, \code{n2}, and \code{alpha}; and the flags
-\code{conservative} and \code{allow_empty_warning}.
+A list with the following elements:
+\describe{
+  \item{best}{The first row of \code{candidates}, retained as a data frame.}
+  \item{candidates}{A data frame containing up to \code{max_results} ranked
+  candidates. Columns are \code{wl}, \code{ucl1}, \code{ucl2},
+  \code{wl_accept}, \code{ucl1_reject}, \code{ucl2_accept}, \code{pt0},
+  \code{p_signal0}, \code{arl0}, \code{ass0}, and \code{feasible}; when
+  \code{p1} is supplied, \code{pt1}, \code{p_signal1}, \code{arl1}, and
+  \code{ass1} are also included.}
+  \item{p0, p1, n1, n2, alpha}{The validated input parameters.}
+  \item{conservative, allow_empty_warning}{The validated input flags.}
+}
 }
 \description{
 Search for feasible fractional control limits for the double-sampling np
-chart by enumerating integer threshold combinations. This function searches
-limits only; it does not optimize the complete sampling design over sample
-sizes.
+chart by enumerating integer threshold combinations and evaluating each
+candidate with the shared numerical core used by \code{dsnp_prob_accept()},
+\code{dsnp_arl()}, and \code{dsnp_ass()}. This function searches limits for
+fixed sample sizes; it does not optimize the complete sampling design.
 }
 \details{
-Integer threshold combinations are converted to fractional limits and
-evaluated with the shared DS-np numerical core. When \code{p1} is supplied,
-out-of-control performance is included in the ranking. An empty warning zone
-degenerates to a single-sample scheme and is excluded by default.
+The function enumerates valid combinations of \code{wl_accept},
+\code{ucl1_reject}, and \code{ucl2_accept}, then converts them to fractional
+limits. A candidate is feasible when its in-control signal probability is
+no greater than \code{alpha}.
+
+With \code{p1}, candidates are ranked by feasibility when
+\code{conservative = TRUE}, then by increasing ARL1, ASS0, and distance from
+\code{alpha}. Without \code{p1}, they are ranked by feasibility, distance
+from \code{alpha}, ASS0, and ARL0. Setting \code{conservative = FALSE}
+removes feasibility from the front of the corresponding ordering.
+
+When \code{ucl1_reject = wl_accept + 1}, the warning zone is empty and the
+chart degenerates to a single-sample scheme. Such candidates are excluded
+by default; when allowed, their probabilities are computed directly with
+\code{stats::pbinom()}.
 }
 \examples{
-limits <- dsnp_limits(0.05, 5, 10, alpha = 0.05, p1 = 0.10)
-limits$best
+limits0 <- dsnp_limits(0.05, 5, 10, alpha = 0.05)
+limits0$best
+nrow(limits0$candidates)
+
+limits1 <- dsnp_limits(0.05, 5, 10, alpha = 0.05, p1 = 0.10)
+limits1$best[, c("wl", "ucl1", "ucl2", "arl0", "arl1", "ass0")]
 
 }
 \references{

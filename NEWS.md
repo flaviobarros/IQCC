@@ -89,7 +89,7 @@
 - Fix standardized p-chart and u-chart: removed erroneous multiplication by sample size
 - Fix `cchart.T2.1()` error handling: `sprintf()` replaced with `stop()`
 - Fix error messages throughout: `return("msg")` replaced with `stop("msg")`
-- Fix typos: "Stardardized" → "Standardized", "Shewart" → "Shewhart", "aprroximation" → "approximation"
+- Correct spelling in standardized, Shewhart, and approximation documentation.
 - Add input validation (`n >= 2`) to `d2()`, `d3()`, `c4()`
 
 ## Documentation

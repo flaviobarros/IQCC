@@ -37,23 +37,19 @@ jobs:
         shell: Rscript {0}
 
       - name: Require synchronized generated documentation
-        run: git diff --exit-code -- DESCRIPTION NAMESPACE man
+        run: |
+          documentation_status=$(git status --porcelain --untracked-files=all -- DESCRIPTION NAMESPACE man)
+          if [ -n "$documentation_status" ]; then
+            echo "::error::devtools::document() changed generated documentation"
+            printf '%s\n' "$documentation_status"
+            git diff -- DESCRIPTION NAMESPACE man
+            exit 1
+          fi
         shell: bash
 
-      - name: Check package manuals and vignettes spelling
+      - name: Check package spelling
         run: |
           misspellings <- spelling::spell_check_package()
-
-          # Root release files are maintained by dedicated integration PRs.
-          is_root_release_file <- function(location) {
-            grepl("^(NEWS|README)(\\.[^:]+)?:", location)
-          }
-          misspellings$found <- lapply(
-            misspellings$found,
-            function(locations) locations[!is_root_release_file(locations)]
-          )
-          misspellings <- misspellings[lengths(misspellings$found) > 0, ]
-
           if (nrow(misspellings) > 0) {
             print(misspellings)
             quit(status = 1)

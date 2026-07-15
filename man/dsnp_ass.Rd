@@ -7,27 +7,33 @@
 dsnp_ass(p, n1, n2, wl, ucl1)
 }
 \arguments{
-\item{p}{Nonconforming proportion, scalar or vector in \eqn{[0, 1]}.}
+\item{p}{Nonconforming proportion to evaluate, a finite numeric scalar or
+vector in \eqn{[0, 1]}.}
 
-\item{n1}{First-stage positive integer sample size.}
+\item{n1}{First-stage sample size, a positive integer.}
 
-\item{n2}{Second-stage positive integer sample size.}
+\item{n2}{Second-stage sample size, a positive integer.}
 
 \item{wl}{Finite fractional warning limit.}
 
-\item{ucl1}{Finite fractional first-stage upper control limit.}
+\item{ucl1}{Finite fractional first-stage upper control limit greater than
+\code{wl}.}
 }
 \value{
-A list containing ASS, second-stage probability, and chart
-parameters.
+A list with \code{ass}, the average sample size;
+\code{p_second}, the probability that the second sample is required; and
+the validated chart parameters \code{n1}, \code{n2}, \code{wl}, and
+\code{ucl1}.
 }
 \description{
 Compute the average sample size for the double-sampling np chart under
 complete inspection of every second-stage sample that is requested.
 }
 \details{
-The returned value is \eqn{n_1 + n_2 P(second stage)}. It does not use
-curtailed inspection within the second-stage sample.
+If a decision is reached at the first stage, \eqn{n_1} items are inspected;
+otherwise all \eqn{n_2} additional items are inspected. Therefore
+\deqn{ASS(p) = n_1 + n_2 P_p(\text{second stage}).}
+This function does not use curtailed inspection within the second sample.
 }
 \examples{
 dsnp_ass(0.005, 34, 162, 1.5, 2.5)$ass

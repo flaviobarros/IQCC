@@ -3,16 +3,22 @@
 #' Compute the average sample size for the double-sampling np chart under
 #' complete inspection of every second-stage sample that is requested.
 #'
-#' The returned value is \eqn{n_1 + n_2 P(second stage)}. It does not use
-#' curtailed inspection within the second-stage sample.
+#' If a decision is reached at the first stage, \eqn{n_1} items are inspected;
+#' otherwise all \eqn{n_2} additional items are inspected. Therefore
+#' \deqn{ASS(p) = n_1 + n_2 P_p(\text{second stage}).}
+#' This function does not use curtailed inspection within the second sample.
 #'
-#' @param p Nonconforming proportion, scalar or vector in \eqn{[0, 1]}.
-#' @param n1 First-stage positive integer sample size.
-#' @param n2 Second-stage positive integer sample size.
+#' @param p Nonconforming proportion to evaluate, a finite numeric scalar or
+#' vector in \eqn{[0, 1]}.
+#' @param n1 First-stage sample size, a positive integer.
+#' @param n2 Second-stage sample size, a positive integer.
 #' @param wl Finite fractional warning limit.
-#' @param ucl1 Finite fractional first-stage upper control limit.
-#' @return A list containing ASS, second-stage probability, and chart
-#' parameters.
+#' @param ucl1 Finite fractional first-stage upper control limit greater than
+#' \code{wl}.
+#' @return A list with \code{ass}, the average sample size;
+#' \code{p_second}, the probability that the second sample is required; and
+#' the validated chart parameters \code{n1}, \code{n2}, \code{wl}, and
+#' \code{ucl1}.
 #' @export
 #' @author Daniela R. Recchia, Emanuel P. Barbosa
 #' @references Joekes, S., Smrekar, M. and Barbosa, E. P. (2015). Extending a

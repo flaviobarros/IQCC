@@ -7,29 +7,40 @@
 dsnp_arl(p, n1, n2, wl, ucl1, ucl2)
 }
 \arguments{
-\item{p}{Nonconforming proportion, scalar or vector in \eqn{[0, 1]}.}
+\item{p}{Nonconforming proportion to evaluate, a finite numeric scalar or
+vector in \eqn{[0, 1]}.}
 
-\item{n1}{First-stage positive integer sample size.}
+\item{n1}{First-stage sample size, a positive integer.}
 
-\item{n2}{Second-stage positive integer sample size.}
+\item{n2}{Second-stage sample size, a positive integer.}
 
 \item{wl}{Finite fractional warning limit.}
 
-\item{ucl1}{Finite fractional first-stage upper control limit.}
+\item{ucl1}{Finite fractional first-stage upper control limit greater than
+\code{wl}.}
 
-\item{ucl2}{Finite fractional combined upper control limit.}
+\item{ucl2}{Finite fractional combined upper control limit greater than
+\code{wl}.}
 }
 \value{
-A list containing ARL, acceptance and signal probabilities, and
-chart parameters.
+A list with \code{arl}, the average run length; \code{pt}, total
+acceptance probability; \code{p_signal}, signal probability; and the
+validated chart parameters \code{n1}, \code{n2}, \code{wl}, \code{ucl1},
+and \code{ucl2}.
 }
 \description{
 Compute the average run length for the double-sampling np chart as the
 reciprocal of the signal probability at each supplied nonconforming
 proportion.
 }
+\details{
+For signal probability \eqn{1 - P_T(p)}, the ARL is
+\eqn{1 / (1 - P_T(p))}. It is infinite when the signal probability is zero.
+}
 \examples{
-dsnp_arl(0.005, 34, 162, 1.5, 2.5, 4.5)$arl
+arl0 <- dsnp_arl(0.005, 34, 162, 1.5, 2.5, 4.5)$arl
+arl1 <- dsnp_arl(0.0075, 34, 162, 1.5, 2.5, 4.5)$arl
+c(arl0 = arl0, arl1 = arl1)
 
 }
 \references{
