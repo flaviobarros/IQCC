@@ -7,9 +7,14 @@ and the monitored rate is \\U = X/n\\.
 ## Usage
 
 ``` r
-uchart_limits(lambda, n, alpha = ALPHA,
+uchart_limits(
+  lambda,
+  n,
+  alpha = ALPHA,
   type = c("normal", "cf1", "cf2"),
-  sides = c("two.sided", "upper"), truncate = TRUE)
+  sides = c("two.sided", "upper"),
+  truncate = TRUE
+)
 ```
 
 ## Arguments
@@ -49,7 +54,15 @@ For \\U\\, the standardized third and fourth cumulants are \\gamma_1 =
 1/sqrt(lambda n)\\ and \\gamma_2 = 1/(lambda n)\\. Consequently, the
 first Cornish-Fisher correction is \\(z^2 - 1)/(6n)\\ and the
 second-order correction reduces to \\z(1-z^2)/(72 n sqrt(lambda n))\\.
-With \\z=3\\, the CF2 upper limit recovers the historical IQCC formula.
+
+With \\z=3\\, the CF2 upper limit recovers the historical IQCC formula
+\$\$lambda + 3 sqrt(lambda/n) + 4/(3n) - 1/(3 n sqrt(lambda n)).\$\$
+
+For two-sided CF2 limits, the operational convention used here evaluates
+the second adjustment with the positive upper-tail quantile and applies
+it with the same sign to both limits. This is consistent with the
+historical IQCC formula and with the operational convention used for the
+corrected p chart.
 
 ## Examples
 

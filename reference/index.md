@@ -2,8 +2,8 @@
 
 ## Package overview
 
-- [`IQCC`](https://flaviobarros.github.io/IQCC/reference/IQCC-package.md)
-  [`IQCC-package`](https://flaviobarros.github.io/IQCC/reference/IQCC-package.md)
+- [`IQCC-package`](https://flaviobarros.github.io/IQCC/reference/IQCC-package.md)
+  [`IQCC`](https://flaviobarros.github.io/IQCC/reference/IQCC-package.md)
   : IQCC: Improved Quality Control Charts
 
 ## Univariate location and dispersion

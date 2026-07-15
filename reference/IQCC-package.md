@@ -6,10 +6,20 @@ limits. The package covers univariate variable and attribute charts,
 double-sampling np charts for rare nonconformities, Hotelling T-squared
 charts, and generalized variance charts for multivariate variability.
 
+## Details
+
 Numerical functions for limits, false-alarm risk, average run length,
 and average sample size are exposed separately from plotting functions
 so that calculations can be inspected, tested, and reused in simulation
 studies.
+
+## Useful links
+
+- <https://github.com/flaviobarros/IQCC>
+
+- <https://flaviobarros.github.io/IQCC/>
+
+- Report bugs at <https://github.com/flaviobarros/IQCC/issues>
 
 ## See also
 
@@ -20,14 +30,6 @@ studies.
 [`cchart.R`](https://flaviobarros.github.io/IQCC/reference/cchart.R.md),
 [`cchart.DSnp`](https://flaviobarros.github.io/IQCC/reference/cchart.DSnp.md),
 [`cchart.GV`](https://flaviobarros.github.io/IQCC/reference/cchart.GV.md)
-
-Useful links:
-
-- <https://github.com/flaviobarros/IQCC>
-
-- <https://flaviobarros.github.io/IQCC/>
-
-- Report bugs at <https://github.com/flaviobarros/IQCC/issues>
 
 ## Author
 

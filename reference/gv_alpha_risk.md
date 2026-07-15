@@ -45,27 +45,55 @@ gv_alpha_risk(
 
 - type:
 
-  Character string selecting the limit calculation: `"normal"`, `"cf"`,
-  `"exact"`, or `"simulation"`. See
-  [`gv_limits`](https://flaviobarros.github.io/IQCC/reference/gv_limits.md)
-  for the exact scope of each method.
+  Character string selecting the limit calculation:
+
+  `"normal"`
+
+  :   Moment-matched Gaussian quantiles using the exact mean and
+      variance of \\\|S\|\\.
+
+  `"cf"`
+
+  :   Cornish-Fisher corrected Gaussian quantiles using skewness, and
+      optionally excess kurtosis.
+
+  `"exact"`
+
+  :   Closed-form chi-square quantiles for \\p=2\\, or the published
+      upper-limit table for \\p=3\\, \\n=4,\ldots,15\\, and `alpha`
+      equal to 0.0020 or 0.0027.
+
+  `"simulation"`
+
+  :   Monte Carlo quantiles from the Bartlett product-of-chi-squares
+      representation.
+
+  Partial matching is not used.
 
 - side:
 
-  Either `"upper"` or `"two.sided"`.
+  Either `"upper"` or `"two.sided"`. Since generalized variance is
+  nonnegative, the lower limit for an upper chart is zero. Any negative
+  approximated lower limit for a two-sided chart is also truncated to
+  zero.
 
 - cf_order:
 
-  Integer 1 or 2 controlling the Cornish-Fisher correction when
-  `type = "cf"`.
+  Integer 1 or 2. Order 1 uses the skewness correction. Order 2
+  additionally uses excess kurtosis and the squared-skewness term. It is
+  used only when `type = "cf"`.
 
 - nsim:
 
-  Integer number of Monte Carlo draws, at least 1000.
+  Integer number of Monte Carlo draws, at least 1000. It is used by
+  `type = "simulation"` and stored in the returned object for all
+  methods.
 
 - seed:
 
-  `NULL` or a finite numeric scalar used as the Monte Carlo seed.
+  `NULL` or a finite numeric scalar used as the Monte Carlo seed. A
+  supplied seed makes simulated limits reproducible and the caller's
+  existing `.Random.seed` is restored on exit.
 
 ## Value
 

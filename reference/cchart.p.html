@@ -72,7 +72,10 @@
 
 
 <dt id="arg-type">type<a class="anchor" aria-label="anchor" href="#arg-type"></a></dt>
-<dd><p>Chart type. Accepted values are <code>"normal"</code>, <code>"cf1"</code>, <code>"cf2"</code>, and <code>"standardized"</code>. The legacy aliases <code>"norm"</code>, <code>"CF"</code>, and <code>"std"</code> remain supported; <code>"CF"</code> maps to <code>"cf1"</code>.</p></dd>
+<dd><p>Chart type. Accepted values are <code>"normal"</code>, <code>"cf1"</code>,
+<code>"cf2"</code>, and <code>"standardized"</code>. The legacy aliases
+<code>"norm"</code>, <code>"CF"</code>, and <code>"std"</code> remain supported;
+<code>"CF"</code> maps to <code>"cf1"</code>.</p></dd>
 
 
 <dt id="arg-p-">p1<a class="anchor" aria-label="anchor" href="#arg-p-"></a></dt>
@@ -105,13 +108,23 @@
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>For a Phase I chart, <code>n1</code> and exactly one of <code>x1</code> or <code>p1</code> must be supplied. For a Phase II chart, <code>n2</code> and exactly one of <code>x2</code> or <code>p2</code> must be supplied, together with Phase I information or a known <code>phat</code>.</p>
-<p>When sample sizes vary, the process proportion is estimated by the pooled binomial estimator, \(sum(x_i) / sum(n_i)\), rather than by the unweighted mean of subgroup proportions. The plotting wrapper uses two-sided limits; use <code><a href="pchart_limits.html">pchart_limits()</a></code> directly for one-sided upper limits.</p>
+    <p>For a Phase I chart, <code>n1</code> and exactly one of <code>x1</code> or <code>p1</code>
+must be supplied. For a Phase II chart, <code>n2</code> and exactly one of
+<code>x2</code> or <code>p2</code> must be supplied, together with Phase I information
+or a known <code>phat</code>.</p>
+<p>When sample sizes vary, the process proportion is estimated by the pooled
+binomial estimator, \(sum(x_i) / sum(n_i)\), rather than by the unweighted
+mean of subgroup proportions. The plotting wrapper uses two-sided limits;
+use <code><a href="pchart_limits.html">pchart_limits()</a></code> directly for one-sided upper limits.</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
-    <p>Montgomery, D. C. (2008). <em>Introduction to Statistical Quality Control</em>. Wiley.</p>
-<p>Joekes, S. and Barbosa, E. P. (2013). An improved attribute control chart for monitoring non-conforming proportion in high quality processes. <em>Control Engineering Practice</em>, 21, 407–412. <a href="https://doi.org/10.1016/j.conengprac.2012.12.005" class="external-link">doi:10.1016/j.conengprac.2012.12.005</a>
+    <p>Montgomery, D. C. (2008). <em>Introduction to Statistical Quality
+Control</em>. Wiley.</p>
+<p>Joekes, S. and Barbosa, E. P. (2013). An improved attribute control chart
+for monitoring non-conforming proportion in high quality processes.
+<em>Control Engineering Practice</em>, 21, 407–412.
+<a href="https://doi.org/10.1016/j.conengprac.2012.12.005" class="external-link">doi:10.1016/j.conengprac.2012.12.005</a>
 .</p>
     </div>
     <div class="section level2">
@@ -121,7 +134,8 @@
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">binomdata</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">binomdata</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">cchart.p</span><span class="op">(</span>x1 <span class="op">=</span> <span class="va">binomdata</span><span class="op">$</span><span class="va">Di</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">12</span><span class="op">]</span>, n1 <span class="op">=</span> <span class="va">binomdata</span><span class="op">$</span><span class="va">ni</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">12</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="cchart.p-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="fu">cchart.p</span><span class="op">(</span>x1 <span class="op">=</span> <span class="va">binomdata</span><span class="op">$</span><span class="va">Di</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">12</span><span class="op">]</span>, n1 <span class="op">=</span> <span class="va">binomdata</span><span class="op">$</span><span class="va">ni</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">12</span><span class="op">]</span>,</span></span>
@@ -132,6 +146,7 @@
 <span class="r-in"><span>         <span class="va">binomdata</span><span class="op">$</span><span class="va">ni</span><span class="op">[</span><span class="fl">13</span><span class="op">:</span><span class="fl">25</span><span class="op">]</span>, n2 <span class="op">=</span> <span class="va">binomdata</span><span class="op">$</span><span class="va">ni</span><span class="op">[</span><span class="fl">13</span><span class="op">:</span><span class="fl">25</span><span class="op">]</span>,</span></span>
 <span class="r-in"><span>         phat <span class="op">=</span> <span class="fl">0.1115833</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="cchart.p-3.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

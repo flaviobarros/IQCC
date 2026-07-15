@@ -40,10 +40,10 @@ because of floating-point roundoff is returned as zero.
 ## Details
 
 For subgroup \\i\\ with \\n\\ observations on \\p\\ variables,
-`gv_stat()` calculates \$\$\|S_i\|, \qquad S_i =
-\frac{1}{n-1}\sum\_{j=1}^{n}(x\_{ij}-\bar{x}\_i)(x\_{ij}-\bar{x}\_i)^T.\$\$
-All subgroups must have the same \\n\\ and \\p\\, with \\p \>= 2\\ and
-\\n \> p\\. The latter condition permits a nonsingular sample covariance
+`gv_stat()` calculates \$\$\|S_i\|, \qquad S_i = \frac{1}{n-1}
+\sum\_{j=1}^{n}(x\_{ij}-\bar{x}\_i)(x\_{ij}-\bar{x}\_i)^T.\$\$ All
+subgroups must have the same \\n\\ and \\p\\, with \\p \>= 2\\ and \\n
+\> p\\. The latter condition permits a nonsingular sample covariance
 matrix under nondegenerate data, although an observed subgroup may still
 have determinant zero because of exact linear dependence.
 

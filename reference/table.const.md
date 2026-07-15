@@ -1,7 +1,7 @@
 # Table of values for the constants d2, d3 and c4.
 
 This function is used to build a table of values for the constants d2,
-d3 and c4 for sucessive values of sample size n.
+d3 and c4 for successive values of sample size n.
 
 ## Usage
 

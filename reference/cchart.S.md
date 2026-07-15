@@ -1,8 +1,10 @@
 # Standard-Deviation Control Chart
 
-Build a control chart for subgroup standard deviations using either
-normalized limits or exact probability limits derived from the
-chi-square distribution of the sample variance.
+Build a control chart for subgroup standard deviations using either the
+normalized limits supplied by
+[`qcc::qcc()`](https://rdrr.io/pkg/qcc/man/qcc.html) or exact
+probability limits derived from the chi-square distribution of the
+sample variance.
 
 ## Usage
 
@@ -21,8 +23,8 @@ cchart.S(x, type = c("n", "e"), m = NULL)
 
 - type:
 
-  Either `"n"` for normalized limits or `"e"` for exact equal-tail
-  probability limits.
+  Either `"n"` for the normalized qcc limits or `"e"` for exact
+  equal-tail probability limits.
 
 - m:
 
@@ -38,15 +40,20 @@ draws the chart.
 
 ## Details
 
-For exact limits, \\(m-1)S^2/\sigma^2\\ is treated as chi-square with
-\\m-1\\ degrees of freedom. Limits are obtained from the 0.00135 and
-0.99865 chi-square quantiles and the scale estimate `qcc::sd.S(x)`.
+Under multivariate normal sampling reduced to a univariate subgroup,
+\\(m-1)S^2/\sigma^2\\ follows a chi-square distribution with \\m-1\\
+degrees of freedom. The exact limits are therefore
+\$\$\hat\sigma\sqrt{\chi^2\_{0.00135,m-1}/(m-1)}\$\$ and
+\$\$\hat\sigma\sqrt{\chi^2\_{0.99865,m-1}/(m-1)},\$\$ where
+\\\hat\sigma\\ is obtained with `qcc::sd.S(x)`.
 
 ## Errors and warnings
 
 An error is raised for an unsupported `type` or an invalid supplied `m`.
 If exact limits are requested without `m`, the function warns and falls
-back to the normalized chart.
+back to the normalized chart. Additional data validation is performed by
+[`qcc::qcc()`](https://rdrr.io/pkg/qcc/man/qcc.html) and
+[`qcc::sd.S()`](https://rdrr.io/pkg/qcc/man/stats.S.html).
 
 ## References
 

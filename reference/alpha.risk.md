@@ -18,21 +18,31 @@ alpha.risk(n)
 
 ## Value
 
-A numeric vector with the same length and order as `n`, containing the
-exact in-control false-alarm probability of the conventional three-sigma
-R chart.
+A numeric vector with the same length and order as `n`. Element \\i\\ is
+\$\$1 - \\F_W(D_2;n_i) - F_W(D_1;n_i)\\,\$\$ where \\F_W\\ is evaluated
+with [`stats::ptukey()`](https://rdrr.io/r/stats/Tukey.html) using
+infinite denominator degrees of freedom.
 
 ## Details
 
-The conventional limits use \\D_1=\max\\0,d_2(n)-3d_3(n)\\\\ and
-\\D_2=d_2(n)+3d_3(n)\\. The returned risk is
-\\1-\\F_W(D_2)-F_W(D_1)\\\\, evaluated with
-[`stats::ptukey()`](https://rdrr.io/r/stats/Tukey.html). For small
-subgroup sizes this risk can be substantially larger than 0.0027.
+The conventional limits are \$\$D_1\sigma = \max\\0, d_2(n) -
+3d_3(n)\\\sigma\$\$ and \$\$D_2\sigma = \\d_2(n) + 3d_3(n)\\\sigma.\$\$
+Because the relative range is not normally distributed for the small
+subgroup sizes commonly used in practice, the resulting false-alarm
+probability can be substantially larger than 0.0027.
+
+## Interpretation
+
+The result is the probability that an in-control subgroup falls below
+the conventional lower limit or above the conventional upper limit. It
+is not the nominal value requested by an exact probability-limit design.
 
 ## Errors
 
-An error is raised when any subgroup size is smaller than 2.
+An error is raised when any subgroup size is smaller than 2. The
+underlying [`d2()`](https://flaviobarros.github.io/IQCC/reference/d2.md)
+and [`d3()`](https://flaviobarros.github.io/IQCC/reference/d3.md)
+calculations also require finite admissible subgroup sizes.
 
 ## References
 

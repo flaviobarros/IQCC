@@ -93,6 +93,7 @@ Daniela R. Recchia, Emanuel P. Barbosa
 ## Examples
 
 ``` r
+
 data(binomdata)
 cchart.p(x1 = binomdata$Di[1:12], n1 = binomdata$ni[1:12])
 
@@ -103,4 +104,5 @@ cchart.p(x1 = binomdata$Di[1:12], n1 = binomdata$ni[1:12],
 cchart.p(type = "standardized", p2 = binomdata$Di[13:25] /
          binomdata$ni[13:25], n2 = binomdata$ni[13:25],
          phat = 0.1115833)
+
 ```

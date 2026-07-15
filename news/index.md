@@ -140,8 +140,8 @@
   replaced with [`stop()`](https://rdrr.io/r/base/stop.html)
 - Fix error messages throughout: `return("msg")` replaced with
   `stop("msg")`
-- Fix typos: “Stardardized” → “Standardized”, “Shewart” → “Shewhart”,
-  “aprroximation” → “approximation”
+- Correct spelling in standardized, Shewhart, and approximation
+  documentation.
 - Add input validation (`n >= 2`) to
   [`d2()`](https://flaviobarros.github.io/IQCC/reference/d2.md),
   [`d3()`](https://flaviobarros.github.io/IQCC/reference/d3.md),
