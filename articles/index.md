@@ -2,6 +2,8 @@
 
 ### Overview
 
+- [Getting started with
+  IQCC](https://flaviobarros.github.io/IQCC/articles/getting-started-with-iqcc.md):
 - [When to use IQCC: exact and corrected control
   charts](https://flaviobarros.github.io/IQCC/articles/iqcc-positioning.md):
 
