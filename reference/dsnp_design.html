@@ -72,7 +72,8 @@ best feasible candidates across all pairs.</p>
 <span>  weights <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>arl1 <span class="op">=</span> <span class="fl">1</span>, ass0 <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
 <span>  allow_empty_warning <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  max_results <span class="op">=</span> <span class="fl">20</span>,</span>
-<span>  progress <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  progress <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  ass0_max <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'dsnp_design'</span></span>
@@ -141,6 +142,14 @@ Positive integer.</p></dd>
 the search.</p></dd>
 
 
+<dt id="arg-ass-max">ass0_max<a class="anchor" aria-label="anchor" href="#arg-ass-max"></a></dt>
+<dd><p>Optional maximum in-control average sample size. When
+supplied, it must be a finite positive scalar and candidates must satisfy
+<code>ass0 &lt;= ass0_max</code>. The current ASS calculation follows equation
+(15) of Joekes et al. (2015) and assumes complete inspection of the second
+sample whenever the first-stage count is in the warning region.</p></dd>
+
+
 <dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
 <dd><p>An object of class <code>"dsnp_design"</code>.</p></dd>
 
@@ -187,12 +196,19 @@ This function does not implement curtailed inspection.</p>
 effective alpha of <code>1 / arl0_min</code> is used to guide
 <code><a href="dsnp_limits.html">dsnp_limits()</a></code>, but final feasibility is checked against the
 explicit <code>arl0 &gt;= arl0_min</code> condition.</p>
+<p>The published design problem minimizes out-of-control ARL subject to
+<code>ass0 &lt;= ass0_max</code> and <code>arl0 &gt;= arl0_min</code>. Setting
+<code>ass0_max = NULL</code> omits only the ASS constraint and preserves the
+behavior of earlier IQCC versions. The argument is appended to the function
+signature so existing positional calls retain their meaning.</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
-    <p>Joekes, S., Smrekar, M. and Barbosa, E. (2015). Extending a
+    <p>Joekes, S., Smrekar, M. and Barbosa, E. P. (2015). Extending a
 double sampling control chart for non-conforming proportion in high quality
-processes to the case of small samples.</p>
+processes to the case of small samples. Statistical Methodology, 23, 35-49.
+<a href="https://doi.org/10.1016/j.stamet.2014.09.003" class="external-link">doi:10.1016/j.stamet.2014.09.003</a>
+.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>

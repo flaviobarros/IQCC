@@ -153,6 +153,9 @@ probability;</li>
 <li>
 <code><a href="../reference/dsnp_limits.html">dsnp_limits()</a></code> searches and ranks feasible limits;</li>
 <li>
+<code><a href="../reference/dsnp_design.html">dsnp_design()</a></code> searches sample sizes and limits under
+explicit ARL and ASS constraints;</li>
+<li>
 <code><a href="../reference/cchart.DSnp.html">cchart.DSnp()</a></code> classifies observations and constructs
 the chart.</li>
 </ul>
@@ -208,6 +211,45 @@ without making documentation builds unnecessarily slow.</p>
 <span><span class="co">#&gt; 1 0.5  1.5  2.5 0.04013256 24.91743 5.951221 7.036266</span></span></code></pre></div>
 </div>
 <div class="section level2">
+<h2 id="searching-a-complete-design">Searching a complete design<a class="anchor" aria-label="anchor" href="#searching-a-complete-design"></a>
+</h2>
+<p>Joekes, Smrekar and Barbosa (2015) formulate the DS-np design problem
+as minimizing out-of-control <code>ARL1</code>, subject to a minimum
+<code>ARL0</code> and a maximum in-control average sample size
+<code>ASS0</code>. The shift is written in the paper as
+<code>p1 = gamma * p0</code>. In IQCC, the corresponding bound is
+<code>ass0_max</code>:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">design</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dsnp_design.html">dsnp_design</a></span><span class="op">(</span></span>
+<span>  p0 <span class="op">=</span> <span class="fl">0.05</span>,</span>
+<span>  p1 <span class="op">=</span> <span class="fl">0.10</span>,</span>
+<span>  n1_range <span class="op">=</span> <span class="fl">5</span><span class="op">:</span><span class="fl">6</span>,</span>
+<span>  n2_range <span class="op">=</span> <span class="fl">8</span><span class="op">:</span><span class="fl">10</span>,</span>
+<span>  arl0_min <span class="op">=</span> <span class="fl">50</span>,</span>
+<span>  ass0_max <span class="op">=</span> <span class="fl">6</span>,</span>
+<span>  objective <span class="op">=</span> <span class="st">"arl1"</span>,</span>
+<span>  max_results <span class="op">=</span> <span class="fl">5</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">design</span><span class="op">$</span><span class="va">best</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"n1"</span>, <span class="st">"n2"</span>, <span class="st">"wl"</span>, <span class="st">"ucl1"</span>, <span class="st">"ucl2"</span>,</span>
+<span>                <span class="st">"ass0"</span>, <span class="st">"arl0"</span>, <span class="st">"arl1"</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="co">#&gt;   n1 n2  wl ucl1 ucl2     ass0     arl0     arl1</span></span>
+<span><span class="co">#&gt; 1  5 10 1.5  2.5  2.5 5.214344 102.4701 17.84397</span></span></code></pre></div>
+<p>The published tables report selected plans but not the complete
+bounds used for the searches over <code>n1</code> and <code>n2</code> or
+every tie-breaking rule. IQCC tests recover a published Table 5 plan
+over an explicitly recorded local grid and validate the exhaustive
+algorithm independently on a small grid; this evidence should not be
+described as a reproduction of undocumented global search settings.</p>
+<p>Setting <code>ass0_max = NULL</code> preserves the unconstrained
+search. The ASS used by <code><a href="../reference/dsnp_ass.html">dsnp_ass()</a></code> and
+<code><a href="../reference/dsnp_design.html">dsnp_design()</a></code> is equation (15) of the paper: whenever the
+first-stage count enters the warning region, all <code>n2</code> units
+are counted. The paper also describes stopping second-stage inspection
+as soon as rejection is certain, but it does not provide the
+corresponding expected-inspection formula; IQCC does not label that
+curtailed quantity as the current ASS.</p>
+</div>
+<div class="section level2">
 <h2 id="interpreting-fractional-limits">Interpreting fractional limits<a class="anchor" aria-label="anchor" href="#interpreting-fractional-limits"></a>
 </h2>
 <p>For a DS-np plan with first-stage count <code>D1</code> and
@@ -225,7 +267,7 @@ second-stage count <code>D2</code>, IQCC uses the following rule:</p>
 <div class="section level2">
 <h2 id="constructing-the-chart">Constructing the chart<a class="anchor" aria-label="anchor" href="#constructing-the-chart"></a>
 </h2>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">2</span>, <span class="fl">4</span>, <span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="va">x2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="cn">NA</span>, <span class="fl">2</span>, <span class="cn">NA</span>, <span class="cn">NA</span>, <span class="cn">NA</span>, <span class="fl">3</span>, <span class="cn">NA</span>, <span class="cn">NA</span>, <span class="cn">NA</span><span class="op">)</span></span>
 <span></span>
@@ -242,7 +284,7 @@ second-stage count <code>D2</code>, IQCC uses the following rule:</p>
 <span>  plot <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p><img src="high-quality-processes_files/figure-html/dsnp-chart-1.png" class="r-plt" alt="" width="672"></p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">chart</span><span class="op">$</span><span class="va">limits</span></span>
 <span><span class="co">#&gt; $wl</span></span>
@@ -292,7 +334,7 @@ second-stage count <code>D2</code>, IQCC uses the following rule:</p>
 <span><span class="co">#&gt; 8      8  4 NA    NA  signal_first   TRUE</span></span>
 <span><span class="co">#&gt; 9      9  1 NA    NA  accept_first  FALSE</span></span>
 <span><span class="co">#&gt; 10    10  0 NA    NA  accept_first  FALSE</span></span></code></pre></div>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"&lt;!-- IQCC_EXECUTED_HIGH_QUALITY --&gt;\n"</span><span class="op">)</span></span></code></pre></div>
 <!-- IQCC_EXECUTED_HIGH_QUALITY -->
 </div>

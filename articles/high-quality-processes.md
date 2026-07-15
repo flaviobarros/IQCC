@@ -86,6 +86,9 @@ IQCC provides the complete DS-np workflow:
   computes average sample size;
 - [`dsnp_limits()`](https://flaviobarros.github.io/IQCC/reference/dsnp_limits.md)
   searches and ranks feasible limits;
+- [`dsnp_design()`](https://flaviobarros.github.io/IQCC/reference/dsnp_design.md)
+  searches sample sizes and limits under explicit ARL and ASS
+  constraints;
 - [`cchart.DSnp()`](https://flaviobarros.github.io/IQCC/reference/cchart.DSnp.md)
   classifies observations and constructs the chart.
 
@@ -141,6 +144,50 @@ lim$best[, c("wl", "ucl1", "ucl2", "p_signal0",
 #>    wl ucl1 ucl2  p_signal0     arl0     arl1     ass0
 #> 1 0.5  1.5  2.5 0.04013256 24.91743 5.951221 7.036266
 ```
+
+## Searching a complete design
+
+Joekes, Smrekar and Barbosa (2015) formulate the DS-np design problem as
+minimizing out-of-control `ARL1`, subject to a minimum `ARL0` and a
+maximum in-control average sample size `ASS0`. The shift is written in
+the paper as `p1 = gamma * p0`. In IQCC, the corresponding bound is
+`ass0_max`:
+
+``` r
+
+design <- dsnp_design(
+  p0 = 0.05,
+  p1 = 0.10,
+  n1_range = 5:6,
+  n2_range = 8:10,
+  arl0_min = 50,
+  ass0_max = 6,
+  objective = "arl1",
+  max_results = 5
+)
+design$best[, c("n1", "n2", "wl", "ucl1", "ucl2",
+                "ass0", "arl0", "arl1")]
+#>   n1 n2  wl ucl1 ucl2     ass0     arl0     arl1
+#> 1  5 10 1.5  2.5  2.5 5.214344 102.4701 17.84397
+```
+
+The published tables report selected plans but not the complete bounds
+used for the searches over `n1` and `n2` or every tie-breaking rule.
+IQCC tests recover a published Table 5 plan over an explicitly recorded
+local grid and validate the exhaustive algorithm independently on a
+small grid; this evidence should not be described as a reproduction of
+undocumented global search settings.
+
+Setting `ass0_max = NULL` preserves the unconstrained search. The ASS
+used by
+[`dsnp_ass()`](https://flaviobarros.github.io/IQCC/reference/dsnp_ass.md)
+and
+[`dsnp_design()`](https://flaviobarros.github.io/IQCC/reference/dsnp_design.md)
+is equation (15) of the paper: whenever the first-stage count enters the
+warning region, all `n2` units are counted. The paper also describes
+stopping second-stage inspection as soon as rejection is certain, but it
+does not provide the corresponding expected-inspection formula; IQCC
+does not label that curtailed quantity as the current ASS.
 
 ## Interpreting fractional limits
 
