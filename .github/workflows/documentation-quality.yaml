@@ -29,7 +29,7 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::devtools, any::spelling, roxygen2@7.3.2
+          extra-packages: devtools@2.4.5, any::spelling, roxygen2@7.3.2
           needs: check
 
       - name: Regenerate roxygen documentation
