@@ -2,37 +2,37 @@
 % Please edit documentation in R/add.data.R
 \name{add.data}
 \alias{add.data}
-\title{Updates the Hotelling Control Chart.}
+\title{Add a New Observation to a Phase II T² Chart}
 \usage{
 add.data(datum2, estat, T2II, n, j, m = NULL)
 }
 \arguments{
-\item{datum2}{The data set for the phase II. Should be a matrix.}
+\item{datum2}{New Phase II data (vector for \eqn{n = 1}, matrix for
+\eqn{n > 1}).}
 
-\item{estat}{The values of the auxiliary statistics. Should be a list with a
-vector with the mean of the mean vectors, a matrix with the average of the
-variance-covariance matrices and a matrix with the means.}
+\item{estat}{Phase I statistics (list from \code{\link{stats}}).}
 
-\item{T2II}{A vector with the value of T2 statistic for one sample.}
+\item{T2II}{Previous T² vector (updated in calling code).}
 
-\item{n}{The sample size. For individual observations, use n = 1.}
+\item{n}{Subgroup size. Use \eqn{n = 1} for individual observations,
+\eqn{n > 1} for subgroups.}
 
-\item{j}{The index of the current sample.}
+\item{j}{Index of this new sample.}
 
-\item{m}{The number of samples in phase I. Only needed if the phase I data
-set is show on the plot.}
+\item{m}{Optional. Number of Phase I samples (needed if Phase I data is
+shown).}
 }
 \value{
-Add the new observation to the current Hotelling control chart for
-phase II. Returns the new T2 statistic invisibly.
+Invisibly, the new T² statistic.
 }
 \description{
-This function is used to update the phase II control chart with new
-observations.
+Add a new Phase II point to an existing Hotelling T² chart. Computes the T²
+statistic via \code{\link{T2.2}} and plots it. Use after
+\code{\link{cchart.T2.2}} to build the chart incrementally.
 }
 \details{
 To use this function it is necessary to have the output given by the
-function T2.2. At every step you should entry with the new data set.
+function \code{\link{T2.2}}. At every step you should enter the new data set.
 }
 \examples{
 
@@ -67,7 +67,7 @@ add.data(datum3, estat, T2II, 1, 2, 50)
 
 }
 \seealso{
-\link{T2.2}
+\code{\link{T2.2}}, \code{\link{cchart.T2.2}}
 }
 \author{
 Daniela R. Recchia, Emanuel P. Barbosa

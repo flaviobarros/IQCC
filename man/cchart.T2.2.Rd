@@ -2,42 +2,45 @@
 % Please edit documentation in R/cchart.T2.2.R
 \name{cchart.T2.2}
 \alias{cchart.T2.2}
-\title{Phase II Hotelling Control Chart.}
+\title{Phase II Hotelling T² Control Chart}
 \usage{
 cchart.T2.2(T2II, m, n, j, t, p, datum = NULL, stats = NULL, T2 = NULL)
 }
 \arguments{
-\item{T2II}{A vector with the value of T2 statistic for one sample.}
+\item{T2II}{Vector with Phase II T² values (from \code{\link{T2.2}}).}
 
-\item{m}{The number of samples generated previously in data.1.}
+\item{m}{Number of Phase I subgroups.}
 
-\item{n}{The size of each sample used previously in data.1. If they are
-individual observations, use n = 1.}
+\item{n}{Subgroup size.}
 
-\item{j}{The index of the current sample.}
+\item{j}{Index of the current Phase II sample (1-based).}
 
-\item{t}{The maximum value of the x axis.}
+\item{t}{Maximum x-axis limit (number of Phase II samples to show).}
 
-\item{p}{The dimension used previously in function data.1.}
+\item{p}{Number of variables.}
 
-\item{datum}{The data set used in phase I.}
+\item{datum}{Optional. Phase I data array to display reference points.}
 
-\item{stats}{The auxiliary statistics created by the function stats.}
+\item{stats}{Optional. Phase I statistics to compute T² if not provided.}
 
-\item{T2}{The Hotelling T2 statistic for multivariate observations at phase
-I created by the function T2.1.}
+\item{T2}{Optional. Pre-computed Phase I T² values.}
 }
 \value{
-Return a control chart.
+Draws the chart. Returns nothing.
 }
 \description{
-Builds the sub group phase II Hotelling control chart.
+Build or update a Phase II T² chart. Can optionally display Phase I
+reference data. Limits: For \eqn{n = 1}:
+\eqn{UCL = (p(m+1)(m-1))/(m^2-mp) \times qf(1-\alpha, p, m-p)}.
+For \eqn{n > 1}:
+\eqn{UCL = (p(m+1)(n-1))/(mn-m-p+1) \times qf(1-\alpha, p, mn-m-p+1)}.
 }
-\details{
-It builds the Hotelling T2 control chart for multivariate normal data to be
-used in the operational phase (known as phase II); the control limits are
-based on the F distribution.
+\section{Phase convention}{
+
+  Phase II monitoring. The vertical dashed line separates Phase I (left) from
+  Phase II (right).
 }
+
 \examples{
 
 mu <- c(5.682, 88.22)
@@ -64,11 +67,11 @@ cchart.T2.2(T2II, 50, 1, 1, 25, 2, datum = datum)
 
 }
 \references{
-Montgomery, D.C.,(2008). "Introduction to Statistical Quality
-Control". Chapter 11. Wiley
+Montgomery, D.C., (2009). "Introduction to Statistical Quality
+Control". Chapter 11. Wiley.
 }
 \seealso{
-\link{cchart.T2.1}
+\code{\link{T2.2}}, \code{\link{cchart.T2.1}}
 }
 \author{
 Daniela R. Recchia, Emanuel P. Barbosa

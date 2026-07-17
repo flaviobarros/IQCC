@@ -2,32 +2,39 @@
 % Please edit documentation in R/stats.R
 \name{stats}
 \alias{stats}
-\title{Auxiliary statistics for the multivariate control chart.}
+\title{Auxiliary Statistics for Hotelling T² Charts}
 \usage{
 stats(datum, m, n, p)
 }
 \arguments{
-\item{datum}{The data set. Should be an array.}
+\item{datum}{For \eqn{n = 1}: \eqn{m \times p} matrix. For \eqn{n > 1}:
+\eqn{n \times p \times m} array.}
 
-\item{m}{The number of sub groups generated previously in data.1.}
+\item{m}{Number of subgroups.}
 
-\item{n}{The size of each sub group used previously in data.1.}
+\item{n}{Subgroup size.}
 
-\item{p}{The dimension used previously in function data.1.}
+\item{p}{Dimension.}
 }
 \value{
-Return the values of the three statistics: a vector with the mean of
-the means, the mean of the estimated variance-covariance matrixes and a
-matrix with the means of each sample.
+A list with three components: grand mean (vector), pooled covariance
+  (matrix), subgroup means (\eqn{m \times p} matrix).
 }
 \description{
-This function calculate the auxiliary statistics necessary to build the
-control chart reference lines.
+Compute the reference statistics needed by \code{\link{T2.1}} and
+\code{\link{T2.2}} from Phase I data. Returns a list with: \code{[[1]]}
+grand mean vector (\eqn{\bar{\bar{x}}}), \code{[[2]]} pooled covariance
+matrix (\eqn{\bar{S}}), \code{[[3]]} matrix of subgroup means.
 }
 \details{
-To use this function it is necessary to have the information about the
-data.1.
+To use this function it is necessary to have the information from
+\code{\link{data.1}}.
 }
+\section{Phase convention}{
+
+  Designed for Phase I reference data.
+}
+
 \examples{
 
 mu <- c(5.682, 88.22)
@@ -39,6 +46,9 @@ estat <- stats(datum, 50, 1, 2)
 datum <- data.1(20, 10, mu, Sigma)
 estat <- stats(datum, 20, 10, 2)
 
+}
+\seealso{
+\code{\link{T2.1}}, \code{\link{data.1}}
 }
 \author{
 Daniela R. Recchia, Emanuel P. Barbosa

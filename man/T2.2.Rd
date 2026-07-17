@@ -2,31 +2,40 @@
 % Please edit documentation in R/T2.2.R
 \name{T2.2}
 \alias{T2.2}
-\title{Hotelling T2 Statistic for Phase II.}
+\title{Hotelling T² Statistic for Phase II}
 \usage{
 T2.2(datum2, estat, n)
 }
 \arguments{
-\item{datum2}{The data set for the phase II. Should be a vector.}
+\item{datum2}{Phase II data. For \eqn{n = 1}: a numeric vector of length
+\eqn{p}. For \eqn{n > 1}: an \eqn{n \times p} matrix.}
 
-\item{estat}{The values of the auxiliary statistics. Should be a list with a
-matrix with the means, mean of the means and mean of the standard deviation.}
+\item{estat}{List from \code{\link{stats}} (Phase I estimates).}
 
-\item{n}{The size of each sample used previously in data.2. If they are
-individual observations, use n = 1.}
+\item{n}{Subgroup size. Use \eqn{n = 1} for individual observations,
+\eqn{n > 1} for subgroups.}
 }
 \value{
-Return a vector with the Hotelling T2 statistics.
+A scalar T² statistic.
 }
 \description{
-Calculate the Hotelling T2 statistic for multivariate observations at phase
-II , to be used to build the corresponding control chart.
+Calculate T² for new (Phase II) observations using Phase I reference
+parameters. For individual observations:
+\eqn{T^2 = (x_{new} - \bar{\bar{x}})' S^{-1} (x_{new} - \bar{\bar{x}})}.
+For subgroups:
+\eqn{T^2 = n (\bar{x}_{new} - \bar{\bar{x}})' S^{-1} (\bar{x}_{new} - \bar{\bar{x}})}.
 }
 \details{
-Before using this function it is necessary to execute the function
-"stats"(that calculate the auxiliary statistics involved in the T2 formula)
-and the function "data.2" (or other way to supply the data).
+Before using this function it is necessary to execute \code{\link{stats}}
+(that calculates the auxiliary statistics involved in the T² formula) and
+the function \code{\link{data.2}} (or other way to supply the data).
 }
+\section{Phase convention}{
+
+  Phase II \code{---} tests new observations against Phase I reference
+  distribution.
+}
+
 \examples{
 
 mu <- c(5.682, 88.22)
@@ -44,11 +53,11 @@ T2II <- T2.2(datum2, estat, 10)
 
 }
 \references{
-Montgomery, D.C.,(2008)."Introduction to Statistical Quality
+Montgomery, D.C., (2009). "Introduction to Statistical Quality
 Control". Chapter 11. Wiley.
 }
 \seealso{
-\link{T2.1},\link{stats}, \link{data.2}, \link{cchart.T2.2}
+\code{\link{T2.1}}, \code{\link{cchart.T2.2}}
 }
 \author{
 Daniela R. Recchia, Emanuel P. Barbosa

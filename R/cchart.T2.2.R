@@ -1,30 +1,31 @@
-#' Phase II Hotelling Control Chart.
-#' 
-#' Builds the sub group phase II Hotelling control chart.
-#' 
-#' It builds the Hotelling T2 control chart for multivariate normal data to be
-#' used in the operational phase (known as phase II); the control limits are
-#' based on the F distribution.
-#' 
-#' @param T2II A vector with the value of T2 statistic for one sample.
-#' @param m The number of samples generated previously in data.1.
-#' @param n The size of each sample used previously in data.1. If they are
-#' individual observations, use n = 1.
-#' @param j The index of the current sample.
-#' @param t The maximum value of the x axis.
-#' @param p The dimension used previously in function data.1.
-#' @param datum The data set used in phase I.
-#' @param stats The auxiliary statistics created by the function stats.
-#' @param T2 The Hotelling T2 statistic for multivariate observations at phase
-#' I created by the function T2.1.
-#' @return Return a control chart.
-#' @export
-#' @author Daniela R. Recchia, Emanuel P. Barbosa
-#' @seealso \link{cchart.T2.1}
-#' @references Montgomery, D.C.,(2008). "Introduction to Statistical Quality
-#' Control". Chapter 11. Wiley
+#' Phase II Hotelling T² Control Chart
+#'
+#' Build or update a Phase II T² chart. Can optionally display Phase I
+#' reference data. Limits: For \eqn{n = 1}:
+#' \eqn{UCL = (p(m+1)(m-1))/(m^2-mp) \times qf(1-\alpha, p, m-p)}.
+#' For \eqn{n > 1}:
+#' \eqn{UCL = (p(m+1)(n-1))/(mn-m-p+1) \times qf(1-\alpha, p, mn-m-p+1)}.
+#'
+#' @param T2II Vector with Phase II T² values (from \code{\link{T2.2}}).
+#' @param m Number of Phase I subgroups.
+#' @param n Subgroup size.
+#' @param j Index of the current Phase II sample (1-based).
+#' @param t Maximum x-axis limit (number of Phase II samples to show).
+#' @param p Number of variables.
+#' @param datum Optional. Phase I data array to display reference points.
+#' @param stats Optional. Phase I statistics to compute T² if not provided.
+#' @param T2 Optional. Pre-computed Phase I T² values.
+#' @return Draws the chart. Returns nothing.
+#' @section Phase convention:
+#'   Phase II monitoring. The vertical dashed line separates Phase I (left) from
+#'   Phase II (right).
+#' @seealso \code{\link{T2.2}}, \code{\link{cchart.T2.1}}
+#' @references Montgomery, D.C., (2009). "Introduction to Statistical Quality
+#' Control". Chapter 11. Wiley.
 #' @importFrom graphics plot title mtext abline axis lines
 #' @importFrom stats qf
+#' @export
+#' @author Daniela R. Recchia, Emanuel P. Barbosa
 #' @examples
 #' 
 #' mu <- c(5.682, 88.22)

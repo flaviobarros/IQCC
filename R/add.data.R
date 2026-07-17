@@ -1,26 +1,26 @@
-#' Updates the Hotelling Control Chart.
-#' 
-#' This function is used to update the phase II control chart with new
-#' observations.
-#' 
+#' Add a New Observation to a Phase II T² Chart
+#'
+#' Add a new Phase II point to an existing Hotelling T² chart. Computes the T²
+#' statistic via \code{\link{T2.2}} and plots it. Use after
+#' \code{\link{cchart.T2.2}} to build the chart incrementally.
+#'
 #' To use this function it is necessary to have the output given by the
-#' function T2.2. At every step you should entry with the new data set.
-#' 
-#' @param datum2 The data set for the phase II. Should be a matrix.
-#' @param estat The values of the auxiliary statistics. Should be a list with a
-#' vector with the mean of the mean vectors, a matrix with the average of the
-#' variance-covariance matrices and a matrix with the means.
-#' @param T2II A vector with the value of T2 statistic for one sample.
-#' @param n The sample size. For individual observations, use n = 1.
-#' @param j The index of the current sample.
-#' @param m The number of samples in phase I. Only needed if the phase I data
-#' set is show on the plot.
-#' @return Add the new observation to the current Hotelling control chart for
-#' phase II. Returns the new T2 statistic invisibly.
+#' function \code{\link{T2.2}}. At every step you should enter the new data set.
+#'
+#' @param datum2 New Phase II data (vector for \eqn{n = 1}, matrix for
+#'   \eqn{n > 1}).
+#' @param estat Phase I statistics (list from \code{\link{stats}}).
+#' @param T2II Previous T² vector (updated in calling code).
+#' @param n Subgroup size. Use \eqn{n = 1} for individual observations,
+#'   \eqn{n > 1} for subgroups.
+#' @param j Index of this new sample.
+#' @param m Optional. Number of Phase I samples (needed if Phase I data is
+#'   shown).
+#' @return Invisibly, the new T² statistic.
+#' @seealso \code{\link{T2.2}}, \code{\link{cchart.T2.2}}
+#' @importFrom graphics points lines
 #' @export
 #' @author Daniela R. Recchia, Emanuel P. Barbosa
-#' @seealso \link{T2.2}
-#' @importFrom graphics points lines
 #' @examples
 #' 
 #' mu <- c(5.682, 88.22)
