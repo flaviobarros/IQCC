@@ -355,5 +355,7 @@ Hotelling T-squared and generalized variance charts.
 
 - [High-quality processes and rare
   nonconformities](https://flaviobarros.github.io/IQCC/articles/high-quality-processes.md):
+- [Monitoring univariate dispersion with R and S
+  charts](https://flaviobarros.github.io/IQCC/articles/univariate-dispersion-monitoring.md):
 - [Statistical Foundations of
   IQCC](https://flaviobarros.github.io/IQCC/articles/statistical-foundations.md):
