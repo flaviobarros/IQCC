@@ -15,7 +15,7 @@
 #' @importFrom miscTools symMatrix
 #' @export
 #' @author Daniela R. Recchia, Emanuel P. Barbosa
-#' @seealso \link{stats}, \link{data.1}, \link{cchart.T2.1}
+#' @seealso \link{stats}, \link{data.1}, \link{cchart.T2.1}, \link{robustez}
 #' @references Montgomery, D.C.,(2008)."Introduction to Statistical Quality
 #' Control". Chapter 11. Wiley.
 #' @examples

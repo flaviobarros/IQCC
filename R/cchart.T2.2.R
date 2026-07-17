@@ -20,7 +20,7 @@
 #' @return Return a control chart.
 #' @export
 #' @author Daniela R. Recchia, Emanuel P. Barbosa
-#' @seealso \link{cchart.T2.1}
+#' @seealso \link{cchart.T2.1}, \link{robustez}
 #' @references Montgomery, D.C.,(2008). "Introduction to Statistical Quality
 #' Control". Chapter 11. Wiley
 #' @importFrom graphics plot title mtext abline axis lines

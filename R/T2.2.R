@@ -15,7 +15,7 @@
 #' @return Return a vector with the Hotelling T2 statistics.
 #' @export
 #' @author Daniela R. Recchia, Emanuel P. Barbosa
-#' @seealso \link{T2.1},\link{stats}, \link{data.2}, \link{cchart.T2.2}
+#' @seealso \link{T2.1},\link{stats}, \link{data.2}, \link{cchart.T2.2}, \link{robustez}
 #' @references Montgomery, D.C.,(2008)."Introduction to Statistical Quality
 #' Control". Chapter 11. Wiley.
 #' @examples

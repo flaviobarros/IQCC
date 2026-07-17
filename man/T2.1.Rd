@@ -45,7 +45,7 @@ Montgomery, D.C.,(2008)."Introduction to Statistical Quality
 Control". Chapter 11. Wiley.
 }
 \seealso{
-\link{stats}, \link{data.1}, \link{cchart.T2.1}
+\link{stats}, \link{data.1}, \link{cchart.T2.1}, \link{robustez}
 }
 \author{
 Daniela R. Recchia, Emanuel P. Barbosa

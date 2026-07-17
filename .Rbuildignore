@@ -11,3 +11,5 @@
 ^Rplots\.pdf$
 ^tests/testthat/Rplots\.pdf$
 ^sources$
+^\.opencode$
+^AGENTS\.md$
