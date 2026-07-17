@@ -250,7 +250,7 @@ design. The exact IQCC wrapper makes this split explicit through
 <span>  type <span class="op">=</span> <span class="st">"tukey"</span>,</span>
 <span>  y <span class="op">=</span> <span class="va">phase1</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="univariate-dispersion-monitoring_files/figure-html/exact-r-chart-1.png" class="r-plt" alt="Exact R chart for Phase II piston-ring ranges" width="672"></p>
+<p><img src="univariate-dispersion-monitoring_files/figure-html/exact-r-chart-1.png" class="r-plt" alt="" width="672"></p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">r_chart</span><span class="op">$</span><span class="va">limits</span></span>
 <span><span class="co">#&gt;         LCL         UCL</span></span>
@@ -277,7 +277,7 @@ II monitoring.</p>
 <span>  n <span class="op">=</span> <span class="fl">5</span>,</span>
 <span>  type <span class="op">=</span> <span class="st">"norm"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="univariate-dispersion-monitoring_files/figure-html/conventional-r-chart-1.png" class="r-plt" alt="Classical R chart for piston-ring ranges" width="672"></p>
+<p><img src="univariate-dispersion-monitoring_files/figure-html/conventional-r-chart-1.png" class="r-plt" alt="" width="672"></p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">r_chart_classical</span><span class="op">$</span><span class="va">limits</span></span>
 <span><span class="co">#&gt;  LCL        UCL</span></span>
@@ -321,10 +321,10 @@ limits for small
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">softdrink</span><span class="op">)</span></span>
 <span><span class="va">s_chart_normalized</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cchart.S.html">cchart.S</a></span><span class="op">(</span><span class="va">softdrink</span>, type <span class="op">=</span> <span class="st">"n"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="univariate-dispersion-monitoring_files/figure-html/s-charts-1.png" class="r-plt" alt="Normalized and exact S charts for soft-drink data" width="672"></p>
+<p><img src="univariate-dispersion-monitoring_files/figure-html/s-charts-1.png" class="r-plt" alt="" width="672"></p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">s_chart_exact</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cchart.S.html">cchart.S</a></span><span class="op">(</span><span class="va">softdrink</span>, type <span class="op">=</span> <span class="st">"e"</span>, m <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
-<p><img src="univariate-dispersion-monitoring_files/figure-html/s-charts-2.png" class="r-plt" alt="Normalized and exact S charts for soft-drink data" width="672"></p>
+<p><img src="univariate-dispersion-monitoring_files/figure-html/s-charts-2.png" class="r-plt" alt="" width="672"></p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span></span>

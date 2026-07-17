@@ -214,13 +214,13 @@ Shewhart charts and distribution-aware limits for continuous
 measurements.
 
 - [`cchart.Xbar()`](https://flaviobarros.github.io/IQCC/reference/cchart.Xbar.md)
-  : X-bar Control Chart for phase I and II.
+  : X-bar Control Chart for Phase I and Phase II
 - [`cchart.Xbar1()`](https://flaviobarros.github.io/IQCC/reference/cchart.Xbar1.md)
-  : X-bar Shewhart Control Chart for phase I.
+  : Phase I X-bar Shewhart Control Chart
 - [`cchart.Xbar2()`](https://flaviobarros.github.io/IQCC/reference/cchart.Xbar2.md)
-  : X-bar Shewhart Control Chart for phase II.
+  : Phase II X-bar Shewhart Control Chart
 - [`cchart.Xbar_R()`](https://flaviobarros.github.io/IQCC/reference/cchart.Xbar_R.md)
-  : X-bar and R control charts
+  : X-bar and R Control Charts
 - [`cchart.R()`](https://flaviobarros.github.io/IQCC/reference/cchart.R.md)
   : Range Control Chart
 - [`r_shewhart_limits()`](https://flaviobarros.github.io/IQCC/reference/r_shewhart_limits.md)

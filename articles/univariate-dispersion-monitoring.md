@@ -193,8 +193,7 @@ r_chart <- cchart.R(
 )
 ```
 
-![Exact R chart for Phase II piston-ring
-ranges](univariate-dispersion-monitoring_files/figure-html/exact-r-chart-1.png)
+![](univariate-dispersion-monitoring_files/figure-html/exact-r-chart-1.png)
 
 ``` r
 
@@ -229,8 +228,7 @@ r_chart_classical <- cchart.R(
 )
 ```
 
-![Classical R chart for piston-ring
-ranges](univariate-dispersion-monitoring_files/figure-html/conventional-r-chart-1.png)
+![](univariate-dispersion-monitoring_files/figure-html/conventional-r-chart-1.png)
 
 ``` r
 
@@ -279,16 +277,14 @@ data(softdrink)
 s_chart_normalized <- cchart.S(softdrink, type = "n")
 ```
 
-![Normalized and exact S charts for soft-drink
-data](univariate-dispersion-monitoring_files/figure-html/s-charts-1.png)
+![](univariate-dispersion-monitoring_files/figure-html/s-charts-1.png)
 
 ``` r
 
 s_chart_exact <- cchart.S(softdrink, type = "e", m = 10)
 ```
 
-![Normalized and exact S charts for soft-drink
-data](univariate-dispersion-monitoring_files/figure-html/s-charts-2.png)
+![](univariate-dispersion-monitoring_files/figure-html/s-charts-2.png)
 
 ``` r
 

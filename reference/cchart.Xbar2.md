@@ -1,6 +1,10 @@
-# X-bar Shewhart Control Chart for phase II.
+# Phase II X-bar Shewhart Control Chart
 
-Builds the x-bar control chart for phase II.
+Builds the X-bar control chart for Phase II monitoring using reference
+limits obtained from a Phase I analysis. The Phase I estimates of
+`x2bar` (mean of means) and `sigma` (standard deviation) are required,
+typically obtained from
+[`cchart.Xbar1`](https://flaviobarros.github.io/IQCC/reference/cchart.Xbar1.md).
 
 ## Usage
 
@@ -12,33 +16,37 @@ cchart.Xbar2(x, x2bar, sigma, sizes)
 
 - x:
 
-  The data to be plotted.
+  Phase II data. Matrix or data frame with subgroups in rows.
 
 - x2bar:
 
-  The mean of means.
+  Mean of subgroup means from Phase I (center line).
 
 - sigma:
 
-  The standard deviation of the data.
+  Standard deviation from Phase I (for control limits).
 
 - sizes:
 
-  A value or a vector of values specifying the sample sizes associated
-  with each group.
+  Phase II subgroup size(s).
 
 ## Value
 
-Return a x-bar control chart for phase II.
+Draws the X-bar control chart. Returns nothing.
 
-## Details
+## Phase convention
 
-To use this function it is necessary to have the output given by the
-function XbarI.
+Phase II `---` tests new data against Phase I reference distribution.
+
+## References
+
+Montgomery, D.C., (2009). "Introduction to Statistical Quality Control".
+Chapter 6. Wiley.
 
 ## See also
 
-[cchart.Xbar1](https://flaviobarros.github.io/IQCC/reference/cchart.Xbar1.md)
+[`cchart.Xbar1`](https://flaviobarros.github.io/IQCC/reference/cchart.Xbar1.md),
+[`cchart.Xbar`](https://flaviobarros.github.io/IQCC/reference/cchart.Xbar.md)
 
 ## Author
 
