@@ -4,6 +4,11 @@
 #' three-sigma approximation or exact probability limits from the distribution
 #' of the relative range \eqn{W = R / \sigma}.
 #'
+#' The numerical limits are computed by \code{\link{r_shewhart_limits}} (for
+#' \code{type = "norm"}) or \code{\link{r_exact_limits}} (for \code{type =
+#' "tukey"}), keeping the plotting wrapper separate from the pure limit
+#' calculations.
+#'
 #' @param x Phase II subgroup data accepted by \code{qcc::qcc()} for an
 #' \code{"R"} chart. Rows represent subgroups and columns observations within
 #' subgroups.
@@ -48,7 +53,8 @@
 #' Statistics - Simulation and Computation}, 42(2), 247--262.
 #' \doi{10.1080/03610918.2011.639967}.
 #'
-#' @seealso \code{\link{alpha.risk}}, \code{\link{cchart.S}},
+#' @seealso \code{\link{r_shewhart_limits}}, \code{\link{r_exact_limits}},
+#' \code{\link{alpha.risk}}, \code{\link{cchart.S}},
 #' \code{\link{table.qtukey}}
 #' @export
 #' @author Daniela R. Recchia, Emanuel P. Barbosa
@@ -82,11 +88,12 @@ cchart.R <- function(x, n, type = c("norm", "tukey"), y = NULL)
     {
         if(is.null(y))
             stop("y must be supplied when type = 'tukey'")
+        sigma_hat <- sd.R(y)
+        lims <- r_exact_limits(sigma_hat, n)
         chart <- qcc(
             x,
             type = "R",
-            limits = c(qtukey(Q_LOWER, n, Inf) * sd.R(y),
-                       qtukey(Q_UPPER, n, Inf) * sd.R(y))
+            limits = c(lims$lcl, lims$ucl)
         )
     }
 

@@ -67,6 +67,8 @@ reference:
   - cchart.Xbar2
   - cchart.Xbar_R
   - cchart.R
+  - r_shewhart_limits
+  - r_exact_limits
   - cchart.S
   - alpha.risk
   - c4
