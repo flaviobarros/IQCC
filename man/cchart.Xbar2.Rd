@@ -2,30 +2,33 @@
 % Please edit documentation in R/cchart.Xbar2.R
 \name{cchart.Xbar2}
 \alias{cchart.Xbar2}
-\title{X-bar Shewhart Control Chart for phase II.}
+\title{Phase II X-bar Shewhart Control Chart}
 \usage{
 cchart.Xbar2(x, x2bar, sigma, sizes)
 }
 \arguments{
-\item{x}{The data to be plotted.}
+\item{x}{Phase II data. Matrix or data frame with subgroups in rows.}
 
-\item{x2bar}{The mean of means.}
+\item{x2bar}{Mean of subgroup means from Phase I (center line).}
 
-\item{sigma}{The standard deviation of the data.}
+\item{sigma}{Standard deviation from Phase I (for control limits).}
 
-\item{sizes}{A value or a vector of values specifying the sample sizes
-associated with each group.}
+\item{sizes}{Phase II subgroup size(s).}
 }
 \value{
-Return a x-bar control chart for phase II.
+Draws the X-bar control chart. Returns nothing.
 }
 \description{
-Builds the x-bar control chart for phase II.
+Builds the X-bar control chart for Phase II monitoring using reference
+limits obtained from a Phase I analysis. The Phase I estimates of
+\code{x2bar} (mean of means) and \code{sigma} (standard deviation) are
+required, typically obtained from \code{\link{cchart.Xbar1}}.
 }
-\details{
-To use this function it is necessary to have the output given by the
-function XbarI.
+\section{Phase convention}{
+
+Phase II \code{---} tests new data against Phase I reference distribution.
 }
+
 \examples{
 
 data(pistonrings)
@@ -33,8 +36,11 @@ stat <- cchart.Xbar1(pistonrings[1:25, ], 5)
 cchart.Xbar2(pistonrings[26:40, ], stat[[1]][1], stat[[1]][2], 5)
 
 }
+\references{
+Montgomery, D.C., (2009). "Introduction to Statistical Quality Control". Chapter 6. Wiley.
+}
 \seealso{
-\link{cchart.Xbar1}
+\code{\link{cchart.Xbar1}}, \code{\link{cchart.Xbar}}
 }
 \author{
 Daniela R. Recchia, Emanuel P. Barbosa

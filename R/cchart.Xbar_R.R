@@ -1,14 +1,18 @@
-#' X-bar and R control charts
+#' X-bar and R Control Charts
 #' 
-#' This function builds the X-bar and R control charts in the same window.
+#' Draws the X-bar control chart and the R (range) control chart side by
+#' side in the same graphics window, using estimated Phase I control limits.
+#' Both charts share the same subgroup data.
 #' 
-#' 
-#' @param x The data to be plotted.
-#' @param sizes A value or a vector of values specifying the sample sizes
-#' associated with each group.
-#' @return Return the two control charts.
+#' @param x Phase I data. Matrix or data frame with subgroups in rows.
+#' @param sizes Subgroup size(s). A single integer (equal sizes) or a vector.
+#' @return Draws two control charts side by side. Returns nothing.
+#' @section Phase convention:
+#' Phase I \code{---} control limits estimated from the data for both charts.
+#' @seealso \code{\link{cchart.Xbar1}}, \code{\link{cchart.Xbar2}}, \code{\link{cchart.Xbar}}
+#' @references Montgomery, D.C., (2009). "Introduction to Statistical Quality Control". Chapter 6. Wiley.
 #' @export
-#' @author Daniela R. Recchia, Emanuel P. Barbosa.
+#' @author Daniela R. Recchia, Emanuel P. Barbosa
 #' @importFrom graphics par
 #' @importFrom qcc qcc
 #' @examples

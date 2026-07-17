@@ -161,7 +161,7 @@ Phase I reference data establish the process scale and the fixed limits. Phase
 II data are prospective subgroups evaluated against that design. The exact IQCC
 wrapper makes this split explicit through `y` and `x` for the limits.
 
-```{r exact-r-chart, fig.alt='Exact R chart for Phase II piston-ring ranges'}
+```{r exact-r-chart}
 data(pistonrings)
 phase1 <- pistonrings[1:25, ]
 phase2 <- pistonrings[26:40, ]
@@ -187,7 +187,7 @@ the supplied `x`. It is appropriate for a retrospective chart of a stable
 reference data set, but its interface does not accept a separate Phase I scale
 for prospective Phase II monitoring.
 
-```{r conventional-r-chart, fig.alt='Classical R chart for piston-ring ranges'}
+```{r conventional-r-chart}
 r_chart_classical <- cchart.R(
   x = phase1,
   n = 5,
@@ -231,7 +231,7 @@ uses \(E(S)=c_4(n)\sigma\) and
 As with R, these moment-based limits are not equal-tail probability limits for
 small \(n\).
 
-```{r s-charts, fig.alt='Normalized and exact S charts for soft-drink data'}
+```{r s-charts}
 data(softdrink)
 s_chart_normalized <- cchart.S(softdrink, type = "n")
 s_chart_exact <- cchart.S(softdrink, type = "e", m = 10)
