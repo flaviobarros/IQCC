@@ -26,6 +26,8 @@ navbar:
         href: articles/high-quality-processes.html
       - text: Univariate dispersion monitoring
         href: articles/univariate-dispersion-monitoring.html
+      - text: Multivariate process monitoring
+        href: articles/multivariate-monitoring.html
       - text: Statistical foundations
         href: articles/statistical-foundations.html
     reference:
@@ -49,6 +51,7 @@ articles:
   contents:
   - high-quality-processes
   - univariate-dispersion-monitoring
+  - multivariate-monitoring
   - statistical-foundations
 
 reference:

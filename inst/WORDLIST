@@ -17,6 +17,7 @@ Moonroof
 Nonconformities
 Phase
 Pimentel
+Pre
 README
 SPC
 Shewhart
@@ -44,6 +45,7 @@ hardcoded
 infty
 leq
 lfloor
+
 mathrm
 moonroof
 nd
@@ -63,12 +65,11 @@ qcc
 qquad
 rfloor
 roadmap
-roxygen
 roundoff
+roxygen
 sidedness
 subgroup
 subgrouping
 subgroups
 testthat
 th
-univariate
