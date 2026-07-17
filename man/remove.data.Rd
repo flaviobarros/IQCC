@@ -2,21 +2,23 @@
 % Please edit documentation in R/remove.data.R
 \name{remove.data}
 \alias{remove.data}
-\title{Remove an undesirable observation.}
+\title{Remove an Observation from Phase I Data}
 \usage{
 remove.data(datum, i)
 }
 \arguments{
-\item{datum}{The data set. Should be an array.}
+\item{datum}{Phase I data (matrix for \eqn{n = 1}, 3D array for
+\eqn{n > 1}).}
 
-\item{i}{The index in the matrix of the data to be removed.}
+\item{i}{Index of the subgroup to remove (1-based).}
 }
 \value{
-Return the new data set without the observation that was removed.
+The data set without the \eqn{i}-th subgroup.
 }
 \description{
-This function removes an undesirable data that might be out of control in
-you data set. It is used at Hotelling T2 control charts for phase I.
+Remove the \eqn{i}-th subgroup from a Phase I data set (array or matrix).
+Used during Phase I retrospective analysis to eliminate out-of-control
+signals before recomputing reference limits.
 }
 \examples{
 
@@ -26,6 +28,9 @@ datum <- data.1(20, 10, mu, Sigma)
 # Removing the observatiob 13 from the data set "datum" and updating it:
 datum <- remove.data(datum, 13)
 
+}
+\seealso{
+\code{\link{data.1}}, \code{\link{T2.1}}
 }
 \author{
 Daniela R. Recchia, Emanuel P. Barbosa

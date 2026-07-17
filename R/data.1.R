@@ -1,20 +1,23 @@
-#' Hotelling Control Chart Phase I simulated data.
-#' 
-#' This function simulates a normal data set to be used in the phase I Hotelling
-#' control charts.
-#' 
-#' 
-#' @param m The number of samples to be generated.
-#' @param n The size of each sample. If they are individual observations, then
-#' use n = 1.
-#' @param mu The vector with the means of the data to be generated.
-#' @param Sigma The variance-covariance matrix of the data to
-#' be generated.
-#' @return Return an array with the simulated data.
+#' Simulate Phase I Multivariate Normal Data
+#'
+#' Generate \eqn{m} samples from a \eqn{p}-variate normal distribution for
+#' Phase I Hotelling T² chart development. For \eqn{n = 1}: returns an
+#' \eqn{m \times p} matrix. For \eqn{n > 1}: returns an
+#' \eqn{n \times p \times m} array.
+#'
+#' @param m Number of samples.
+#' @param n Sample size per subgroup. Use \eqn{n = 1} for individual
+#'   observations, \eqn{n > 1} for subgroups.
+#' @param mu Mean vector (length \eqn{p}).
+#' @param Sigma \eqn{p \times p} covariance matrix.
+#' @return For \eqn{n = 1}: an \eqn{m \times p} matrix. For \eqn{n > 1}: an
+#'   \eqn{n \times p \times m} array.
+#' @section Simulation:
+#'   Uses \code{MASS::mvrnorm()}. Set the seed externally for reproducibility.
+#' @seealso \code{\link{data.2}}, \code{\link{T2.1}}
+#' @importFrom MASS mvrnorm
 #' @export
 #' @author Daniela R. Recchia, Emanuel P. Barbosa
-#' @seealso \link{data.2}
-#' @importFrom MASS mvrnorm
 #' @examples
 #' 
 #' mu <- c(5.682, 88.22)

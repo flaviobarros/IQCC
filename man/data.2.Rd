@@ -2,32 +2,32 @@
 % Please edit documentation in R/data.2.R
 \name{data.2}
 \alias{data.2}
-\title{Hotelling Control Chart Phase II simulated data.}
+\title{Simulate Phase II Multivariate Normal Data}
 \usage{
 data.2(estat, n, delta = 0, p)
 }
 \arguments{
-\item{estat}{The values of the auxiliary statistics. Should be a list with
-the mean of means, the average variance-covariance matrix, and a matrix
-with the means of each sample.}
+\item{estat}{List from \code{\link{stats}} (Phase I estimates).}
 
-\item{n}{The size of each sample. If they are individual observations, use n
-= 1.}
+\item{n}{Subgroup size. Use \eqn{n = 1} for individual observations,
+\eqn{n > 1} for subgroups.}
 
-\item{delta}{A value to be added on the vector of means.}
+\item{delta}{Optional shift added to mean vector for out-of-control
+simulation.}
 
-\item{p}{The dimension.}
+\item{p}{Dimension.}
 }
 \value{
-Return an array with the simulated data.
+For \eqn{n = 1}: a numeric vector. For \eqn{n > 1}: an
+  \eqn{n \times p} matrix.
 }
 \description{
-This function simulate a normal data set to be used in the phase II
-Hotelling control charts.
+Generate a single new observation from \eqn{N(\mu_0 + \delta, \Sigma)} using
+Phase I reference parameters for Phase II monitoring.
 }
 \details{
-To use this function it is necessary to have the information about the phase
-I given by the functions data.1 and stats.
+To use this function it is necessary to have the information about Phase I
+given by the functions \code{\link{data.1}} and \code{\link{stats}}.
 }
 \examples{
 
@@ -40,7 +40,7 @@ datum2 <- data.2(estat, 10, p = 2)
 
 }
 \seealso{
-\link{data.1}
+\code{\link{data.1}}, \code{\link{T2.2}}
 }
 \author{
 Daniela R. Recchia, Emanuel P. Barbosa

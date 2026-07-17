@@ -1,22 +1,22 @@
-#' Hotelling Control Chart Phase II simulated data.
-#' 
-#' This function simulate a normal data set to be used in the phase II
-#' Hotelling control charts.
-#' 
-#' To use this function it is necessary to have the information about the phase
-#' I given by the functions data.1 and stats.
-#' 
-#' @param estat The values of the auxiliary statistics. Should be a list with
-#' the mean of means, the average variance-covariance matrix, and a matrix
-#' with the means of each sample.
-#' @param n The size of each sample. If they are individual observations, use n
-#' = 1.
-#' @param delta A value to be added on the vector of means.
-#' @param p The dimension.
-#' @return Return an array with the simulated data.
+#' Simulate Phase II Multivariate Normal Data
+#'
+#' Generate a single new observation from \eqn{N(\mu_0 + \delta, \Sigma)} using
+#' Phase I reference parameters for Phase II monitoring.
+#'
+#' To use this function it is necessary to have the information about Phase I
+#' given by the functions \code{\link{data.1}} and \code{\link{stats}}.
+#'
+#' @param estat List from \code{\link{stats}} (Phase I estimates).
+#' @param n Subgroup size. Use \eqn{n = 1} for individual observations,
+#'   \eqn{n > 1} for subgroups.
+#' @param delta Optional shift added to mean vector for out-of-control
+#'   simulation.
+#' @param p Dimension.
+#' @return For \eqn{n = 1}: a numeric vector. For \eqn{n > 1}: an
+#'   \eqn{n \times p} matrix.
+#' @seealso \code{\link{data.1}}, \code{\link{T2.2}}
 #' @export
 #' @author Daniela R. Recchia, Emanuel P. Barbosa
-#' @seealso \link{data.1}
 #' @examples
 #' 
 #' mu <- c(5.682, 88.22)

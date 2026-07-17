@@ -1,12 +1,14 @@
-#' Remove an undesirable observation.
-#' 
-#' This function removes an undesirable data that might be out of control in
-#' you data set. It is used at Hotelling T2 control charts for phase I.
-#' 
-#' 
-#' @param datum The data set. Should be an array.
-#' @param i The index in the matrix of the data to be removed.
-#' @return Return the new data set without the observation that was removed.
+#' Remove an Observation from Phase I Data
+#'
+#' Remove the \eqn{i}-th subgroup from a Phase I data set (array or matrix).
+#' Used during Phase I retrospective analysis to eliminate out-of-control
+#' signals before recomputing reference limits.
+#'
+#' @param datum Phase I data (matrix for \eqn{n = 1}, 3D array for
+#'   \eqn{n > 1}).
+#' @param i Index of the subgroup to remove (1-based).
+#' @return The data set without the \eqn{i}-th subgroup.
+#' @seealso \code{\link{data.1}}, \code{\link{T2.1}}
 #' @export
 #' @author Daniela R. Recchia, Emanuel P. Barbosa
 #' @examples

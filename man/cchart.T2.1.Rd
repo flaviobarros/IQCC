@@ -2,31 +2,40 @@
 % Please edit documentation in R/cchart.T2.1.R
 \name{cchart.T2.1}
 \alias{cchart.T2.1}
-\title{Phase I Hotelling Control Chart.}
+\title{Phase I Hotelling T² Control Chart}
 \usage{
 cchart.T2.1(T2, m, n, p)
 }
 \arguments{
-\item{T2}{The values of the T2 statistic. Should be a numeric vector.}
+\item{T2}{Numeric vector of T² statistics from \code{\link{T2.1}}.}
 
-\item{m}{The number of samples generated previously in data.1.}
+\item{m}{Number of subgroups in Phase I.}
 
-\item{n}{The size of each sample used previously in data.1. If they are
-individual observations, then use n = 1.}
+\item{n}{Subgroup size. Use \eqn{n = 1} for individual observations,
+\eqn{n > 1} for subgroups.}
 
-\item{p}{The dimension used previously in function data.1.}
+\item{p}{Number of variables (dimension).}
 }
 \value{
-Return a control chart.
+Draws the chart. Returns nothing.
 }
 \description{
-Builds the phase I Hotelling control chart.
+Build a Phase I T² control chart. For \eqn{n = 1}:
+\eqn{UCL = ((m-1)^2/m) \times qbeta(1-\alpha, p/2, (m-p-1)/2)}.
+For \eqn{n > 1}:
+\eqn{UCL = (p(m-1)(n-1))/(mn-m-p+1) \times qf(1-\alpha, p, mn-m-p+1)}.
+The control limits are based on the beta and F distributions.
 }
-\details{
-It builds the Hotelling T2 control chart for multivariate normal data (m
-samples / samples of size n > 1), used retrospective / validation analysis
-(phase I); the control limits are based on the F distribution.
+\section{Phase convention}{
+
+  Phase I retrospective analysis. All points are plotted simultaneously.
 }
+
+\section{Errors}{
+
+  Stop if \eqn{n < 1}.
+}
+
 \examples{
 
 mu <- c(5.682, 88.22)
@@ -39,11 +48,11 @@ cchart.T2.1(T2, 20, 10, 2)
 
 }
 \references{
-Montgomery, D.C.,(2008)."Introduction to Statistical Quality
-Control". Chapter 11. Wiley
+Montgomery, D.C., (2009). "Introduction to Statistical Quality
+Control". Chapter 11. Wiley.
 }
 \seealso{
-\link{cchart.T2.2}
+\code{\link{T2.1}}, \code{\link{cchart.T2.2}}
 }
 \author{
 Daniela R. Recchia, Emanuel P. Barbosa

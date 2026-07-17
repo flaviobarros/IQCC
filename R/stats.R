@@ -1,18 +1,23 @@
-#' Auxiliary statistics for the multivariate control chart.
-#' 
-#' This function calculate the auxiliary statistics necessary to build the
-#' control chart reference lines.
-#' 
-#' To use this function it is necessary to have the information about the
-#' data.1.
-#' 
-#' @param datum The data set. Should be an array.
-#' @param m The number of sub groups generated previously in data.1.
-#' @param n The size of each sub group used previously in data.1.
-#' @param p The dimension used previously in function data.1.
-#' @return Return the values of the three statistics: a vector with the mean of
-#' the means, the mean of the estimated variance-covariance matrixes and a
-#' matrix with the means of each sample.
+#' Auxiliary Statistics for Hotelling T² Charts
+#'
+#' Compute the reference statistics needed by \code{\link{T2.1}} and
+#' \code{\link{T2.2}} from Phase I data. Returns a list with: \code{[[1]]}
+#' grand mean vector (\eqn{\bar{\bar{x}}}), \code{[[2]]} pooled covariance
+#' matrix (\eqn{\bar{S}}), \code{[[3]]} matrix of subgroup means.
+#'
+#' To use this function it is necessary to have the information from
+#' \code{\link{data.1}}.
+#'
+#' @param datum For \eqn{n = 1}: \eqn{m \times p} matrix. For \eqn{n > 1}:
+#'   \eqn{n \times p \times m} array.
+#' @param m Number of subgroups.
+#' @param n Subgroup size.
+#' @param p Dimension.
+#' @return A list with three components: grand mean (vector), pooled covariance
+#'   (matrix), subgroup means (\eqn{m \times p} matrix).
+#' @section Phase convention:
+#'   Designed for Phase I reference data.
+#' @seealso \code{\link{T2.1}}, \code{\link{data.1}}
 #' @export
 #' @author Daniela R. Recchia, Emanuel P. Barbosa
 #' @examples

@@ -2,28 +2,35 @@
 % Please edit documentation in R/data.1.R
 \name{data.1}
 \alias{data.1}
-\title{Hotelling Control Chart Phase I simulated data.}
+\title{Simulate Phase I Multivariate Normal Data}
 \usage{
 data.1(m, n, mu, Sigma)
 }
 \arguments{
-\item{m}{The number of samples to be generated.}
+\item{m}{Number of samples.}
 
-\item{n}{The size of each sample. If they are individual observations, then
-use n = 1.}
+\item{n}{Sample size per subgroup. Use \eqn{n = 1} for individual
+observations, \eqn{n > 1} for subgroups.}
 
-\item{mu}{The vector with the means of the data to be generated.}
+\item{mu}{Mean vector (length \eqn{p}).}
 
-\item{Sigma}{The variance-covariance matrix of the data to
-be generated.}
+\item{Sigma}{\eqn{p \times p} covariance matrix.}
 }
 \value{
-Return an array with the simulated data.
+For \eqn{n = 1}: an \eqn{m \times p} matrix. For \eqn{n > 1}: an
+  \eqn{n \times p \times m} array.
 }
 \description{
-This function simulates a normal data set to be used in the phase I Hotelling
-control charts.
+Generate \eqn{m} samples from a \eqn{p}-variate normal distribution for
+Phase I Hotelling T² chart development. For \eqn{n = 1}: returns an
+\eqn{m \times p} matrix. For \eqn{n > 1}: returns an
+\eqn{n \times p \times m} array.
 }
+\section{Simulation}{
+
+  Uses \code{MASS::mvrnorm()}. Set the seed externally for reproducibility.
+}
+
 \examples{
 
 mu <- c(5.682, 88.22)
@@ -35,7 +42,7 @@ datum <- data.1(20, 10, mu, Sigma)
 
 }
 \seealso{
-\link{data.2}
+\code{\link{data.2}}, \code{\link{T2.1}}
 }
 \author{
 Daniela R. Recchia, Emanuel P. Barbosa

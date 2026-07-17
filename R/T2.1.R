@@ -1,23 +1,36 @@
-#' Hotelling T2 Statistic for Phase I.
-#' 
-#' Calculate the Hotelling T2 statistic for multivariate observations at phase
-#' I , to be used to build the corresponding control chart.
-#' 
-#' Before using this function it is necessary to execute the function
-#' "stats"(that calculate the auxiliary statistics involved in the T2 formula)
-#' and the function "data.1" (or other way to supply the data).
-#' 
-#' @param estat The values of the auxiliary statistics. Should be a list with a
-#' matrix with the means, mean of the means and mean of the standard deviation.
-#' @param m The number of samples generated previously in data.1.
-#' @param n The size of each samples used previously in data.1.
-#' @return Return a vector with the Hotelling T2 statistics.
+#' Hotelling T² Statistic for Phase I
+#'
+#' Calculate the Hotelling T² statistic for Phase I using estimated mean vector
+#' and covariance matrix. For individual observations (\eqn{n = 1}):
+#' \eqn{T^2 = x_i' S^{-1} x_i}. For subgroups (\eqn{n > 1}):
+#' \eqn{T^2_i = n (\bar{x}_i - \bar{\bar{x}})' S^{-1} (\bar{x}_i - \bar{\bar{x}})}.
+#'
+#' Before using this function it is necessary to execute \code{\link{stats}}
+#' (that calculates the auxiliary statistics involved in the T² formula) and
+#' the function \code{\link{data.1}} (or other way to supply the data).
+#'
+#' @param estat A list returned by \code{\link{stats}} with three components:
+#'   \code{[[1]]} grand mean vector, \code{[[2]]} pooled covariance matrix,
+#'   \code{[[3]]} matrix of subgroup means (\eqn{m \times p}).
+#' @param m Number of subgroups (Phase I sample size).
+#' @param n Subgroup size. Use \eqn{n = 1} for individual observations,
+#'   \eqn{n > 1} for subgroups.
+#' @return A numeric vector of length \eqn{m} with the T² statistics.
+#' @section Phase convention:
+#'   Phase I \code{---} uses parameters estimated from the same data being
+#'   plotted. The T² statistics are not independent.
+#' @section Errors:
+#'   Stop if \eqn{n < 1}.
+#' @section Decision rule:
+#'   A Phase I point signals when T² exceeds the UCL from
+#'   \code{\link{cchart.T2.1}}.
+#' @seealso \code{\link{T2.2}}, \code{\link{cchart.T2.1}},
+#'   \code{\link{stats}}, \code{\link{data.1}}
+#' @references Montgomery, D.C., (2009). "Introduction to Statistical Quality
+#' Control". Chapter 11. Wiley.
 #' @importFrom miscTools symMatrix
 #' @export
 #' @author Daniela R. Recchia, Emanuel P. Barbosa
-#' @seealso \link{stats}, \link{data.1}, \link{cchart.T2.1}
-#' @references Montgomery, D.C.,(2008)."Introduction to Statistical Quality
-#' Control". Chapter 11. Wiley.
 #' @examples
 #' 
 #' mu <- c(5.682, 88.22)
