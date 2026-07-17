@@ -1,9 +1,10 @@
-#' Piston Rings Data Set.
-#' 
-#' The Piston Rings data set was taken from Montgomery's book. It consists of
-#' 40 samples of size 5 each of values of the diameter of the piston rings.
-#' 
-#' 
+#' Piston Rings Diameter Data
+#'
+#' 40 subgroups of size 5 containing diameter measurements of piston rings.
+#' This data set is used extensively in statistical process control textbooks
+#' and throughout the IQCC package to illustrate \eqn{\bar{X}}, \eqn{R}, and
+#' \eqn{S} charts.
+#'
 #' @name pistonrings
 #' @docType data
 #' @format A data frame with 40 observations on the following 5 variables.
@@ -13,8 +14,8 @@
 #' \item{V3}{The third measure.} 
 #' \item{V4}{The fourth measure.} 
 #' \item{V5}{The fifth measure.} }
-#' @source Montgomery, D.C.,(2008)."Introduction to Statistical Quality
-#' Control".4th Ed. Wiley
+#' @source Montgomery, D. C. (2009). \emph{Introduction to Statistical Quality
+#' Control}, 6th ed. Wiley. ISBN 978-0-470-16992-6.
 #' @examples
 #' 
 #' data(pistonrings)

@@ -1,20 +1,30 @@
-#' Table of values for the constants d2, d3 and c4.
-#' 
-#' This function is used to build a table of values for the constants d2, d3
-#' and c4 for successive values of sample size n.
-#' 
-#' It builds a table in matrix form with 3 columns (one for each constant) and
-#' one row for each value of n from 2 to a specified value.
-#' 
-#' @param n The maximum size.
-#' @return Return the values of these three constants.
+#' Table of Control Chart Constants d2, d3, and c4
+#'
+#' Build a matrix with the constants \eqn{d_2}, \eqn{d_3}, and \eqn{c_4} for
+#' sample sizes \eqn{n = 2, 3, \ldots,} the specified maximum.
+#'
+#' The three constants are those returned by \code{\link{d2}},
+#' \code{\link{d3}}, and \code{\link{c4}} respectively. They are the standard
+#' Shewhart chart constants for the relative range and the standard deviation
+#' under normality.
+#'
+#' @param n Maximum sample size (must be \eqn{\ge 2}). The table includes rows
+#'   for \eqn{n = 2, 3, \ldots, n}.
+#' @return A matrix with \eqn{n - 1} rows and 3 columns named \code{"d2"},
+#'   \code{"d3"}, \code{"c4"}. Row names are the sample sizes.
 #' @export
 #' @author Daniela R. Recchia, Emanuel P. Barbosa
-#' @seealso \link{d2},\link{d3},\link{c4}
+#' @section Errors:
+#' Stops if \code{n < 2}, raised by the internal \code{\link{d2}} call.
+#' @references
+#' Montgomery, D. C. (2009). \emph{Introduction to Statistical Quality Control},
+#' 6th ed. Wiley.
+#' @seealso \code{\link{d2}}, \code{\link{d3}}, \code{\link{c4}}
 #' @examples
-#' 
-#' table.const(17)
-#' 
+#'
+#' table.const(10)
+#' table.const(5)
+#'
 table.const <- function(n)
 {
     n <- 2:n

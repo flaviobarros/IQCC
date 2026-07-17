@@ -2,31 +2,39 @@
 % Please edit documentation in R/c4.R
 \name{c4}
 \alias{c4}
-\title{C4 Constant.}
+\title{Bias Correction Constant for Sample Standard Deviation}
 \usage{
 c4(n)
 }
 \arguments{
-\item{n}{The sample size.}
+\item{n}{Integer sample size, at least 2. Can be a vector.}
 }
 \value{
-Return the value of c4 for a given sample size n.
+Numeric vector of \eqn{c_4} values, the same length as \code{n}.
 }
 \description{
-This function is used to calculate the bias correction constant c4 for the
-sample standard deviation statistic.
+Compute the constant \eqn{c_4}, which corrects the bias of the sample
+standard deviation \eqn{S} as an estimator of the process standard deviation
+\eqn{\sigma} under normality.
 }
 \details{
-It is used to correct the bias for small sample sizes in the sample standard
-deviation statistic.
+The constant is given by
+\deqn{c_4 = \sqrt{\frac{2}{n-1}} \,\frac{\Gamma(n/2)}{\Gamma\{(n-1)/2\}},}
+so that \eqn{E[S] = c_4 \, \sigma}. Multiplying \eqn{S} by \eqn{1 / c_4}
+produces an unbiased estimator of \eqn{\sigma}.
 }
 \examples{
 
 c4(5)
+c4(2:15)
 
 }
+\references{
+Montgomery, D. C. (2009). \emph{Introduction to Statistical Quality Control},
+6th ed. Wiley.
+}
 \seealso{
-\link{d2},\link{d3}
+\code{\link{d2}}, \code{\link{d3}}, \code{\link{table.const}}
 }
 \author{
 Daniela R. Recchia, Emanuel P. Barbosa

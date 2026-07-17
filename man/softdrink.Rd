@@ -3,7 +3,7 @@
 \docType{data}
 \name{softdrink}
 \alias{softdrink}
-\title{Soft Drink Data Set.}
+\title{Soft Drink Bottling Volume Data}
 \format{
 A data frame with 15 lines and 10 columns.  
 \describe{
@@ -14,18 +14,19 @@ A data frame with 15 lines and 10 columns.
 \item{x5}{The fifth measure.} 
 \item{x6}{The sixth measure.}
 \item{x7}{The seventh measure.} 
-\item{x8}{The eighth measure.} 
+\item{x8}{The eighth measure.}
 \item{x9}{The ninth measure.} 
 \item{x10}{The tenth
 measure.} }
 }
 \source{
-Montgomery, D.C.,(2001)."Introduction to Statistical Quality
-Control".4th ed. Wiley.
+Montgomery, D. C. (2009). \emph{Introduction to Statistical Quality
+Control}, 6th ed. Wiley.
 }
 \description{
-Consists of 15 samples of 10 bottles where it is measured the volume of soft
-drink.
+15 subgroups of size 10 containing volume measurements of soft drink bottles.
+This data set is used throughout the IQCC package for multivariate and
+univariate control chart examples.
 }
 \examples{
 
