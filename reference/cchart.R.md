@@ -46,6 +46,13 @@ showing the actual false-alarm probability returned by `alpha.risk(n)`.
 
 ## Details
 
+The numerical limits are computed by
+[`r_shewhart_limits`](https://flaviobarros.github.io/IQCC/reference/r_shewhart_limits.md)
+(for `type = "norm"`) or
+[`r_exact_limits`](https://flaviobarros.github.io/IQCC/reference/r_exact_limits.md)
+(for `type = "tukey"`), keeping the plotting wrapper separate from the
+pure limit calculations.
+
 For `type = "norm"`, limits are delegated to the standard `qcc`
 range-chart implementation. For `type = "tukey"`, the lower and upper
 limits are \$\$\hat\sigma F_W^{-1}(0.00135;n)\$\$ and \$\$\hat\sigma
@@ -78,6 +85,8 @@ Statistics - Simulation and Computation*, 42(2), 247–262.
 
 ## See also
 
+[`r_shewhart_limits`](https://flaviobarros.github.io/IQCC/reference/r_shewhart_limits.md),
+[`r_exact_limits`](https://flaviobarros.github.io/IQCC/reference/r_exact_limits.md),
 [`alpha.risk`](https://flaviobarros.github.io/IQCC/reference/alpha.risk.md),
 [`cchart.S`](https://flaviobarros.github.io/IQCC/reference/cchart.S.md),
 [`table.qtukey`](https://flaviobarros.github.io/IQCC/reference/table.qtukey.md)

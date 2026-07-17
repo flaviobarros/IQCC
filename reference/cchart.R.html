@@ -94,7 +94,12 @@ added below the plot showing the actual false-alarm probability returned by
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>For <code>type = "norm"</code>, limits are delegated to the standard
+    <p>The numerical limits are computed by <code><a href="r_shewhart_limits.html">r_shewhart_limits</a></code> (for
+<code>type = "norm"</code>) or <code><a href="r_exact_limits.html">r_exact_limits</a></code> (for <code>type =
+"tukey"</code>), keeping the plotting wrapper separate from the pure limit
+calculations.</p>
+
+<p>For <code>type = "norm"</code>, limits are delegated to the standard
 <code>qcc</code> range-chart implementation. For <code>type = "tukey"</code>, the
 lower and upper limits are
 $$\hat\sigma F_W^{-1}(0.00135;n)$$
@@ -130,7 +135,8 @@ Statistics - Simulation and Computation</em>, 42(2), 247–262.
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code><a href="alpha.risk.html">alpha.risk</a></code>, <code><a href="cchart.S.html">cchart.S</a></code>,
+    <div class="dont-index"><p><code><a href="r_shewhart_limits.html">r_shewhart_limits</a></code>, <code><a href="r_exact_limits.html">r_exact_limits</a></code>,
+<code><a href="alpha.risk.html">alpha.risk</a></code>, <code><a href="cchart.S.html">cchart.S</a></code>,
 <code><a href="table.qtukey.html">table.qtukey</a></code></p></div>
     </div>
     <div class="section level2">

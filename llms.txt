@@ -223,6 +223,10 @@ measurements.
   : X-bar and R control charts
 - [`cchart.R()`](https://flaviobarros.github.io/IQCC/reference/cchart.R.md)
   : Range Control Chart
+- [`r_shewhart_limits()`](https://flaviobarros.github.io/IQCC/reference/r_shewhart_limits.md)
+  : Conventional Three-Sigma Limits for the R Chart
+- [`r_exact_limits()`](https://flaviobarros.github.io/IQCC/reference/r_exact_limits.md)
+  : Exact Probability Limits for the R Chart
 - [`cchart.S()`](https://flaviobarros.github.io/IQCC/reference/cchart.S.md)
   : Standard-Deviation Control Chart
 - [`alpha.risk()`](https://flaviobarros.github.io/IQCC/reference/alpha.risk.md)
