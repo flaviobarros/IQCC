@@ -1,6 +1,7 @@
-# Moonroof
+# Moonroof Installation Defect Data
 
-A data set used to build an u-charts.
+34 subgroups with defect counts (`yi`) and sample sizes (`ni`) for
+moonroof installation. This data set is used for \\u\\-chart examples.
 
 ## Format
 
@@ -24,16 +25,8 @@ A data frame with 34 observations on the following 4 variables.
 
 ## Source
 
-DeVor, R.E.; Chang, T.; Sutherland, J.W., 2007. "Statistical Quality
-Design and Control".
-
-## Details
-
-Defect data for moonroof installation example.
-
-## References
-
-See the source.
+DeVor, R. E., Chang, T., and Sutherland, J. W. (2007). *Statistical
+Quality Design and Control*, 2nd ed. Pearson.
 
 ## Examples
 

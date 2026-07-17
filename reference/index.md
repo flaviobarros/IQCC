@@ -29,12 +29,12 @@ measurements.
   : Standard-Deviation Control Chart
 - [`alpha.risk()`](https://flaviobarros.github.io/IQCC/reference/alpha.risk.md)
   : False-Alarm Probability for the Three-Sigma R Chart
-- [`c4()`](https://flaviobarros.github.io/IQCC/reference/c4.md) : C4
-  Constant.
-- [`d2()`](https://flaviobarros.github.io/IQCC/reference/d2.md) : D2
-  Constant.
-- [`d3()`](https://flaviobarros.github.io/IQCC/reference/d3.md) : D3
-  Constant.
+- [`c4()`](https://flaviobarros.github.io/IQCC/reference/c4.md) : Bias
+  Correction Constant for Sample Standard Deviation
+- [`d2()`](https://flaviobarros.github.io/IQCC/reference/d2.md) : Mean
+  of the Relative Range
+- [`d3()`](https://flaviobarros.github.io/IQCC/reference/d3.md) :
+  Standard Deviation of the Relative Range
 
 ## Attribute control charts
 
@@ -83,13 +83,13 @@ monitoring.
 Hotelling T-squared and generalized variance charts.
 
 - [`T2.1()`](https://flaviobarros.github.io/IQCC/reference/T2.1.md) :
-  Hotelling T2 Statistic for Phase I.
+  Hotelling T² Statistic for Phase I
 - [`T2.2()`](https://flaviobarros.github.io/IQCC/reference/T2.2.md) :
-  Hotelling T2 Statistic for Phase II.
+  Hotelling T² Statistic for Phase II
 - [`cchart.T2.1()`](https://flaviobarros.github.io/IQCC/reference/cchart.T2.1.md)
-  : Phase I Hotelling Control Chart.
+  : Phase I Hotelling T² Control Chart
 - [`cchart.T2.2()`](https://flaviobarros.github.io/IQCC/reference/cchart.T2.2.md)
-  : Phase II Hotelling Control Chart.
+  : Phase II Hotelling T² Control Chart
 - [`gv_stat()`](https://flaviobarros.github.io/IQCC/reference/gv_stat.md)
   : Generalized Variance by Subgroup
 - [`gv_limits()`](https://flaviobarros.github.io/IQCC/reference/gv_limits.md)
@@ -119,27 +119,27 @@ Hotelling T-squared and generalized variance charts.
 ## Data preparation and utilities
 
 - [`data.1()`](https://flaviobarros.github.io/IQCC/reference/data.1.md)
-  : Hotelling Control Chart Phase I simulated data.
+  : Simulate Phase I Multivariate Normal Data
 - [`data.2()`](https://flaviobarros.github.io/IQCC/reference/data.2.md)
-  : Hotelling Control Chart Phase II simulated data.
+  : Simulate Phase II Multivariate Normal Data
 - [`add.data()`](https://flaviobarros.github.io/IQCC/reference/add.data.md)
-  : Updates the Hotelling Control Chart.
+  : Add a New Observation to a Phase II T² Chart
 - [`remove.data()`](https://flaviobarros.github.io/IQCC/reference/remove.data.md)
-  : Remove an undesirable observation.
+  : Remove an Observation from Phase I Data
 - [`stats()`](https://flaviobarros.github.io/IQCC/reference/stats.md) :
-  Auxiliary statistics for the multivariate control chart.
+  Auxiliary Statistics for Hotelling T² Charts
 - [`table.const()`](https://flaviobarros.github.io/IQCC/reference/table.const.md)
-  : Table of values for the constants d2, d3 and c4.
+  : Table of Control Chart Constants d2, d3, and c4
 - [`table.qtukey()`](https://flaviobarros.github.io/IQCC/reference/table.qtukey.md)
-  : Tukey Quantile Table
+  : Tukey Quantile Table for the Relative Range
 
 ## Example datasets
 
 - [`binomdata`](https://flaviobarros.github.io/IQCC/reference/binomdata.md)
-  : Binomial Data.
+  : Binomial Process Data for p-Charts
 - [`moonroof`](https://flaviobarros.github.io/IQCC/reference/moonroof.md)
-  : Moonroof
+  : Moonroof Installation Defect Data
 - [`pistonrings`](https://flaviobarros.github.io/IQCC/reference/pistonrings.md)
-  : Piston Rings Data Set.
+  : Piston Rings Diameter Data
 - [`softdrink`](https://flaviobarros.github.io/IQCC/reference/softdrink.md)
-  : Soft Drink Data Set.
+  : Soft Drink Bottling Volume Data

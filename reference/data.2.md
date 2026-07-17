@@ -1,7 +1,7 @@
-# Hotelling Control Chart Phase II simulated data.
+# Simulate Phase II Multivariate Normal Data
 
-This function simulate a normal data set to be used in the phase II
-Hotelling control charts.
+Generate a single new observation from \\N(\mu_0 + \delta, \Sigma)\\
+using Phase I reference parameters for Phase II monitoring.
 
 ## Usage
 
@@ -13,35 +13,39 @@ data.2(estat, n, delta = 0, p)
 
 - estat:
 
-  The values of the auxiliary statistics. Should be a list with the mean
-  of means, the average variance-covariance matrix, and a matrix with
-  the means of each sample.
+  List from
+  [`stats`](https://flaviobarros.github.io/IQCC/reference/stats.md)
+  (Phase I estimates).
 
 - n:
 
-  The size of each sample. If they are individual observations, use n =
-  1.
+  Subgroup size. Use \\n = 1\\ for individual observations, \\n \> 1\\
+  for subgroups.
 
 - delta:
 
-  A value to be added on the vector of means.
+  Optional shift added to mean vector for out-of-control simulation.
 
 - p:
 
-  The dimension.
+  Dimension.
 
 ## Value
 
-Return an array with the simulated data.
+For \\n = 1\\: a numeric vector. For \\n \> 1\\: an \\n \times p\\
+matrix.
 
 ## Details
 
-To use this function it is necessary to have the information about the
-phase I given by the functions data.1 and stats.
+To use this function it is necessary to have the information about Phase
+I given by the functions
+[`data.1`](https://flaviobarros.github.io/IQCC/reference/data.1.md) and
+[`stats`](https://flaviobarros.github.io/IQCC/reference/stats.md).
 
 ## See also
 
-[data.1](https://flaviobarros.github.io/IQCC/reference/data.1.md)
+[`data.1`](https://flaviobarros.github.io/IQCC/reference/data.1.md),
+[`T2.2`](https://flaviobarros.github.io/IQCC/reference/T2.2.md)
 
 ## Author
 

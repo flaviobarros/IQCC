@@ -1,6 +1,9 @@
-# Tukey Quantile Table
+# Tukey Quantile Table for the Relative Range
 
-Builds a table with quantiles of the sample relative range distribution.
+Print a table of quantiles of the studentized range distribution \\W = R
+/ \sigma\\ for sample sizes \\n = 2\\ through the specified maximum,
+using [`qtukey`](https://rdrr.io/r/stats/Tukey.html) with infinite
+denominator degrees of freedom.
 
 ## Usage
 
@@ -12,21 +15,40 @@ table.qtukey(alpha, n)
 
 - alpha:
 
-  The probability of type-I error of false alarm , that is equal to 1
-  minus the confidence level.
+  Type-I error probability (\\0 \< \alpha \< 1\\).
 
 - n:
 
-  The maximum sample size.
+  Maximum sample size (\\\ge 2\\).
 
 ## Value
 
-Returns a matrix with 4 columns containing the quantiles, printed to the
-console and returned invisibly.
+Invisibly, a matrix with \\n - 1\\ rows and 4 columns. The matrix is
+also printed to the console.
+
+## Details
+
+Four tail probabilities are tabulated for each \\n\\: \\\alpha/2\\,
+\\\alpha\\, \\1 - \alpha\\, and \\1 - \alpha/2\\. The default examples
+use \\\alpha = 0.0027\\ (US convention) and \\\alpha = 0.0020\\
+(European convention).
+
+## Errors
+
+Stops if `n < 2` or if `alpha` is not strictly between 0 and 1.
+
+## References
+
+Barbosa, E. P., Gneri, M. A. and Meneguetti, A. (2013). On the the
+evaluation of the relative range distribution. *Communications in
+Statistics - Simulation and Computation*, 42, 1311–1339.
+[doi:10.1080/03610918.2011.639967](https://doi.org/10.1080/03610918.2011.639967)
+.
 
 ## See also
 
-[table.const](https://flaviobarros.github.io/IQCC/reference/table.const.md),[alpha.risk](https://flaviobarros.github.io/IQCC/reference/alpha.risk.md),[qtukey](https://rdrr.io/r/stats/Tukey.html)
+[`alpha.risk`](https://flaviobarros.github.io/IQCC/reference/alpha.risk.md),
+[`cchart.R`](https://flaviobarros.github.io/IQCC/reference/cchart.R.md)
 
 ## Author
 
@@ -52,4 +74,15 @@ table.qtukey(0.0027, 15)
 #> 13 1.428067918 1.534493165 5.816219  6.046960
 #> 14 1.513279523 1.619738053 5.865398  6.094613
 #> 15 1.592376820 1.698718124 5.910733  6.138556
+table.qtukey(0.0020, 10)
+#>        alpha/2       alpha  1-alpha 1-alpha/2
+#> 2  0.001772454 0.003544911 4.370248  4.653508
+#> 3  0.060244727 0.085220362 4.798017  5.063453
+#> 4  0.199446016 0.251655687 5.053191  5.308804
+#> 5  0.367392008 0.438356130 5.234784  5.483754
+#> 6  0.534736270 0.617474738 5.375312  5.619333
+#> 7  0.691346609 0.781445264 5.489641  5.729754
+#> 8  0.834825690 0.929575684 5.585821  5.822728
+#> 9  0.965508168 1.063219041 5.668703  5.902906
+#> 10 1.084582650 1.184171044 5.741432  5.973307
 ```

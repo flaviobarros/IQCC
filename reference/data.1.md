@@ -1,7 +1,9 @@
-# Hotelling Control Chart Phase I simulated data.
+# Simulate Phase I Multivariate Normal Data
 
-This function simulates a normal data set to be used in the phase I
-Hotelling control charts.
+Generate \\m\\ samples from a \\p\\-variate normal distribution for
+Phase I Hotelling T² chart development. For \\n = 1\\: returns an \\m
+\times p\\ matrix. For \\n \> 1\\: returns an \\n \times p \times m\\
+array.
 
 ## Usage
 
@@ -13,28 +15,35 @@ data.1(m, n, mu, Sigma)
 
 - m:
 
-  The number of samples to be generated.
+  Number of samples.
 
 - n:
 
-  The size of each sample. If they are individual observations, then use
-  n = 1.
+  Sample size per subgroup. Use \\n = 1\\ for individual observations,
+  \\n \> 1\\ for subgroups.
 
 - mu:
 
-  The vector with the means of the data to be generated.
+  Mean vector (length \\p\\).
 
 - Sigma:
 
-  The variance-covariance matrix of the data to be generated.
+  \\p \times p\\ covariance matrix.
 
 ## Value
 
-Return an array with the simulated data.
+For \\n = 1\\: an \\m \times p\\ matrix. For \\n \> 1\\: an \\n \times p
+\times m\\ array.
+
+## Simulation
+
+Uses [`MASS::mvrnorm()`](https://rdrr.io/pkg/MASS/man/mvrnorm.html). Set
+the seed externally for reproducibility.
 
 ## See also
 
-[data.2](https://flaviobarros.github.io/IQCC/reference/data.2.md)
+[`data.2`](https://flaviobarros.github.io/IQCC/reference/data.2.md),
+[`T2.1`](https://flaviobarros.github.io/IQCC/reference/T2.1.md)
 
 ## Author
 

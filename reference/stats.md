@@ -1,7 +1,11 @@
-# Auxiliary statistics for the multivariate control chart.
+# Auxiliary Statistics for Hotelling T² Charts
 
-This function calculate the auxiliary statistics necessary to build the
-control chart reference lines.
+Compute the reference statistics needed by
+[`T2.1`](https://flaviobarros.github.io/IQCC/reference/T2.1.md) and
+[`T2.2`](https://flaviobarros.github.io/IQCC/reference/T2.2.md) from
+Phase I data. Returns a list with: `[[1]]` grand mean vector
+(\\\bar{\bar{x}}\\), `[[2]]` pooled covariance matrix (\\\bar{S}\\),
+`[[3]]` matrix of subgroup means.
 
 ## Usage
 
@@ -13,30 +17,39 @@ stats(datum, m, n, p)
 
 - datum:
 
-  The data set. Should be an array.
+  For \\n = 1\\: \\m \times p\\ matrix. For \\n \> 1\\: \\n \times p
+  \times m\\ array.
 
 - m:
 
-  The number of sub groups generated previously in data.1.
+  Number of subgroups.
 
 - n:
 
-  The size of each sub group used previously in data.1.
+  Subgroup size.
 
 - p:
 
-  The dimension used previously in function data.1.
+  Dimension.
 
 ## Value
 
-Return the values of the three statistics: a vector with the mean of the
-means, the mean of the estimated variance-covariance matrixes and a
-matrix with the means of each sample.
+A list with three components: grand mean (vector), pooled covariance
+(matrix), subgroup means (\\m \times p\\ matrix).
 
 ## Details
 
-To use this function it is necessary to have the information about the
-data.1.
+To use this function it is necessary to have the information from
+[`data.1`](https://flaviobarros.github.io/IQCC/reference/data.1.md).
+
+## Phase convention
+
+Designed for Phase I reference data.
+
+## See also
+
+[`T2.1`](https://flaviobarros.github.io/IQCC/reference/T2.1.md),
+[`data.1`](https://flaviobarros.github.io/IQCC/reference/data.1.md)
 
 ## Author
 

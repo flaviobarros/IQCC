@@ -1,7 +1,8 @@
-# Remove an undesirable observation.
+# Remove an Observation from Phase I Data
 
-This function removes an undesirable data that might be out of control
-in you data set. It is used at Hotelling T2 control charts for phase I.
+Remove the \\i\\-th subgroup from a Phase I data set (array or matrix).
+Used during Phase I retrospective analysis to eliminate out-of-control
+signals before recomputing reference limits.
 
 ## Usage
 
@@ -13,15 +14,20 @@ remove.data(datum, i)
 
 - datum:
 
-  The data set. Should be an array.
+  Phase I data (matrix for \\n = 1\\, 3D array for \\n \> 1\\).
 
 - i:
 
-  The index in the matrix of the data to be removed.
+  Index of the subgroup to remove (1-based).
 
 ## Value
 
-Return the new data set without the observation that was removed.
+The data set without the \\i\\-th subgroup.
+
+## See also
+
+[`data.1`](https://flaviobarros.github.io/IQCC/reference/data.1.md),
+[`T2.1`](https://flaviobarros.github.io/IQCC/reference/T2.1.md)
 
 ## Author
 

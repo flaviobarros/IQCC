@@ -1,6 +1,9 @@
-# Phase II Hotelling Control Chart.
+# Phase II Hotelling T² Control Chart
 
-Builds the sub group phase II Hotelling control chart.
+Build or update a Phase II T² chart. Can optionally display Phase I
+reference data. Limits: For \\n = 1\\: \\UCL = (p(m+1)(m-1))/(m^2-mp)
+\times qf(1-\alpha, p, m-p)\\. For \\n \> 1\\: \\UCL =
+(p(m+1)(n-1))/(mn-m-p+1) \times qf(1-\alpha, p, mn-m-p+1)\\.
 
 ## Usage
 
@@ -12,60 +15,59 @@ cchart.T2.2(T2II, m, n, j, t, p, datum = NULL, stats = NULL, T2 = NULL)
 
 - T2II:
 
-  A vector with the value of T2 statistic for one sample.
+  Vector with Phase II T² values (from
+  [`T2.2`](https://flaviobarros.github.io/IQCC/reference/T2.2.md)).
 
 - m:
 
-  The number of samples generated previously in data.1.
+  Number of Phase I subgroups.
 
 - n:
 
-  The size of each sample used previously in data.1. If they are
-  individual observations, use n = 1.
+  Subgroup size.
 
 - j:
 
-  The index of the current sample.
+  Index of the current Phase II sample (1-based).
 
 - t:
 
-  The maximum value of the x axis.
+  Maximum x-axis limit (number of Phase II samples to show).
 
 - p:
 
-  The dimension used previously in function data.1.
+  Number of variables.
 
 - datum:
 
-  The data set used in phase I.
+  Optional. Phase I data array to display reference points.
 
 - stats:
 
-  The auxiliary statistics created by the function stats.
+  Optional. Phase I statistics to compute T² if not provided.
 
 - T2:
 
-  The Hotelling T2 statistic for multivariate observations at phase I
-  created by the function T2.1.
+  Optional. Pre-computed Phase I T² values.
 
 ## Value
 
-Return a control chart.
+Draws the chart. Returns nothing.
 
-## Details
+## Phase convention
 
-It builds the Hotelling T2 control chart for multivariate normal data to
-be used in the operational phase (known as phase II); the control limits
-are based on the F distribution.
+Phase II monitoring. The vertical dashed line separates Phase I (left)
+from Phase II (right).
 
 ## References
 
-Montgomery, D.C.,(2008). "Introduction to Statistical Quality Control".
-Chapter 11. Wiley
+Montgomery, D.C., (2009). "Introduction to Statistical Quality Control".
+Chapter 11. Wiley.
 
 ## See also
 
-[cchart.T2.1](https://flaviobarros.github.io/IQCC/reference/cchart.T2.1.md)
+[`T2.2`](https://flaviobarros.github.io/IQCC/reference/T2.2.md),
+[`cchart.T2.1`](https://flaviobarros.github.io/IQCC/reference/cchart.T2.1.md)
 
 ## Author
 

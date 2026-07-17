@@ -1,7 +1,8 @@
-# Soft Drink Data Set.
+# Soft Drink Bottling Volume Data
 
-Consists of 15 samples of 10 bottles where it is measured the volume of
-soft drink.
+15 subgroups of size 10 containing volume measurements of soft drink
+bottles. This data set is used throughout the IQCC package for
+multivariate and univariate control chart examples.
 
 ## Format
 
@@ -49,8 +50,8 @@ A data frame with 15 lines and 10 columns.
 
 ## Source
 
-Montgomery, D.C.,(2001)."Introduction to Statistical Quality
-Control".4th ed. Wiley.
+Montgomery, D. C. (2009). *Introduction to Statistical Quality Control*,
+6th ed. Wiley.
 
 ## Examples
 

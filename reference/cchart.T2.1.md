@@ -1,6 +1,9 @@
-# Phase I Hotelling Control Chart.
+# Phase I Hotelling T² Control Chart
 
-Builds the phase I Hotelling control chart.
+Build a Phase I T² control chart. For \\n = 1\\: \\UCL = ((m-1)^2/m)
+\times qbeta(1-\alpha, p/2, (m-p-1)/2)\\. For \\n \> 1\\: \\UCL =
+(p(m-1)(n-1))/(mn-m-p+1) \times qf(1-\alpha, p, mn-m-p+1)\\. The control
+limits are based on the beta and F distributions.
 
 ## Usage
 
@@ -12,39 +15,43 @@ cchart.T2.1(T2, m, n, p)
 
 - T2:
 
-  The values of the T2 statistic. Should be a numeric vector.
+  Numeric vector of T² statistics from
+  [`T2.1`](https://flaviobarros.github.io/IQCC/reference/T2.1.md).
 
 - m:
 
-  The number of samples generated previously in data.1.
+  Number of subgroups in Phase I.
 
 - n:
 
-  The size of each sample used previously in data.1. If they are
-  individual observations, then use n = 1.
+  Subgroup size. Use \\n = 1\\ for individual observations, \\n \> 1\\
+  for subgroups.
 
 - p:
 
-  The dimension used previously in function data.1.
+  Number of variables (dimension).
 
 ## Value
 
-Return a control chart.
+Draws the chart. Returns nothing.
 
-## Details
+## Phase convention
 
-It builds the Hotelling T2 control chart for multivariate normal data (m
-samples / samples of size n \> 1), used retrospective / validation
-analysis (phase I); the control limits are based on the F distribution.
+Phase I retrospective analysis. All points are plotted simultaneously.
+
+## Errors
+
+Stop if \\n \< 1\\.
 
 ## References
 
-Montgomery, D.C.,(2008)."Introduction to Statistical Quality Control".
-Chapter 11. Wiley
+Montgomery, D.C., (2009). "Introduction to Statistical Quality Control".
+Chapter 11. Wiley.
 
 ## See also
 
-[cchart.T2.2](https://flaviobarros.github.io/IQCC/reference/cchart.T2.2.md)
+[`T2.1`](https://flaviobarros.github.io/IQCC/reference/T2.1.md),
+[`cchart.T2.2`](https://flaviobarros.github.io/IQCC/reference/cchart.T2.2.md)
 
 ## Author
 

@@ -1,7 +1,11 @@
-# Updates the Hotelling Control Chart.
+# Add a New Observation to a Phase II T² Chart
 
-This function is used to update the phase II control chart with new
-observations.
+Add a new Phase II point to an existing Hotelling T² chart. Computes the
+T² statistic via
+[`T2.2`](https://flaviobarros.github.io/IQCC/reference/T2.2.md) and
+plots it. Use after
+[`cchart.T2.2`](https://flaviobarros.github.io/IQCC/reference/cchart.T2.2.md)
+to build the chart incrementally.
 
 ## Usage
 
@@ -13,44 +17,45 @@ add.data(datum2, estat, T2II, n, j, m = NULL)
 
 - datum2:
 
-  The data set for the phase II. Should be a matrix.
+  New Phase II data (vector for \\n = 1\\, matrix for \\n \> 1\\).
 
 - estat:
 
-  The values of the auxiliary statistics. Should be a list with a vector
-  with the mean of the mean vectors, a matrix with the average of the
-  variance-covariance matrices and a matrix with the means.
+  Phase I statistics (list from
+  [`stats`](https://flaviobarros.github.io/IQCC/reference/stats.md)).
 
 - T2II:
 
-  A vector with the value of T2 statistic for one sample.
+  Previous T² vector (updated in calling code).
 
 - n:
 
-  The sample size. For individual observations, use n = 1.
+  Subgroup size. Use \\n = 1\\ for individual observations, \\n \> 1\\
+  for subgroups.
 
 - j:
 
-  The index of the current sample.
+  Index of this new sample.
 
 - m:
 
-  The number of samples in phase I. Only needed if the phase I data set
-  is show on the plot.
+  Optional. Number of Phase I samples (needed if Phase I data is shown).
 
 ## Value
 
-Add the new observation to the current Hotelling control chart for phase
-II. Returns the new T2 statistic invisibly.
+Invisibly, the new T² statistic.
 
 ## Details
 
 To use this function it is necessary to have the output given by the
-function T2.2. At every step you should entry with the new data set.
+function
+[`T2.2`](https://flaviobarros.github.io/IQCC/reference/T2.2.md). At
+every step you should enter the new data set.
 
 ## See also
 
-[T2.2](https://flaviobarros.github.io/IQCC/reference/T2.2.md)
+[`T2.2`](https://flaviobarros.github.io/IQCC/reference/T2.2.md),
+[`cchart.T2.2`](https://flaviobarros.github.io/IQCC/reference/cchart.T2.2.md)
 
 ## Author
 
