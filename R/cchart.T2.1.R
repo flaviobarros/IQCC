@@ -16,7 +16,8 @@
 #'   Phase I retrospective analysis. All points are plotted simultaneously.
 #' @section Errors:
 #'   Stop if \eqn{n < 1}.
-#' @seealso \code{\link{T2.1}}, \code{\link{cchart.T2.2}}
+#' @seealso \code{\link{T2.1}}, \code{\link{cchart.T2.2}},
+#'   \code{\link{robustez}}
 #' @references Montgomery, D.C., (2009). "Introduction to Statistical Quality
 #' Control". Chapter 11. Wiley.
 #' @importFrom graphics plot lines mtext abline axis title
