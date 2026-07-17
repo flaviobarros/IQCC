@@ -34,6 +34,12 @@ three-sigma approximation or exact probability limits from the distribution
 of the relative range \eqn{W = R / \sigma}.
 }
 \details{
+The numerical limits are computed by \code{\link{r_shewhart_limits}} (for
+\code{type = "norm"}) or \code{\link{r_exact_limits}} (for \code{type =
+"tukey"}), keeping the plotting wrapper separate from the pure limit
+calculations.
+
+
 For \code{type = "norm"}, limits are delegated to the standard
 \code{qcc} range-chart implementation. For \code{type = "tukey"}, the
 lower and upper limits are
@@ -74,6 +80,7 @@ Statistics - Simulation and Computation}, 42(2), 247--262.
 \doi{10.1080/03610918.2011.639967}.
 }
 \seealso{
+\code{\link{r_shewhart_limits}}, \code{\link{r_exact_limits}},
 \code{\link{alpha.risk}}, \code{\link{cchart.S}},
 \code{\link{table.qtukey}}
 }
