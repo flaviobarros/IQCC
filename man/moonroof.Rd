@@ -3,7 +3,7 @@
 \docType{data}
 \name{moonroof}
 \alias{moonroof}
-\title{Moonroof}
+\title{Moonroof Installation Defect Data}
 \format{
 A data frame with 34 observations on the following 4 variables.
 \describe{ 
@@ -13,20 +13,15 @@ A data frame with 34 observations on the following 4 variables.
 \item{ui}{The proportion of defects.} }
 }
 \source{
-DeVor, R.E.; Chang, T.; Sutherland, J.W., 2007. "Statistical Quality
-Design and Control".
+DeVor, R. E., Chang, T., and Sutherland, J. W. (2007).
+\emph{Statistical Quality Design and Control}, 2nd ed. Pearson.
 }
 \description{
-A data set used to build an u-charts.
-}
-\details{
-Defect data for moonroof installation example.
+34 subgroups with defect counts (\code{yi}) and sample sizes (\code{ni}) for
+moonroof installation. This data set is used for \eqn{u}-chart examples.
 }
 \examples{
 
 data(moonroof)
 
-}
-\references{
-See the source.
 }

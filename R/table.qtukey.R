@@ -1,21 +1,35 @@
-#' Tukey Quantile Table
-#' 
-#' Builds a table with quantiles of the sample relative range distribution.
-#' 
-#' 
-#' @param alpha The probability of type-I error of false alarm , that is equal
-#' to 1 minus the confidence level.
-#' @param n The maximum sample size.
-#' @return Returns a matrix with 4 columns containing the quantiles, printed to
-#' the console and returned invisibly.
+#' Tukey Quantile Table for the Relative Range
+#'
+#' Print a table of quantiles of the studentized range distribution
+#' \eqn{W = R / \sigma} for sample sizes \eqn{n = 2} through the specified
+#' maximum, using \code{\link[stats]{qtukey}} with infinite denominator degrees
+#' of freedom.
+#'
+#' Four tail probabilities are tabulated for each \eqn{n}: \eqn{\alpha/2},
+#' \eqn{\alpha}, \eqn{1 - \alpha}, and \eqn{1 - \alpha/2}. The default examples
+#' use \eqn{\alpha = 0.0027} (US convention) and \eqn{\alpha = 0.0020}
+#' (European convention).
+#'
+#' @param alpha Type-I error probability (\eqn{0 < \alpha < 1}).
+#' @param n Maximum sample size (\eqn{\ge 2}).
+#' @return Invisibly, a matrix with \eqn{n - 1} rows and 4 columns. The matrix
+#'   is also printed to the console.
 #' @export
 #' @author Daniela R. Recchia, Emanuel P. Barbosa
-#' @seealso \link{table.const},\link{alpha.risk},\link{qtukey}
+#' @section Errors:
+#' Stops if \code{n < 2} or if \code{alpha} is not strictly between 0 and 1.
+#' @references
+#' Barbosa, E. P., Gneri, M. A. and Meneguetti, A. (2013). On the the
+#' evaluation of the relative range distribution. \emph{Communications in
+#' Statistics - Simulation and Computation}, 42, 1311--1339.
+#' \doi{10.1080/03610918.2011.639967}.
+#' @seealso \code{\link{alpha.risk}}, \code{\link{cchart.R}}
 #' @importFrom stats qtukey
 #' @examples
-#' 
+#'
 #' table.qtukey(0.0027, 15)
-#' 
+#' table.qtukey(0.0020, 10)
+#'
 table.qtukey <- function(alpha, n)
 {
     u <- matrix(nrow = n, ncol = 4)
