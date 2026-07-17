@@ -10,6 +10,7 @@ Hotelling
 Joekes
 Kotz
 LCL
+Licence
 Meijer
 Meneguetti
 Moonroof
@@ -44,7 +45,7 @@ hardcoded
 infty
 leq
 lfloor
-Licence
+
 mathrm
 moonroof
 nd
@@ -67,6 +68,8 @@ roadmap
 roundoff
 roxygen
 sidedness
+subgroup
 subgrouping
+subgroups
 testthat
 th
