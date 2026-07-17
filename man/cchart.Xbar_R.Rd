@@ -2,22 +2,28 @@
 % Please edit documentation in R/cchart.Xbar_R.R
 \name{cchart.Xbar_R}
 \alias{cchart.Xbar_R}
-\title{X-bar and R control charts}
+\title{X-bar and R Control Charts}
 \usage{
 cchart.Xbar_R(x, sizes)
 }
 \arguments{
-\item{x}{The data to be plotted.}
+\item{x}{Phase I data. Matrix or data frame with subgroups in rows.}
 
-\item{sizes}{A value or a vector of values specifying the sample sizes
-associated with each group.}
+\item{sizes}{Subgroup size(s). A single integer (equal sizes) or a vector.}
 }
 \value{
-Return the two control charts.
+Draws two control charts side by side. Returns nothing.
 }
 \description{
-This function builds the X-bar and R control charts in the same window.
+Draws the X-bar control chart and the R (range) control chart side by
+side in the same graphics window, using estimated Phase I control limits.
+Both charts share the same subgroup data.
 }
+\section{Phase convention}{
+
+Phase I \code{---} control limits estimated from the data for both charts.
+}
+
 \examples{
 
 data(pistonrings)
@@ -25,6 +31,12 @@ attach(pistonrings)
 cchart.Xbar_R(pistonrings[1:25, ], 5)
 
 }
+\references{
+Montgomery, D.C., (2009). "Introduction to Statistical Quality Control". Chapter 6. Wiley.
+}
+\seealso{
+\code{\link{cchart.Xbar1}}, \code{\link{cchart.Xbar2}}, \code{\link{cchart.Xbar}}
+}
 \author{
-Daniela R. Recchia, Emanuel P. Barbosa.
+Daniela R. Recchia, Emanuel P. Barbosa
 }

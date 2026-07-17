@@ -1,18 +1,19 @@
-#' X-bar Shewhart Control Chart for phase I.
+#' Phase I X-bar Shewhart Control Chart
 #' 
-#' Builds the x-bar control chart for phase I.
+#' Builds the X-bar control chart for Phase I retrospective analysis. The
+#' control limits are estimated from the supplied data. Even if the data is
+#' not normal, the X-bar statistic is approximately normal by the central
+#' limit theorem when subgroup sizes are sufficiently large.
 #' 
-#' Even if the data is not normal the x-bar statistic will be close to the
-#' normal by the central limit theorem.
-#' 
-#' @param x The data to be plotted.
-#' @param sizes A value or a vector of values specifying the sample sizes
-#' associated with each group.
-#' @return Returns a list with the mean of means (x2bar) and the standard
-#' deviation (sigma), invisibly. Also plots the control chart as a side effect.
+#' @param x Phase I data. Matrix or data frame with subgroups in rows.
+#' @param sizes Subgroup size(s). A single integer (equal sizes) or a vector.
+#' @return A list with components \code{x2bar} (mean of subgroup means) and \code{sigma} (standard deviation), returned invisibly. The control chart is drawn as a side effect.
+#' @section Phase convention:
+#' Phase I \code{---} control limits estimated from the data.
+#' @seealso \code{\link{cchart.Xbar2}}, \code{\link{cchart.Xbar}}, \code{\link{cchart.Xbar_R}}
+#' @references Montgomery, D.C., (2009). "Introduction to Statistical Quality Control". Chapter 6. Wiley.
 #' @export
 #' @author Daniela R. Recchia, Emanuel P. Barbosa
-#' @seealso \link{cchart.Xbar2}
 #' @importFrom qcc qcc sd.xbar
 #' @examples
 #' 

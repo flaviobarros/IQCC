@@ -2,7 +2,7 @@
 % Please edit documentation in R/cchart.Xbar.R
 \name{cchart.Xbar}
 \alias{cchart.Xbar}
-\title{X-bar Control Chart for phase I and II.}
+\title{X-bar Control Chart for Phase I and Phase II}
 \usage{
 cchart.Xbar(
   x1 = NULL,
@@ -14,26 +14,36 @@ cchart.Xbar(
 )
 }
 \arguments{
-\item{x1}{The phase I data to be plotted.}
+\item{x1}{Phase I data. A matrix or data frame where each row is a subgroup.}
 
-\item{n1}{A value or a vector of values specifying the sample sizes
-associated with each group for the phase I data.}
+\item{n1}{Phase I subgroup size(s). A single integer (equal sizes) or a vector.}
 
-\item{x2}{The phase II data to be plotted.}
+\item{x2}{Phase II data. Same structure as x1.}
 
-\item{n2}{A value or a vector of values specifying the sample sizes
-associated with each group for the phase II data.}
+\item{n2}{Phase II subgroup size(s).}
 
-\item{x2bars}{The mean of means from phase I.}
+\item{x2bars}{Mean of subgroup means from Phase I (center line). Can be NULL and computed from x1.}
 
-\item{sigma}{The standard deviation from phase I.}
+\item{sigma}{Standard deviation from Phase I (for control limits). Can be NULL and computed from x1.}
 }
 \value{
-Return an x-bar control chart.
+Draws the X-bar control chart using \code{\link[qcc]{qcc}}. For Phase I only, invisibly returns a list with components \code{x2bar} (mean of means) and \code{sigma} (standard deviation).
 }
 \description{
-Builds the x-bar control chart for phase I or phase II.
+Builds and displays an X-bar control chart for Phase I (retrospective
+analysis), Phase II (monitoring of future production), or both phases
+in a single call. When Phase I data is supplied without Phase II data,
+the chart uses estimated control limits. If Phase II data is supplied
+without Phase I data, the chart requires \code{x2bars} and \code{sigma}
+as reference values.
 }
+\section{Phase convention}{
+
+Phase I when only Phase I data is supplied; limits are estimated from
+the data. Phase II when Phase II data is supplied (with or without
+Phase I reference data).
+}
+
 \examples{
 
 data(pistonrings)
@@ -41,8 +51,11 @@ cchart.Xbar(x1 = pistonrings[1:25, ], n1 = 5)
 cchart.Xbar(x1 = pistonrings[1:25, ], n1 = 5, x2 = pistonrings[26:40, ], n2 = 5)
 
 }
+\references{
+Montgomery, D.C., (2009). "Introduction to Statistical Quality Control". Chapter 6. Wiley.
+}
 \seealso{
-\link{cchart.Xbar1}, \link{cchart.Xbar2}
+\code{\link{cchart.Xbar1}}, \code{\link{cchart.Xbar2}}, \code{\link{cchart.Xbar_R}}
 }
 \author{
 Daniela R. Recchia, Emanuel P. Barbosa

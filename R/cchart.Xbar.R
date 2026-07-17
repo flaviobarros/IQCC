@@ -1,19 +1,27 @@
-#' X-bar Control Chart for phase I and II.
+#' X-bar Control Chart for Phase I and Phase II
 #'
-#' Builds the x-bar control chart for phase I or phase II.
+#' Builds and displays an X-bar control chart for Phase I (retrospective
+#' analysis), Phase II (monitoring of future production), or both phases
+#' in a single call. When Phase I data is supplied without Phase II data,
+#' the chart uses estimated control limits. If Phase II data is supplied
+#' without Phase I data, the chart requires \code{x2bars} and \code{sigma}
+#' as reference values.
 #'
-#' @param x1 The phase I data to be plotted.
-#' @param n1 A value or a vector of values specifying the sample sizes
-#' associated with each group for the phase I data.
-#' @param x2 The phase II data to be plotted.
-#' @param n2 A value or a vector of values specifying the sample sizes
-#' associated with each group for the phase II data.
-#' @param x2bars The mean of means from phase I.
-#' @param sigma The standard deviation from phase I.
-#' @return Return an x-bar control chart.
+#' @param x1 Phase I data. A matrix or data frame where each row is a subgroup.
+#' @param n1 Phase I subgroup size(s). A single integer (equal sizes) or a vector.
+#' @param x2 Phase II data. Same structure as x1.
+#' @param n2 Phase II subgroup size(s).
+#' @param x2bars Mean of subgroup means from Phase I (center line). Can be NULL and computed from x1.
+#' @param sigma Standard deviation from Phase I (for control limits). Can be NULL and computed from x1.
+#' @return Draws the X-bar control chart using \code{\link[qcc]{qcc}}. For Phase I only, invisibly returns a list with components \code{x2bar} (mean of means) and \code{sigma} (standard deviation).
+#' @section Phase convention:
+#' Phase I when only Phase I data is supplied; limits are estimated from
+#' the data. Phase II when Phase II data is supplied (with or without
+#' Phase I reference data).
+#' @seealso \code{\link{cchart.Xbar1}}, \code{\link{cchart.Xbar2}}, \code{\link{cchart.Xbar_R}}
+#' @references Montgomery, D.C., (2009). "Introduction to Statistical Quality Control". Chapter 6. Wiley.
 #' @export
 #' @author Daniela R. Recchia, Emanuel P. Barbosa
-#' @seealso \link{cchart.Xbar1}, \link{cchart.Xbar2}
 #' @importFrom qcc qcc sd.xbar
 #' @examples
 #'
