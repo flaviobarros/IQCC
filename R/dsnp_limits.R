@@ -36,6 +36,8 @@
 #' with no integer count in the warning zone.
 #' @param max_results Positive integer maximum number of ranked candidates to
 #' retain.
+#' @param curtailed Logical. If \code{TRUE}, use curtailed (truncated)
+#' inspection ASS instead of complete second-sample ASS. Default \code{FALSE}.
 #' @return A list with the following elements:
 #' \describe{
 #'   \item{best}{The first row of \code{candidates}, retained as a data frame.}
@@ -68,7 +70,8 @@ dsnp_limits <- function(p0, n1, n2, alpha = 0.0027,
                         p1 = NULL,
                         conservative = TRUE,
                         allow_empty_warning = FALSE,
-                        max_results = 20)
+                        max_results = 20,
+                        curtailed = FALSE)
 {
     p0 <- .dsnp_validate_probability(p0, "p0", scalar = TRUE)
     n1 <- .dsnp_validate_size(n1, "n1")
@@ -88,6 +91,8 @@ dsnp_limits <- function(p0, n1, n2, alpha = 0.0027,
        !is.finite(max_results) || max_results < 1 ||
        max_results != floor(max_results))
         stop("max_results must be a positive integer")
+    if(!is.logical(curtailed) || length(curtailed) != 1 || is.na(curtailed))
+        stop("curtailed must be TRUE or FALSE")
 
     rows <- vector("list", 0)
 
@@ -125,7 +130,11 @@ dsnp_limits <- function(p0, n1, n2, alpha = 0.0027,
                     pt0 <- perf0$pt
                     p_signal0 <- perf0$p_signal
                     arl0 <- perf0$arl
-                    ass0 <- perf0$ass
+                    ass0 <- if(curtailed)
+                        .dsnp_curtailed_ass(p0, n1, n2,
+                                            .dsnp_thresholds(wl, ucl1, ucl2))
+                    else
+                        perf0$ass
                 }
 
                 row <- list(
@@ -157,7 +166,11 @@ dsnp_limits <- function(p0, n1, n2, alpha = 0.0027,
                         pt1 <- perf1$pt
                         p_signal1 <- perf1$p_signal
                         arl1 <- perf1$arl
-                        ass1 <- perf1$ass
+                        ass1 <- if(curtailed)
+                            .dsnp_curtailed_ass(p1, n1, n2,
+                                                .dsnp_thresholds(wl, ucl1, ucl2))
+                        else
+                            perf1$ass
                     }
                     row$pt1 <- pt1
                     row$p_signal1 <- p_signal1

@@ -46,6 +46,8 @@
 #'   only when limits need to be computed via \code{dsnp_limits()}.
 #' @param p1 Optional out-of-control proportion. When provided, performance
 #'   metrics at \code{p1} are included in the returned object.
+#' @param curtailed Logical. If \code{TRUE}, use curtailed (truncated)
+#'   inspection ASS in the performance summary. Default \code{FALSE}.
 #' @param plot Logical. If \code{TRUE} (default), draws the control chart.
 #'   If \code{FALSE}, only returns the result object.
 #' @param ... Additional arguments passed to \code{plot()}.
@@ -60,7 +62,7 @@
 #'     \code{wl}, \code{ucl1}, \code{ucl2}, \code{wl_accept},
 #'     \code{ucl1_reject}, \code{ucl2_accept}.}
 #'   \item{parameters}{A list with \code{n1}, \code{n2}, \code{p0},
-#'     \code{alpha}, and \code{p1}.}
+#'     \code{alpha}, \code{p1}, and \code{curtailed}.}
 #'   \item{performance}{A list with in-control performance metrics
 #'     (\code{arl0}, \code{ass0}, \code{p_signal0}), and optionally
 #'     out-of-control metrics (\code{arl1}, \code{ass1},
@@ -93,6 +95,7 @@ cchart.DSnp <- function(x1, n1, n2, p0,
                         limits = NULL,
                         alpha = 0.0027,
                         p1 = NULL,
+                        curtailed = FALSE,
                         plot = TRUE,
                         ...)
 {
@@ -234,7 +237,7 @@ cchart.DSnp <- function(x1, n1, n2, p0,
     )
 
     arl0_res <- dsnp_arl(p0, n1, n2, wl, ucl1, ucl2)
-    ass0_res <- dsnp_ass(p0, n1, n2, wl, ucl1)
+    ass0_res <- dsnp_ass(p0, n1, n2, wl, ucl1, ucl2, curtailed = curtailed)
     pa0_res <- dsnp_prob_accept(p0, n1, n2, wl, ucl1, ucl2)
 
     performance <- list(
@@ -246,7 +249,7 @@ cchart.DSnp <- function(x1, n1, n2, p0,
     if(!is.null(p1))
     {
         arl1_res <- dsnp_arl(p1, n1, n2, wl, ucl1, ucl2)
-        ass1_res <- dsnp_ass(p1, n1, n2, wl, ucl1)
+        ass1_res <- dsnp_ass(p1, n1, n2, wl, ucl1, ucl2, curtailed = curtailed)
         pa1_res <- dsnp_prob_accept(p1, n1, n2, wl, ucl1, ucl2)
         performance$arl1 <- arl1_res$arl
         performance$ass1 <- ass1_res$ass
@@ -269,7 +272,8 @@ cchart.DSnp <- function(x1, n1, n2, p0,
             n2 = n2,
             p0 = p0,
             alpha = alpha,
-            p1 = p1
+            p1 = p1,
+            curtailed = curtailed
         ),
         performance = performance
     )

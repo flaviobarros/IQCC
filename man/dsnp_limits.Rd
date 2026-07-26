@@ -12,7 +12,8 @@ dsnp_limits(
   p1 = NULL,
   conservative = TRUE,
   allow_empty_warning = FALSE,
-  max_results = 20
+  max_results = 20,
+  curtailed = FALSE
 )
 }
 \arguments{
@@ -37,6 +38,9 @@ with no integer count in the warning zone.}
 
 \item{max_results}{Positive integer maximum number of ranked candidates to
 retain.}
+
+\item{curtailed}{Logical. If \code{TRUE}, use curtailed (truncated)
+inspection ASS instead of complete second-sample ASS. Default \code{FALSE}.}
 }
 \value{
 A list with the following elements:

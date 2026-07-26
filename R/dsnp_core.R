@@ -1,5 +1,37 @@
 # Internal validation and probability helpers for DS-np charts.
 
+# Internal helper: compute curtailed (truncated inspection) average sample
+# size.  Uses the same parameters as dsnp_ass(..., curtailed = TRUE).
+# p may be a vector; n1, n2, wl, ucl1, ucl2 are scalars.
+# Requires th to contain valid .dsnp_thresholds output with ucl2_accept.
+.dsnp_curtailed_ass <- function(p, n1, n2, th)
+{
+    vapply(
+        seq_along(p),
+        function(i)
+        {
+            prob <- p[i]
+            if(th$d1_lower > th$d1_upper)
+                return(n1)
+
+            d1_vals <- seq.int(th$d1_lower, th$d1_upper)
+            e_m <- vapply(
+                d1_vals,
+                function(d1)
+                {
+                    r <- th$ucl2_accept - d1 + 1L
+                    if(r <= 0L)
+                        return(0)
+                    sum(stats::pbinom(r - 1L, 0:(n2 - 1L), prob))
+                },
+                numeric(1)
+            )
+            n1 + sum(stats::dbinom(d1_vals, n1, prob) * e_m)
+        },
+        numeric(1)
+    )
+}
+
 .dsnp_validate_probability <- function(p, name = "p", scalar = FALSE)
 {
     if(scalar)
