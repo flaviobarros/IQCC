@@ -74,9 +74,12 @@
 #'   the search.
 #' @param ass0_max Optional maximum in-control average sample size. When
 #'   supplied, it must be a finite positive scalar and candidates must satisfy
-#'   \code{ass0 <= ass0_max}. The current ASS calculation follows equation
-#'   (15) of Joekes et al. (2015) and assumes complete inspection of the second
-#'   sample whenever the first-stage count is in the warning region.
+#'   \code{ass0 <= ass0_max}. The ASS calculation follows equation (15) of
+#'   Joekes et al. (2015); when \code{curtailed = TRUE} the expected inspection
+#'   of the second sample reflects truncated (curtailed) inspection.
+#' @param curtailed Logical. If \code{TRUE}, use curtailed (truncated)
+#'   inspection ASS instead of complete second-sample ASS. Default
+#'   \code{FALSE}.
 #' @return An object of class \code{"dsnp_design"} with the following
 #' elements:
 #' \describe{
@@ -126,7 +129,8 @@ dsnp_design <- function(
     allow_empty_warning = FALSE,
     max_results = 20,
     progress = FALSE,
-    ass0_max = NULL
+    ass0_max = NULL,
+    curtailed = FALSE
 )
 {
     # --- Validate p0 and p1 ---
@@ -192,6 +196,8 @@ dsnp_design <- function(
         stop("max_results must be a positive integer")
     if(length(progress) != 1 || !is.logical(progress) || is.na(progress))
         stop("progress must be a logical scalar (TRUE or FALSE)")
+    if(!is.logical(curtailed) || length(curtailed) != 1 || is.na(curtailed))
+        stop("curtailed must be TRUE or FALSE")
 
     # --- Determine effective alpha for dsnp_limits ---
     alpha_for_limits <- if(!is.null(alpha)) alpha else 1 / arl0_min
@@ -228,7 +234,8 @@ dsnp_design <- function(
                     p1 = p1,
                     conservative = TRUE,
                     allow_empty_warning = allow_empty_warning,
-                    max_results = .Machine$integer.max
+                    max_results = .Machine$integer.max,
+                    curtailed = curtailed
                 ),
                 error = function(e)
                 {
@@ -386,7 +393,8 @@ dsnp_design <- function(
             objective = objective,
             weights = weights,
             allow_empty_warning = allow_empty_warning,
-            max_results = max_results
+            max_results = max_results,
+            curtailed = curtailed
         ),
         search = list(
             n_pairs_evaluated = as.integer(n_candidates_total),

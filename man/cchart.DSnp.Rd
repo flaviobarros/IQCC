@@ -16,6 +16,7 @@ cchart.DSnp(
   limits = NULL,
   alpha = 0.0027,
   p1 = NULL,
+  curtailed = FALSE,
   plot = TRUE,
   ...
 )
@@ -52,6 +53,9 @@ only when limits need to be computed via \code{dsnp_limits()}.}
 \item{p1}{Optional out-of-control proportion. When provided, performance
 metrics at \code{p1} are included in the returned object.}
 
+\item{curtailed}{Logical. If \code{TRUE}, use curtailed (truncated)
+inspection ASS in the performance summary. Default \code{FALSE}.}
+
 \item{plot}{Logical. If \code{TRUE} (default), draws the control chart.
 If \code{FALSE}, only returns the result object.}
 
@@ -68,7 +72,7 @@ following elements:
     \code{wl}, \code{ucl1}, \code{ucl2}, \code{wl_accept},
     \code{ucl1_reject}, \code{ucl2_accept}.}
   \item{parameters}{A list with \code{n1}, \code{n2}, \code{p0},
-    \code{alpha}, and \code{p1}.}
+    \code{alpha}, \code{p1}, and \code{curtailed}.}
   \item{performance}{A list with in-control performance metrics
     (\code{arl0}, \code{ass0}, \code{p_signal0}), and optionally
     out-of-control metrics (\code{arl1}, \code{ass1},
