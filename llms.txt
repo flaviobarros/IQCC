@@ -284,6 +284,10 @@ monitoring.
 
 Hotelling T-squared and generalized variance charts.
 
+- [`robustez`](https://flaviobarros.github.io/IQCC/reference/robustez.md)
+  : Asymptotic Robustness of Hotelling T²
+- [`sim_t2_asymptotic()`](https://flaviobarros.github.io/IQCC/reference/sim_t2_asymptotic.md)
+  : Simulate Asymptotic Distribution of Hotelling T²
 - [`T2.1()`](https://flaviobarros.github.io/IQCC/reference/T2.1.md) :
   Hotelling T² Statistic for Phase I
 - [`T2.2()`](https://flaviobarros.github.io/IQCC/reference/T2.2.md) :

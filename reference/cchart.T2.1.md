@@ -51,7 +51,8 @@ Chapter 11. Wiley.
 ## See also
 
 [`T2.1`](https://flaviobarros.github.io/IQCC/reference/T2.1.md),
-[`cchart.T2.2`](https://flaviobarros.github.io/IQCC/reference/cchart.T2.2.md)
+[`cchart.T2.2`](https://flaviobarros.github.io/IQCC/reference/cchart.T2.2.md),
+[`robustez`](https://flaviobarros.github.io/IQCC/reference/robustez.md)
 
 ## Author
 
