@@ -81,22 +81,37 @@ control limits may therefore be poorly calibrated, even when the usual
 chart is familiar and easy to apply.</p>
 <p>IQCC addresses this problem with corrected p-chart limits, exact
 binomial false-alarm calculations, and a complete double-sampling np
-workflow including performance evaluation, automatic limit search, chart
-construction, and plotting.</p>
+(DS-np) workflow including performance evaluation, automatic limit
+search, chart construction, and plotting.</p>
 </div>
 <div class="section level2">
-<h2 id="cornish-fisher-corrected-p-charts">Cornish-Fisher corrected p charts<a class="anchor" aria-label="anchor" href="#cornish-fisher-corrected-p-charts"></a>
+<h2 id="when-to-correct-the-p-chart">When to correct the p chart<a class="anchor" aria-label="anchor" href="#when-to-correct-the-p-chart"></a>
 </h2>
-<p>IQCC distinguishes two corrected methods:</p>
+<p>The standard p-chart three-sigma limits,</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>U</mi><mi>C</mi><mi>L</mi><mo>=</mo><mover><mi>p</mi><mo accent="true">̂</mo></mover><mo>+</mo><mn>3</mn><msqrt><mrow><mover><mi>p</mi><mo accent="true">̂</mo></mover><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><mover><mi>p</mi><mo accent="true">̂</mo></mover><mo stretchy="false" form="postfix">)</mo><mi>/</mi><mi>n</mi></mrow></msqrt><mo>,</mo><mspace width="2.0em"></mspace><mi>L</mi><mi>C</mi><mi>L</mi><mo>=</mo><mover><mi>p</mi><mo accent="true">̂</mo></mover><mo>−</mo><mn>3</mn><msqrt><mrow><mover><mi>p</mi><mo accent="true">̂</mo></mover><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><mover><mi>p</mi><mo accent="true">̂</mo></mover><mo stretchy="false" form="postfix">)</mo><mi>/</mi><mi>n</mi></mrow></msqrt><mo>,</mo></mrow><annotation encoding="application/x-tex">
+UCL = \hat p + 3\sqrt{\hat p(1 - \hat p)/n},\qquad
+LCL = \hat p - 3\sqrt{\hat p(1 - \hat p)/n},
+</annotation></semantics></math></p>
+<p>rely on a normal approximation to the binomial. When the expected
+number of nonconformities
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mi>p</mi></mrow><annotation encoding="application/x-tex">np</annotation></semantics></math>
+is small, the binomial distribution is skewed and the actual false-alarm
+probability of the normal limits can be far from the nominal
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>0.0027</mn><annotation encoding="application/x-tex">0.0027</annotation></semantics></math>.
+The Cornish-Fisher expansion adjusts the quantile to account for
+skewness, yielding two corrected methods in IQCC:</p>
 <ul>
 <li>
-<code>type = "cf1"</code> uses the first skewness correction;</li>
+<code>type = "cf1"</code> applies the first skewness
+correction;</li>
 <li>
-<code>type = "cf2"</code> uses the two-adjustment operational limits
-documented by Joekes and Barbosa (2013).</li>
+<code>type = "cf2"</code> applies the two-adjustment operational
+limits from Joekes and Barbosa (2013).</li>
 </ul>
-<p>The following chunk is executed and compares all three limit
-methods.</p>
+<p>The following table compares the nominal and actual performance for
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mn>0.015</mn></mrow><annotation encoding="application/x-tex">p = 0.015</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>=</mo><mn>20</mn></mrow><annotation encoding="application/x-tex">n = 20</annotation></semantics></math>:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">methods</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"normal"</span>, <span class="st">"cf1"</span>, <span class="st">"cf2"</span><span class="op">)</span></span>
 <span><span class="va">p_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span></span>
@@ -124,6 +139,9 @@ methods.</p>
 <span><span class="co">#&gt; 1 normal   0  0.015 0.09653924 0.0357458712   27.97526</span></span>
 <span><span class="co">#&gt; 2    cf1   0  0.015 0.16120479 0.0002023458 4942.03542</span></span>
 <span><span class="co">#&gt; 3    cf2   0  0.015 0.13031923 0.0031780828  314.65511</span></span></code></pre></div>
+<p>The normal limits produce an ARL0 of only about 28 subgroups, far
+below the nominal 370. The CF2 correction brings the actual risk
+substantially closer to the target.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">binomdata</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/cchart.p.html">cchart.p</a></span><span class="op">(</span></span>
@@ -134,16 +152,45 @@ methods.</p>
 <span>  n2 <span class="op">=</span> <span class="va">binomdata</span><span class="op">$</span><span class="va">ni</span><span class="op">[</span><span class="fl">13</span><span class="op">:</span><span class="fl">25</span><span class="op">]</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p><img src="high-quality-processes_files/figure-html/p-chart-figure-1.png" class="r-plt" alt="" width="672"></p>
+<div class="section level3">
+<h3 id="diagnosing-p-chart-applicability">Diagnosing p-chart applicability<a class="anchor" aria-label="anchor" href="#diagnosing-p-chart-applicability"></a>
+</h3>
+<p>A useful diagnostic is the expected number of nonconformities per
+subgroup,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mover><mi>p</mi><mo accent="true">̂</mo></mover></mrow><annotation encoding="application/x-tex">n \hat p</annotation></semantics></math>.
+When
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mover><mi>p</mi><mo accent="true">̂</mo></mover><mo>&lt;</mo><mn>5</mn></mrow><annotation encoding="application/x-tex">n \hat p &lt; 5</annotation></semantics></math>,
+the normal approximation is unreliable and corrected limits or a
+double-sampling plan should be considered.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">p_candidate</span> <span class="op">&lt;-</span> <span class="fl">0.015</span></span>
+<span><span class="va">n_candidate</span> <span class="op">&lt;-</span> <span class="fl">20</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"n * p ="</span>, <span class="va">n_candidate</span> <span class="op">*</span> <span class="va">p_candidate</span>, <span class="st">"\n"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; n * p = 0.3</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"Recommendation:"</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">n_candidate</span> <span class="op">*</span> <span class="va">p_candidate</span> <span class="op">&lt;</span> <span class="fl">5</span>,</span>
+<span>           <span class="st">"use CF limits or consider DS-np"</span>,</span>
+<span>           <span class="st">"normal approximation may be adequate"</span><span class="op">)</span>,</span>
+<span>    <span class="st">"\n"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Recommendation: use CF limits or consider DS-np</span></span></code></pre></div>
+</div>
 </div>
 <div class="section level2">
 <h2 id="double-sampling-np-charts">Double-sampling np charts<a class="anchor" aria-label="anchor" href="#double-sampling-np-charts"></a>
 </h2>
 <p>A double-sampling np chart uses two possible sampling stages. A first
-sample is inspected. If the count of nonconforming items is clearly
-acceptable, the process is not signaled. If it is clearly large, the
-chart signals immediately. If the count lies in an intermediate region,
-a second sample is inspected and the combined count is used for the
-final decision.</p>
+sample of size
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>n</mi><mn>1</mn></msub><annotation encoding="application/x-tex">n_1</annotation></semantics></math>
+is inspected. If the count of nonconforming items is at most
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">⌊</mo><mi>W</mi><mi>L</mi><mo stretchy="false" form="postfix">⌋</mo></mrow><annotation encoding="application/x-tex">\lfloor WL \rfloor</annotation></semantics></math>,
+the process is accepted. If it is at least
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">⌊</mo><mi>U</mi><mi>C</mi><msub><mi>L</mi><mn>1</mn></msub><mo stretchy="false" form="postfix">⌋</mo><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\lfloor UCL_1 \rfloor + 1</annotation></semantics></math>,
+the chart signals immediately. Otherwise the count lies in the warning
+zone and a second sample of size
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>n</mi><mn>2</mn></msub><annotation encoding="application/x-tex">n_2</annotation></semantics></math>
+is inspected. After the second sample, the process is accepted when
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>D</mi><mn>1</mn></msub><mo>+</mo><msub><mi>D</mi><mn>2</mn></msub><mo>≤</mo><mo stretchy="false" form="prefix">⌊</mo><mi>U</mi><mi>C</mi><msub><mi>L</mi><mn>2</mn></msub><mo stretchy="false" form="postfix">⌋</mo></mrow><annotation encoding="application/x-tex">D_1 + D_2 \le \lfloor UCL_2 \rfloor</annotation></semantics></math>
+and signals otherwise.</p>
 <p>IQCC provides the complete DS-np workflow:</p>
 <ul>
 <li>
@@ -152,9 +199,11 @@ probability;</li>
 <li>
 <code><a href="../reference/dsnp_arl.html">dsnp_arl()</a></code> computes average run length;</li>
 <li>
-<code><a href="../reference/dsnp_ass.html">dsnp_ass()</a></code> computes average sample size;</li>
+<code><a href="../reference/dsnp_ass.html">dsnp_ass()</a></code> computes average sample size, with or
+without curtailed (truncated) second-stage inspection;</li>
 <li>
-<code><a href="../reference/dsnp_limits.html">dsnp_limits()</a></code> searches and ranks feasible limits;</li>
+<code><a href="../reference/dsnp_limits.html">dsnp_limits()</a></code> searches and ranks feasible fractional
+limits;</li>
 <li>
 <code><a href="../reference/dsnp_design.html">dsnp_design()</a></code> searches sample sizes and limits under
 explicit ARL and ASS constraints;</li>
@@ -162,11 +211,19 @@ explicit ARL and ASS constraints;</li>
 <code><a href="../reference/cchart.DSnp.html">cchart.DSnp()</a></code> classifies observations and constructs
 the chart.</li>
 </ul>
-</div>
-<div class="section level2">
-<h2 id="inspecting-a-published-plan">Inspecting a published plan<a class="anchor" aria-label="anchor" href="#inspecting-a-published-plan"></a>
-</h2>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="section level3">
+<h3 id="inspecting-a-published-plan">Inspecting a published plan<a class="anchor" aria-label="anchor" href="#inspecting-a-published-plan"></a>
+</h3>
+<p>Joekes, Smrekar and Barbosa (2015, Table 5) report a DS-np plan for
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mn>0</mn></msub><mo>=</mo><mn>0.005</mn></mrow><annotation encoding="application/x-tex">p_0 = 0.005</annotation></semantics></math>
+with
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>n</mi><mn>1</mn></msub><mo>=</mo><mn>34</mn></mrow><annotation encoding="application/x-tex">n_1 = 34</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>n</mi><mn>2</mn></msub><mo>=</mo><mn>162</mn></mrow><annotation encoding="application/x-tex">n_2 = 162</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>W</mi><mi>L</mi><mo>=</mo><mn>1.5</mn></mrow><annotation encoding="application/x-tex">WL = 1.5</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>U</mi><mi>C</mi><msub><mi>L</mi><mn>1</mn></msub><mo>=</mo><mn>2.5</mn></mrow><annotation encoding="application/x-tex">UCL_1 = 2.5</annotation></semantics></math>,
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>U</mi><mi>C</mi><msub><mi>L</mi><mn>2</mn></msub><mo>=</mo><mn>4.5</mn></mrow><annotation encoding="application/x-tex">UCL_2 = 4.5</annotation></semantics></math>:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">n1</span> <span class="op">&lt;-</span> <span class="fl">34</span></span>
 <span><span class="va">n2</span> <span class="op">&lt;-</span> <span class="fl">162</span></span>
 <span><span class="va">wl</span> <span class="op">&lt;-</span> <span class="fl">1.5</span></span>
@@ -190,16 +247,70 @@ the chart.</li>
 <span><span class="co">#&gt; 2           ARL0 803.4114304</span></span>
 <span><span class="co">#&gt; 3           ARL1 193.2228555</span></span>
 <span><span class="co">#&gt; 4           ASS0  35.9353364</span></span></code></pre></div>
-<p>The approximate published performance values are
-<code>ARL0 = 803.41</code>, <code>ARL1 = 193.22</code>, and
-<code>ASS0 = 35.94</code>.</p>
+<p>The published values are ARL0 = 803.41, ARL1 = 193.22, and ASS0 =
+35.94 — all within rounding tolerance.</p>
 </div>
-<div class="section level2">
-<h2 id="searching-for-limits">Searching for limits<a class="anchor" aria-label="anchor" href="#searching-for-limits"></a>
-</h2>
-<p>A reduced search space is used here to exercise the full algorithm
-without making documentation builds unnecessarily slow.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="section level3">
+<h3 id="average-sample-size-complete-versus-curtailed-inspection">Average sample size: complete versus curtailed inspection<a class="anchor" aria-label="anchor" href="#average-sample-size-complete-versus-curtailed-inspection"></a>
+</h3>
+<p>By default, <code><a href="../reference/dsnp_ass.html">dsnp_ass()</a></code> assumes that whenever the
+first-stage count enters the warning zone, all
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>n</mi><mn>2</mn></msub><annotation encoding="application/x-tex">n_2</annotation></semantics></math>
+second-stage items are inspected. However, as soon as the cumulative
+nonconformity count exceeds
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>U</mi><mi>C</mi><msub><mi>L</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">UCL_2</annotation></semantics></math>
+the rejection decision is certain, and inspection can stop. This
+<em>curtailed</em> (truncated) inspection reduces the average sample
+size without changing the signal probability or ARL. The
+<code>curtailed</code> parameter in <code><a href="../reference/dsnp_ass.html">dsnp_ass()</a></code> enables this
+convention when the user also supplies <code>ucl2</code> (the vignette
+example uses complete inspection; see the function documentation for the
+curtailed option).</p>
+</div>
+<div class="section level3">
+<h3 id="arl-and-ass-as-functions-of-p">ARL and ASS as functions of p<a class="anchor" aria-label="anchor" href="#arl-and-ass-as-functions-of-p"></a>
+</h3>
+<p>The performance of a DS-np plan varies with the true nonconforming
+proportion. The following evaluation shows ARL and ASS across a grid of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math>
+values:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">p_grid</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0.001</span>, <span class="fl">0.03</span>, length.out <span class="op">=</span> <span class="fl">30</span><span class="op">)</span></span>
+<span><span class="va">perf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">rbind</span>, <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">p_grid</span>, <span class="kw">function</span><span class="op">(</span><span class="va">p</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">arl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dsnp_arl.html">dsnp_arl</a></span><span class="op">(</span><span class="va">p</span>, <span class="va">n1</span>, <span class="va">n2</span>, <span class="va">wl</span>, <span class="va">ucl1</span>, <span class="va">ucl2</span><span class="op">)</span><span class="op">$</span><span class="va">arl</span></span>
+<span>  <span class="va">ass</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dsnp_ass.html">dsnp_ass</a></span><span class="op">(</span><span class="va">p</span>, <span class="va">n1</span>, <span class="va">n2</span>, <span class="va">wl</span>, <span class="va">ucl1</span><span class="op">)</span><span class="op">$</span><span class="va">ass</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>p <span class="op">=</span> <span class="va">p</span>, arl <span class="op">=</span> <span class="va">arl</span>, ass_complete <span class="op">=</span> <span class="va">ass</span><span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">perf</span><span class="op">)</span></span>
+<span><span class="co">#&gt;       p         arl ass_complete</span></span>
+<span><span class="co">#&gt; 1 0.001 161757.7315     34.08802</span></span>
+<span><span class="co">#&gt; 2 0.002  18201.4162     34.34097</span></span>
+<span><span class="co">#&gt; 3 0.003   4735.8341     34.74296</span></span>
+<span><span class="co">#&gt; 4 0.004   1758.3823     35.27908</span></span>
+<span><span class="co">#&gt; 5 0.005    803.4114     35.93534</span></span>
+<span><span class="co">#&gt; 6 0.006    422.2120     36.69864</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">perf</span><span class="op">$</span><span class="va">p</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">pmin</a></span><span class="op">(</span><span class="va">perf</span><span class="op">$</span><span class="va">arl</span>, <span class="fl">1000</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">"l"</span>, col <span class="op">=</span> <span class="st">"steelblue"</span>, lwd <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>     xlab <span class="op">=</span> <span class="st">"Nonconforming proportion p"</span>, ylab <span class="op">=</span> <span class="st">"ARL (capped at 1000)"</span>,</span>
+<span>     main <span class="op">=</span> <span class="st">"DS-np ARL curve (n1=34, n2=162)"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/abline.html" class="external-link">abline</a></span><span class="op">(</span>v <span class="op">=</span> <span class="va">p0</span>, lty <span class="op">=</span> <span class="fl">2</span>, col <span class="op">=</span> <span class="st">"gray"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/abline.html" class="external-link">abline</a></span><span class="op">(</span>v <span class="op">=</span> <span class="va">p1</span>, lty <span class="op">=</span> <span class="fl">2</span>, col <span class="op">=</span> <span class="st">"gray"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend</a></span><span class="op">(</span><span class="st">"topright"</span>, legend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ARL"</span>, <span class="st">"p0"</span>, <span class="st">"p1"</span><span class="op">)</span>,</span>
+<span>       col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"steelblue"</span>, <span class="st">"gray"</span>, <span class="st">"gray"</span><span class="op">)</span>, lty <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span>, lwd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="high-quality-processes_files/figure-html/dsnp-arl-curve-1.png" class="r-plt" alt="" width="672"></p>
+<p>The ARL drops steeply as
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math>
+increases beyond
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>p</mi><mn>0</mn></msub><annotation encoding="application/x-tex">p_0</annotation></semantics></math>,
+illustrating the chart’s ability to detect deterioration.</p>
+</div>
+<div class="section level3">
+<h3 id="searching-for-limits">Searching for limits<a class="anchor" aria-label="anchor" href="#searching-for-limits"></a>
+</h3>
+<p>When no published plan is available, <code><a href="../reference/dsnp_limits.html">dsnp_limits()</a></code>
+enumerates and ranks feasible fractional limit combinations for fixed
+sample sizes. A compact example:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">lim</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dsnp_limits.html">dsnp_limits</a></span><span class="op">(</span></span>
 <span>  p0 <span class="op">=</span> <span class="fl">0.05</span>,</span>
 <span>  n1 <span class="op">=</span> <span class="fl">5</span>,</span>
@@ -213,16 +324,19 @@ without making documentation builds unnecessarily slow.</p>
 <span><span class="co">#&gt;    wl ucl1 ucl2  p_signal0     arl0     arl1     ass0</span></span>
 <span><span class="co">#&gt; 1 0.5  1.5  2.5 0.04013256 24.91743 5.951221 7.036266</span></span></code></pre></div>
 </div>
-<div class="section level2">
-<h2 id="searching-a-complete-design">Searching a complete design<a class="anchor" aria-label="anchor" href="#searching-a-complete-design"></a>
-</h2>
-<p>Joekes, Smrekar and Barbosa (2015) formulate the DS-np design problem
-as minimizing out-of-control <code>ARL1</code>, subject to a minimum
-<code>ARL0</code> and a maximum in-control average sample size
-<code>ASS0</code>. The shift is written in the paper as
-<code>p1 = gamma * p0</code>. In IQCC, the corresponding bound is
-<code>ass0_max</code>:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="section level3">
+<h3 id="searching-a-complete-design">Searching a complete design<a class="anchor" aria-label="anchor" href="#searching-a-complete-design"></a>
+</h3>
+<p>The full design search over
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>n</mi><mn>1</mn></msub><annotation encoding="application/x-tex">n_1</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>n</mi><mn>2</mn></msub><annotation encoding="application/x-tex">n_2</annotation></semantics></math>
+is performed by <code><a href="../reference/dsnp_design.html">dsnp_design()</a></code>. The problem minimizes ARL1
+subject to
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mtext mathvariant="normal">ARL</mtext><mn>0</mn></msub><mo>≥</mo><mtext mathvariant="normal">arl0_min</mtext></mrow><annotation encoding="application/x-tex">\text{ARL}_0 \ge
+\text{arl0\_min}</annotation></semantics></math> and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mtext mathvariant="normal">ASS</mtext><mn>0</mn></msub><mo>≤</mo><mtext mathvariant="normal">ass0_max</mtext></mrow><annotation encoding="application/x-tex">\text{ASS}_0 \le \text{ass0\_max}</annotation></semantics></math>:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">design</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dsnp_design.html">dsnp_design</a></span><span class="op">(</span></span>
 <span>  p0 <span class="op">=</span> <span class="fl">0.05</span>,</span>
 <span>  p1 <span class="op">=</span> <span class="fl">0.10</span>,</span>
@@ -237,40 +351,52 @@ as minimizing out-of-control <code>ARL1</code>, subject to a minimum
 <span>                <span class="st">"ass0"</span>, <span class="st">"arl0"</span>, <span class="st">"arl1"</span><span class="op">)</span><span class="op">]</span></span>
 <span><span class="co">#&gt;   n1 n2  wl ucl1 ucl2     ass0     arl0     arl1</span></span>
 <span><span class="co">#&gt; 1  5 10 1.5  2.5  2.5 5.214344 102.4701 17.84397</span></span></code></pre></div>
-<p>The published tables report selected plans but not the complete
-bounds used for the searches over <code>n1</code> and <code>n2</code> or
-every tie-breaking rule. IQCC tests recover a published Table 5 plan
+<p>The published tables in Joekes, Smrekar and Barbosa (2015) report
+selected plans but not the complete bounds used for the searches over
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>n</mi><mn>1</mn></msub><annotation encoding="application/x-tex">n_1</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>n</mi><mn>2</mn></msub><annotation encoding="application/x-tex">n_2</annotation></semantics></math>
+or every tie-breaking rule. IQCC tests recover a published Table 5 plan
 over an explicitly recorded local grid and validate the exhaustive
-algorithm independently on a small grid; this evidence should not be
-described as a reproduction of undocumented global search settings.</p>
-<p>Setting <code>ass0_max = NULL</code> preserves the unconstrained
-search. The ASS used by <code><a href="../reference/dsnp_ass.html">dsnp_ass()</a></code> and
-<code><a href="../reference/dsnp_design.html">dsnp_design()</a></code> is equation (15) of the paper: whenever the
-first-stage count enters the warning region, all <code>n2</code> units
-are counted. The paper also describes stopping second-stage inspection
-as soon as rejection is certain, but it does not provide the
-corresponding expected-inspection formula; IQCC does not label that
-curtailed quantity as the current ASS.</p>
+algorithm independently on a small grid.</p>
 </div>
-<div class="section level2">
-<h2 id="interpreting-fractional-limits">Interpreting fractional limits<a class="anchor" aria-label="anchor" href="#interpreting-fractional-limits"></a>
-</h2>
-<p>For a DS-np plan with first-stage count <code>D1</code> and
-second-stage count <code>D2</code>, IQCC uses the following rule:</p>
+<div class="section level3">
+<h3 id="trade-off-between-detection-and-sampling-effort">Trade-off between detection and sampling effort<a class="anchor" aria-label="anchor" href="#trade-off-between-detection-and-sampling-effort"></a>
+</h3>
+<p>Double sampling reduces the average inspection cost when the process
+is operating near
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>p</mi><mn>0</mn></msub><annotation encoding="application/x-tex">p_0</annotation></semantics></math>,
+because most first-stage samples lead to an immediate decision. The
+trade-off is operational complexity and a slightly larger first-stage
+sample than a single-stage plan would require for the same ARL0. The
+<code>ass0_max</code> constraint in <code><a href="../reference/dsnp_design.html">dsnp_design()</a></code> lets the
+practitioner balance these competing goals.</p>
+</div>
+<div class="section level3">
+<h3 id="interpreting-fractional-limits">Interpreting fractional limits<a class="anchor" aria-label="anchor" href="#interpreting-fractional-limits"></a>
+</h3>
+<p>For a DS-np plan with first-stage count
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>D</mi><mn>1</mn></msub><annotation encoding="application/x-tex">D_1</annotation></semantics></math>
+and second-stage count
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>D</mi><mn>2</mn></msub><annotation encoding="application/x-tex">D_2</annotation></semantics></math>,
+IQCC uses the following rule:</p>
 <ul>
-<li>accept at the first stage when <code>D1 &lt;= floor(wl)</code>;</li>
+<li>accept at the first stage when
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>D</mi><mn>1</mn></msub><mo>≤</mo><mo stretchy="false" form="prefix">⌊</mo><mi>W</mi><mi>L</mi><mo stretchy="false" form="postfix">⌋</mo></mrow><annotation encoding="application/x-tex">D_1 \le \lfloor WL \rfloor</annotation></semantics></math>;</li>
 <li>signal at the first stage when
-<code>D1 &gt;= floor(ucl1) + 1</code>;</li>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>D</mi><mn>1</mn></msub><mo>≥</mo><mo stretchy="false" form="prefix">⌊</mo><mi>U</mi><mi>C</mi><msub><mi>L</mi><mn>1</mn></msub><mo stretchy="false" form="postfix">⌋</mo><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">D_1 \ge \lfloor UCL_1 \rfloor + 1</annotation></semantics></math>;</li>
 <li>otherwise inspect the second sample;</li>
 <li>after the second sample, accept when
-<code>D1 + D2 &lt;= floor(ucl2)</code>;</li>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>D</mi><mn>1</mn></msub><mo>+</mo><msub><mi>D</mi><mn>2</mn></msub><mo>≤</mo><mo stretchy="false" form="prefix">⌊</mo><mi>U</mi><mi>C</mi><msub><mi>L</mi><mn>2</mn></msub><mo stretchy="false" form="postfix">⌋</mo></mrow><annotation encoding="application/x-tex">D_1 + D_2 \le \lfloor UCL_2 \rfloor</annotation></semantics></math>;</li>
 <li>signal after the second stage otherwise.</li>
 </ul>
+<p>The fractional limits allow intermediate non-integer thresholds that
+are converted to the integer decision boundaries above.</p>
 </div>
-<div class="section level2">
-<h2 id="constructing-the-chart">Constructing the chart<a class="anchor" aria-label="anchor" href="#constructing-the-chart"></a>
-</h2>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="section level3">
+<h3 id="constructing-the-chart">Constructing the chart<a class="anchor" aria-label="anchor" href="#constructing-the-chart"></a>
+</h3>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">2</span>, <span class="fl">4</span>, <span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="va">x2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="cn">NA</span>, <span class="fl">2</span>, <span class="cn">NA</span>, <span class="cn">NA</span>, <span class="cn">NA</span>, <span class="fl">3</span>, <span class="cn">NA</span>, <span class="cn">NA</span>, <span class="cn">NA</span><span class="op">)</span></span>
 <span></span>
@@ -287,7 +413,7 @@ second-stage count <code>D2</code>, IQCC uses the following rule:</p>
 <span>  plot <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p><img src="high-quality-processes_files/figure-html/dsnp-chart-1.png" class="r-plt" alt="" width="672"></p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">chart</span><span class="op">$</span><span class="va">limits</span></span>
 <span><span class="co">#&gt; $wl</span></span>
@@ -337,27 +463,45 @@ second-stage count <code>D2</code>, IQCC uses the following rule:</p>
 <span><span class="co">#&gt; 8      8  4 NA    NA  signal_first   TRUE</span></span>
 <span><span class="co">#&gt; 9      9  1 NA    NA  accept_first  FALSE</span></span>
 <span><span class="co">#&gt; 10    10  0 NA    NA  accept_first  FALSE</span></span></code></pre></div>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"&lt;!-- IQCC_EXECUTED_HIGH_QUALITY --&gt;\n"</span><span class="op">)</span></span></code></pre></div>
 <!-- IQCC_EXECUTED_HIGH_QUALITY -->
+</div>
 </div>
 <div class="section level2">
 <h2 id="practical-workflow">Practical workflow<a class="anchor" aria-label="anchor" href="#practical-workflow"></a>
 </h2>
 <p>A practical high-quality-process workflow in IQCC is:</p>
 <ol style="list-style-type: decimal">
+<li>Diagnose applicability: compute
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mover><mi>p</mi><mo accent="true">̂</mo></mover></mrow><annotation encoding="application/x-tex">n \hat p</annotation></semantics></math>
+and decide between p-chart and DS-np.</li>
 <li>Compare normal, CF1, and CF2 limits with
 <code><a href="../reference/pchart_limits.html">pchart_limits()</a></code>.</li>
 <li>Evaluate actual binomial risk with
 <code><a href="../reference/pchart_alpha_risk.html">pchart_alpha_risk()</a></code>.</li>
 <li>Use <code><a href="../reference/cchart.p.html">cchart.p()</a></code> for routine p-chart monitoring.</li>
-<li>Use <code><a href="../reference/dsnp_limits.html">dsnp_limits()</a></code> when inspection effort motivates a
-double-sampling plan.</li>
-<li>Compare candidates using false-alarm probability, out-of-control
-ARL, and ASS.</li>
+<li>Use <code><a href="../reference/dsnp_limits.html">dsnp_limits()</a></code> or <code><a href="../reference/dsnp_design.html">dsnp_design()</a></code> when
+inspection effort motivates a double-sampling plan.</li>
+<li>Evaluate ARL and ASS across the relevant
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math>
+range.</li>
+<li>Optionally compare complete and curtailed ASS via
+<code>dsnp_ass(curtailed = TRUE)</code>.</li>
 <li>Supply the selected design to <code><a href="../reference/cchart.DSnp.html">cchart.DSnp()</a></code> for
 operational monitoring.</li>
 </ol>
+</div>
+<div class="section level2">
+<h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
+<p>Joekes, S. and Barbosa, E. P. (2013). An improved attribute control
+chart for monitoring the quality level in high quality processes.
+<em>Gestão &amp; Produção</em>, 20, 331–344. doi: <a href="https://doi.org/10.1590/S0104-530X2013000200007" class="external-link">10.1590/S0104-530X2013000200007</a>.</p>
+<p>Joekes, S., Smrekar, M. and Barbosa, E. P. (2015). Extending a double
+sampling control chart for non-conforming proportion in high quality
+processes to the case of small samples. <em>Statistical
+Methodology</em>, 23, 35–49. doi: <a href="https://doi.org/10.1016/j.stamet.2014.09.003" class="external-link">10.1016/j.stamet.2014.09.003</a>.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
