@@ -25,7 +25,8 @@
 #'   A Phase I point signals when T² exceeds the UCL from
 #'   \code{\link{cchart.T2.1}}.
 #' @seealso \code{\link{T2.2}}, \code{\link{cchart.T2.1}},
-#'   \code{\link{stats}}, \code{\link{data.1}}
+#'   \code{\link{stats}}, \code{\link{data.1}},
+#'   \code{\link{robustez}}
 #' @references Montgomery, D.C., (2009). "Introduction to Statistical Quality
 #' Control". Chapter 11. Wiley.
 #' @importFrom miscTools symMatrix

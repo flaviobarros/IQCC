@@ -19,7 +19,8 @@
 #' @section Phase convention:
 #'   Phase II \code{---} tests new observations against Phase I reference
 #'   distribution.
-#' @seealso \code{\link{T2.1}}, \code{\link{cchart.T2.2}}
+#' @seealso \code{\link{T2.1}}, \code{\link{cchart.T2.2}},
+#'   \code{\link{robustez}}
 #' @references Montgomery, D.C., (2009). "Introduction to Statistical Quality
 #' Control". Chapter 11. Wiley.
 #' @export

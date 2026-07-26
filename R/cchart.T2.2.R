@@ -19,7 +19,8 @@
 #' @section Phase convention:
 #'   Phase II monitoring. The vertical dashed line separates Phase I (left) from
 #'   Phase II (right).
-#' @seealso \code{\link{T2.2}}, \code{\link{cchart.T2.1}}
+#' @seealso \code{\link{T2.2}}, \code{\link{cchart.T2.1}},
+#'   \code{\link{robustez}}
 #' @references Montgomery, D.C., (2009). "Introduction to Statistical Quality
 #' Control". Chapter 11. Wiley.
 #' @importFrom graphics plot title mtext abline axis lines

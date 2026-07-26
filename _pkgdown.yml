@@ -101,6 +101,8 @@ reference:
 - title: Multivariate monitoring
   desc: Hotelling T-squared and generalized variance charts.
   contents:
+  - robustez
+  - sim_t2_asymptotic
   - T2.1
   - T2.2
   - cchart.T2.1
