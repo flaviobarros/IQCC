@@ -18,6 +18,7 @@ cchart.DSnp(
   limits = NULL,
   alpha = 0.0027,
   p1 = NULL,
+  curtailed = FALSE,
   plot = TRUE,
   ...
 )
@@ -78,6 +79,11 @@ cchart.DSnp(
   Optional out-of-control proportion. When provided, performance metrics
   at `p1` are included in the returned object.
 
+- curtailed:
+
+  Logical. If `TRUE`, use curtailed (truncated) inspection ASS in the
+  performance summary. Default `FALSE`.
+
 - plot:
 
   Logical. If `TRUE` (default), draws the control chart. If `FALSE`,
@@ -109,7 +115,7 @@ elements:
 
 - parameters:
 
-  A list with `n1`, `n2`, `p0`, `alpha`, and `p1`.
+  A list with `n1`, `n2`, `p0`, `alpha`, `p1`, and `curtailed`.
 
 - performance:
 

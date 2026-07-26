@@ -69,7 +69,8 @@ fixed sample sizes; it does not optimize the complete sampling design.</p>
 <span>  p1 <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  conservative <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  allow_empty_warning <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  max_results <span class="op">=</span> <span class="fl">20</span></span>
+<span>  max_results <span class="op">=</span> <span class="fl">20</span>,</span>
+<span>  curtailed <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -113,6 +114,11 @@ with no integer count in the warning zone.</p></dd>
 <dt id="arg-max-results">max_results<a class="anchor" aria-label="anchor" href="#arg-max-results"></a></dt>
 <dd><p>Positive integer maximum number of ranked candidates to
 retain.</p></dd>
+
+
+<dt id="arg-curtailed">curtailed<a class="anchor" aria-label="anchor" href="#arg-curtailed"></a></dt>
+<dd><p>Logical. If <code>TRUE</code>, use curtailed (truncated)
+inspection ASS instead of complete second-sample ASS. Default <code>FALSE</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">

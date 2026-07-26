@@ -23,7 +23,8 @@ dsnp_design(
   allow_empty_warning = FALSE,
   max_results = 20,
   progress = FALSE,
-  ass0_max = NULL
+  ass0_max = NULL,
+  curtailed = FALSE
 )
 
 # S3 method for class 'dsnp_design'
@@ -91,9 +92,14 @@ print(x, ...)
 
   Optional maximum in-control average sample size. When supplied, it
   must be a finite positive scalar and candidates must satisfy
-  `ass0 <= ass0_max`. The current ASS calculation follows equation (15)
-  of Joekes et al. (2015) and assumes complete inspection of the second
-  sample whenever the first-stage count is in the warning region.
+  `ass0 <= ass0_max`. The ASS calculation follows equation (15) of
+  Joekes et al. (2015); when `curtailed = TRUE` the expected inspection
+  of the second sample reflects truncated (curtailed) inspection.
+
+- curtailed:
+
+  Logical. If `TRUE`, use curtailed (truncated) inspection ASS instead
+  of complete second-sample ASS. Default `FALSE`.
 
 - x:
 

@@ -21,7 +21,8 @@ dsnp_limits(
   p1 = NULL,
   conservative = TRUE,
   allow_empty_warning = FALSE,
-  max_results = 20
+  max_results = 20,
+  curtailed = FALSE
 )
 ```
 
@@ -62,6 +63,11 @@ dsnp_limits(
 - max_results:
 
   Positive integer maximum number of ranked candidates to retain.
+
+- curtailed:
+
+  Logical. If `TRUE`, use curtailed (truncated) inspection ASS instead
+  of complete second-sample ASS. Default `FALSE`.
 
 ## Value
 
