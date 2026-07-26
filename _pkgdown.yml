@@ -30,6 +30,8 @@ navbar:
         href: articles/multivariate-monitoring.html
       - text: Statistical foundations
         href: articles/statistical-foundations.html
+      - text: IQCC in the R SPC ecosystem
+        href: articles/software-comparison.html
     reference:
       text: Reference
       href: reference/index.html
@@ -53,6 +55,7 @@ articles:
   - univariate-dispersion-monitoring
   - multivariate-monitoring
   - statistical-foundations
+  - software-comparison
 
 reference:
 - title: Package overview
