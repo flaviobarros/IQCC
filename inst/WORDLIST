@@ -23,7 +23,9 @@ Estadística
 et
 finitos
 frac
+ge
 geq
+Gestão
 Gneri
 hardcoded
 Hotelling
@@ -34,6 +36,7 @@ Khinchin
 Khinchin's
 Kotz
 LCL
+le
 leq
 lfloor
 Licence
@@ -62,6 +65,7 @@ Pimentel
 pkgdown
 pre
 Pre
+Produção
 qcc
 qquad
 README
@@ -77,6 +81,7 @@ sidedness
 Slutsky
 Smrekar
 SPC
+stamet
 subgroup
 subgrouping
 subgroups
