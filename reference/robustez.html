@@ -127,20 +127,28 @@ the covariance matrix is finite and positive-definite.</p>
 
 
 
-<p>The following table maps the T² statistic in Theorem 3 to the
-corresponding IQCC functions:</p>
-<table class="table table"><tr><td><strong>Concept</strong></td><td><strong>IQCC function</strong></td><td><strong>Notes</strong></td></tr><tr><td>T² statistic</td><td><code><a href="T2.1.html">T2.1</a></code></td><td>Phase I; uses \(\bar{\bar{x}}\) and pooled \(\bar{S}\) from <code><a href="stats.html">stats</a></code></td></tr><tr><td>T² statistic</td><td><code><a href="T2.2.html">T2.2</a></code></td><td>Phase II; tests new observations against Phase I estimates</td></tr><tr><td>Phase I chart</td><td><code><a href="cchart.T2.1.html">cchart.T2.1</a></code></td><td>Uses beta (n=1) or F (n&gt;1) limits (finite-sample normal theory)</td></tr><tr><td>Phase II chart</td><td><code><a href="cchart.T2.2.html">cchart.T2.2</a></code></td><td>Uses F limits (finite-sample normal theory)</td></tr><tr><td>Auxiliary stats</td><td><code><a href="stats.html">stats</a></code></td><td>Grand mean, pooled covariance, subgroup means</td></tr><tr><td>Phase I data</td><td><code><a href="data.1.html">data.1</a></code></td><td>Generates multivariate normal samples</td></tr><tr><td>Phase II data</td><td><code><a href="data.2.html">data.2</a></code></td><td>Generates Phase II observation(s)</td></tr></table><p>The T² statistic in <code><a href="T2.1.html">T2.1()</a></code> with \(n &gt; 1\) matches the form in
-Theorem 3 exactly: \(T^2_i = n (\bar{x}_i - \bar{\bar{x}})' \bar{S}^{-1}
-(\bar{x}_i - \bar{\bar{x}})\). For individual observations (\(n = 1\)),
-the centering is at zero rather than the grand mean: \(T^2_i = x_i'
-\bar{S}^{-1} x_i\).</p>
-<p>The control limits in <code><a href="cchart.T2.1.html">cchart.T2.1()</a></code> and <code><a href="cchart.T2.2.html">cchart.T2.2()</a></code> are
+<p>Theorem 3 concerns a single-sample T² statistic:
+$$T^2 = n (\bar{X} - \mu)' S^{-1} (\bar{X} - \mu)$$
+where \(\bar{X}\) and \(S\) are the mean and covariance of the
+<em>same</em> sample, and \(\mu\) is the <em>known</em> null mean.</p>
+<p>The IQCC package implements two related but <strong>distinct</strong> statistics:</p>
+<table class="table table"><tr><td><strong>Concept</strong></td><td><strong>IQCC function</strong></td><td><strong>Notes</strong></td></tr><tr><td>Theorem 3 statistic</td><td><code><a href="sim_t2_asymptotic.html">sim_t2_asymptotic</a></code></td><td>Single sample, known \(\mu = 0\), own \(S\)</td></tr><tr><td>Phase I T²</td><td><code><a href="T2.1.html">T2.1</a></code></td><td>Uses grand mean \(\bar{\bar{x}}\) and pooled \(\bar{S}\) from <code><a href="stats.html">stats</a></code></td></tr><tr><td>Phase II T²</td><td><code><a href="T2.2.html">T2.2</a></code></td><td>Tests new obs. against Phase I estimates</td></tr><tr><td>Phase I chart</td><td><code><a href="cchart.T2.1.html">cchart.T2.1</a></code></td><td>Beta (n=1) or F (n&gt;1) limits</td></tr><tr><td>Phase II chart</td><td><code><a href="cchart.T2.2.html">cchart.T2.2</a></code></td><td>F limits</td></tr><tr><td>Auxiliary stats</td><td><code><a href="stats.html">stats</a></code></td><td>Grand mean, pooled covariance, subgroup means</td></tr></table><p><strong>Key differences between Theorem 3 and <code><a href="T2.1.html">T2.1()</a></code>:</strong></p><ul><li><p>Theorem 3 uses the <em>true</em> null mean \(\mu\);
+        <code><a href="T2.1.html">T2.1()</a></code> uses the <em>estimated</em> grand mean
+        \(\bar{\bar{x}}\) from Phase I data.</p></li>
+<li><p>Theorem 3 uses the covariance of the <em>same</em> sample;
+        <code><a href="T2.1.html">T2.1()</a></code> uses the <em>pooled</em> covariance from
+        multiple Phase I subgroups.</p></li>
+<li><p>Theorem 3 is asymptotic as \(n \to \infty\) for a
+        single sample; <code><a href="T2.1.html">T2.1()</a></code> has \(m\) correlated
+        statistics (one per subgroup) with finite-sample F/beta
+        distributions under normality.</p></li>
+</ul><p>The control limits in <code><a href="cchart.T2.1.html">cchart.T2.1()</a></code> and <code><a href="cchart.T2.2.html">cchart.T2.2()</a></code> are
 based on exact finite-sample distributions under multivariate normality
 (F and beta distributions). These limits are <strong>not</strong> justified by
 Theorem 3 for non-normal data in finite samples. The theorem only
-guarantees that as \(n \to \infty\), the T² statistic approaches a
-\(\chi^2_p\) distribution regardless of the underlying continuous
-distribution (provided the moment conditions hold).</p>
+guarantees that as the subgroup size \(n \to \infty\), a <em>single</em>
+T² statistic approaches a \(\chi^2_p\) distribution regardless of the
+underlying continuous distribution (provided the moment conditions hold).</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>

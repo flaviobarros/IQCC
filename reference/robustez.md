@@ -73,27 +73,38 @@ The theorem is asymptotic and does **not** imply:
 
 ## Relationship to IQCC functions
 
-The following table maps the T² statistic in Theorem 3 to the
-corresponding IQCC functions:
+Theorem 3 concerns a single-sample T² statistic: \$\$T^2 = n (\bar{X} -
+\mu)' S^{-1} (\bar{X} - \mu)\$\$ where \\\bar{X}\\ and \\S\\ are the
+mean and covariance of the *same* sample, and \\\mu\\ is the *known*
+null mean.
+
+The IQCC package implements two related but **distinct** statistics:
 
 |  |  |  |
 |----|----|----|
 | **Concept** | **IQCC function** | **Notes** |
-| T² statistic | [`T2.1`](https://flaviobarros.github.io/IQCC/reference/T2.1.md) | Phase I; uses \\\bar{\bar{x}}\\ and pooled \\\bar{S}\\ from [`stats`](https://flaviobarros.github.io/IQCC/reference/stats.md) |
-| T² statistic | [`T2.2`](https://flaviobarros.github.io/IQCC/reference/T2.2.md) | Phase II; tests new observations against Phase I estimates |
-| Phase I chart | [`cchart.T2.1`](https://flaviobarros.github.io/IQCC/reference/cchart.T2.1.md) | Uses beta (n=1) or F (n\>1) limits (finite-sample normal theory) |
-| Phase II chart | [`cchart.T2.2`](https://flaviobarros.github.io/IQCC/reference/cchart.T2.2.md) | Uses F limits (finite-sample normal theory) |
+| Theorem 3 statistic | [`sim_t2_asymptotic`](https://flaviobarros.github.io/IQCC/reference/sim_t2_asymptotic.md) | Single sample, known \\\mu = 0\\, own \\S\\ |
+| Phase I T² | [`T2.1`](https://flaviobarros.github.io/IQCC/reference/T2.1.md) | Uses grand mean \\\bar{\bar{x}}\\ and pooled \\\bar{S}\\ from [`stats`](https://flaviobarros.github.io/IQCC/reference/stats.md) |
+| Phase II T² | [`T2.2`](https://flaviobarros.github.io/IQCC/reference/T2.2.md) | Tests new obs. against Phase I estimates |
+| Phase I chart | [`cchart.T2.1`](https://flaviobarros.github.io/IQCC/reference/cchart.T2.1.md) | Beta (n=1) or F (n\>1) limits |
+| Phase II chart | [`cchart.T2.2`](https://flaviobarros.github.io/IQCC/reference/cchart.T2.2.md) | F limits |
 | Auxiliary stats | [`stats`](https://flaviobarros.github.io/IQCC/reference/stats.md) | Grand mean, pooled covariance, subgroup means |
-| Phase I data | [`data.1`](https://flaviobarros.github.io/IQCC/reference/data.1.md) | Generates multivariate normal samples |
-| Phase II data | [`data.2`](https://flaviobarros.github.io/IQCC/reference/data.2.md) | Generates Phase II observation(s) |
 
-The T² statistic in
-[`T2.1()`](https://flaviobarros.github.io/IQCC/reference/T2.1.md) with
-\\n \> 1\\ matches the form in Theorem 3 exactly: \\T^2_i = n
-(\bar{x}\_i - \bar{\bar{x}})' \bar{S}^{-1} (\bar{x}\_i -
-\bar{\bar{x}})\\. For individual observations (\\n = 1\\), the centering
-is at zero rather than the grand mean: \\T^2_i = x_i' \bar{S}^{-1}
-x_i\\.
+**Key differences between Theorem 3 and
+[`T2.1()`](https://flaviobarros.github.io/IQCC/reference/T2.1.md):**
+
+- Theorem 3 uses the *true* null mean \\\mu\\;
+  [`T2.1()`](https://flaviobarros.github.io/IQCC/reference/T2.1.md) uses
+  the *estimated* grand mean \\\bar{\bar{x}}\\ from Phase I data.
+
+- Theorem 3 uses the covariance of the *same* sample;
+  [`T2.1()`](https://flaviobarros.github.io/IQCC/reference/T2.1.md) uses
+  the *pooled* covariance from multiple Phase I subgroups.
+
+- Theorem 3 is asymptotic as \\n \to \infty\\ for a single sample;
+  [`T2.1()`](https://flaviobarros.github.io/IQCC/reference/T2.1.md) has
+  \\m\\ correlated statistics (one per subgroup) with finite-sample
+  F/beta distributions under normality.
 
 The control limits in
 [`cchart.T2.1()`](https://flaviobarros.github.io/IQCC/reference/cchart.T2.1.md)
@@ -102,9 +113,10 @@ and
 are based on exact finite-sample distributions under multivariate
 normality (F and beta distributions). These limits are **not** justified
 by Theorem 3 for non-normal data in finite samples. The theorem only
-guarantees that as \\n \to \infty\\, the T² statistic approaches a
-\\\chi^2_p\\ distribution regardless of the underlying continuous
-distribution (provided the moment conditions hold).
+guarantees that as the subgroup size \\n \to \infty\\, a *single* T²
+statistic approaches a \\\chi^2_p\\ distribution regardless of the
+underlying continuous distribution (provided the moment conditions
+hold).
 
 ## References
 
