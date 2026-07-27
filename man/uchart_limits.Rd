@@ -40,17 +40,17 @@ For \eqn{U}, the standardized third and fourth cumulants are
 \eqn{gamma_1 = 1/sqrt(lambda n)} and \eqn{gamma_2 = 1/(lambda n)}.
 Consequently, the first Cornish-Fisher correction is
 \eqn{(z^2 - 1)/(6n)} and the second-order correction reduces to
-\eqn{z(1-z^2)/(72 n sqrt(lambda n))}.
+\eqn{z(1-z^2)/(72 n sqrt(lambda n))}. Each tail is evaluated at its
+signed normal quantile: \eqn{z_{\mathrm{upper}} > 0} for the UCL and
+\eqn{z_{\mathrm{lower}} < 0} for the LCL.
 
-With \eqn{z=3}, the CF2 upper limit recovers the historical IQCC formula
-\deqn{lambda + 3 sqrt(lambda/n) + 4/(3n) -
-      1/(3 n sqrt(lambda n)).}
-
-For two-sided CF2 limits, the operational convention used here evaluates
-the second adjustment with the positive upper-tail quantile and applies it
-with the same sign to both limits. This is consistent with the historical
-IQCC formula and with the operational convention used for the corrected
-p chart.
+With \eqn{z=3}, the CF2 limits recover
+\deqn{UCL = lambda + 3 sqrt(lambda/n) + 4/(3n) -
+      1/(3 n sqrt(lambda n))}
+and
+\deqn{LCL = lambda - 3 sqrt(lambda/n) + 4/(3n) +
+      1/(3 n sqrt(lambda n)),}
+before optional truncation at zero.
 }
 \examples{
 uchart_limits(1.4, 10, type = "normal")
