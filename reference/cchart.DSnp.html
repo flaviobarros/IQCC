@@ -65,8 +65,8 @@ monitoring the nonconforming proportion in high-quality processes.</p>
 <span>  limits <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  alpha <span class="op">=</span> <span class="fl">0.0027</span>,</span>
 <span>  p1 <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  curtailed <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  plot <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  curtailed <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -128,14 +128,14 @@ only when limits need to be computed via <code><a href="dsnp_limits.html">dsnp_l
 metrics at <code>p1</code> are included in the returned object.</p></dd>
 
 
-<dt id="arg-curtailed">curtailed<a class="anchor" aria-label="anchor" href="#arg-curtailed"></a></dt>
-<dd><p>Logical. If <code>TRUE</code>, use curtailed (truncated)
-inspection ASS in the performance summary. Default <code>FALSE</code>.</p></dd>
-
-
 <dt id="arg-plot">plot<a class="anchor" aria-label="anchor" href="#arg-plot"></a></dt>
 <dd><p>Logical. If <code>TRUE</code> (default), draws the control chart.
 If <code>FALSE</code>, only returns the result object.</p></dd>
+
+
+<dt id="arg-curtailed">curtailed<a class="anchor" aria-label="anchor" href="#arg-curtailed"></a></dt>
+<dd><p>Logical. If <code>TRUE</code>, use curtailed (truncated)
+inspection ASS in the performance summary. Default <code>FALSE</code>.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>

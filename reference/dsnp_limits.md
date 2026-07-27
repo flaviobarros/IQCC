@@ -88,7 +88,7 @@ A list with the following elements:
 
   The validated input parameters.
 
-- conservative, allow_empty_warning:
+- conservative, allow_empty_warning, curtailed:
 
   The validated input flags.
 

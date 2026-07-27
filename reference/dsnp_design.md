@@ -139,8 +139,7 @@ An object of class `"dsnp_design"` with the following elements:
 
 The search is discrete and exhaustive within the supplied ranges; it is
 not a continuous optimization. The cost grows with the number of (n1,
-n2) pairs and the number of limit candidates evaluated per pair. This
-function does not implement curtailed inspection.
+n2) pairs and the number of limit candidates evaluated per pair.
 
 When `alpha` is `NULL` and `arl0_min` is provided, an effective alpha of
 `1 / arl0_min` is used to guide
