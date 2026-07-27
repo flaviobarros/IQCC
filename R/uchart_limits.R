@@ -8,17 +8,17 @@
 #' \eqn{gamma_1 = 1/sqrt(lambda n)} and \eqn{gamma_2 = 1/(lambda n)}.
 #' Consequently, the first Cornish-Fisher correction is
 #' \eqn{(z^2 - 1)/(6n)} and the second-order correction reduces to
-#' \eqn{z(1-z^2)/(72 n sqrt(lambda n))}.
+#' \eqn{z(1-z^2)/(72 n sqrt(lambda n))}. Each tail is evaluated at its
+#' signed normal quantile: \eqn{z_{\mathrm{upper}} > 0} for the UCL and
+#' \eqn{z_{\mathrm{lower}} < 0} for the LCL.
 #'
-#' With \eqn{z=3}, the CF2 upper limit recovers the historical IQCC formula
-#' \deqn{lambda + 3 sqrt(lambda/n) + 4/(3n) -
-#'       1/(3 n sqrt(lambda n)).}
-#'
-#' For two-sided CF2 limits, the operational convention used here evaluates
-#' the second adjustment with the positive upper-tail quantile and applies it
-#' with the same sign to both limits. This is consistent with the historical
-#' IQCC formula and with the operational convention used for the corrected
-#' p chart.
+#' With \eqn{z=3}, the CF2 limits recover
+#' \deqn{UCL = lambda + 3 sqrt(lambda/n) + 4/(3n) -
+#'       1/(3 n sqrt(lambda n))}
+#' and
+#' \deqn{LCL = lambda - 3 sqrt(lambda/n) + 4/(3n) +
+#'       1/(3 n sqrt(lambda n)),}
+#' before optional truncation at zero.
 #'
 #' @param lambda In-control defect rate per inspection unit. A positive scalar.
 #' @param n Positive inspection size or vector of inspection sizes.
@@ -72,9 +72,8 @@ uchart_limits <- function(lambda, n, alpha = ALPHA,
     cf1_quantile <- function(z)
         lambda + z * sd_u + (z^2 - 1) / (6 * n)
 
-    cf2_adjustment <- function(z_positive)
-        z_positive * (1 - z_positive^2) /
-            (72 * n * sqrt(lambda * n))
+    cf2_adjustment <- function(z)
+        z * (1 - z^2) / (72 * n * sqrt(lambda * n))
 
     if(type == "normal")
     {
@@ -94,10 +93,9 @@ uchart_limits <- function(lambda, n, alpha = ALPHA,
     }
     else
     {
-        second_adjustment <- cf2_adjustment(z_upper)
-        ucl <- cf1_quantile(z_upper) + second_adjustment
+        ucl <- cf1_quantile(z_upper) + cf2_adjustment(z_upper)
         lcl <- if(sides == "two.sided")
-            cf1_quantile(z_lower) + second_adjustment
+            cf1_quantile(z_lower) + cf2_adjustment(z_lower)
         else
             rep(0, length(n))
     }
