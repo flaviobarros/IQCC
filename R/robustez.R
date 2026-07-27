@@ -72,33 +72,44 @@
 #'
 #' @section Relationship to IQCC functions:
 #'
-#' The following table maps the T² statistic in Theorem 3 to the
-#' corresponding IQCC functions:
+#' Theorem 3 concerns a single-sample T² statistic:
+#' \deqn{T^2 = n (\bar{X} - \mu)' S^{-1} (\bar{X} - \mu)}
+#' where \eqn{\bar{X}} and \eqn{S} are the mean and covariance of the
+#' \emph{same} sample, and \eqn{\mu} is the \emph{known} null mean.
+#'
+#' The IQCC package implements two related but \strong{distinct} statistics:
 #'
 #' \tabular{lll}{
 #'   \strong{Concept} \tab \strong{IQCC function} \tab \strong{Notes}\cr
-#'   T² statistic      \tab \code{\link{T2.1}}        \tab Phase I; uses \eqn{\bar{\bar{x}}} and pooled \eqn{\bar{S}} from \code{\link{stats}}\cr
-#'   T² statistic      \tab \code{\link{T2.2}}        \tab Phase II; tests new observations against Phase I estimates\cr
-#'   Phase I chart     \tab \code{\link{cchart.T2.1}} \tab Uses beta (n=1) or F (n>1) limits (finite-sample normal theory)\cr
-#'   Phase II chart    \tab \code{\link{cchart.T2.2}} \tab Uses F limits (finite-sample normal theory)\cr
-#'   Auxiliary stats   \tab \code{\link{stats}}        \tab Grand mean, pooled covariance, subgroup means\cr
-#'   Phase I data      \tab \code{\link{data.1}}       \tab Generates multivariate normal samples\cr
-#'   Phase II data     \tab \code{\link{data.2}}       \tab Generates Phase II observation(s)\cr
+#'   Theorem 3 statistic \tab \code{\link{sim_t2_asymptotic}} \tab Single sample, known \eqn{\mu = 0}, own \eqn{S}\cr
+#'   Phase I T²          \tab \code{\link{T2.1}}             \tab Uses grand mean \eqn{\bar{\bar{x}}} and pooled \eqn{\bar{S}} from \code{\link{stats}}\cr
+#'   Phase II T²         \tab \code{\link{T2.2}}             \tab Tests new obs. against Phase I estimates\cr
+#'   Phase I chart       \tab \code{\link{cchart.T2.1}}      \tab Beta (n=1) or F (n>1) limits\cr
+#'   Phase II chart      \tab \code{\link{cchart.T2.2}}      \tab F limits\cr
+#'   Auxiliary stats     \tab \code{\link{stats}}             \tab Grand mean, pooled covariance, subgroup means\cr
 #' }
 #'
-#' The T² statistic in \code{T2.1()} with \eqn{n > 1} matches the form in
-#' Theorem 3 exactly: \eqn{T^2_i = n (\bar{x}_i - \bar{\bar{x}})' \bar{S}^{-1}
-#' (\bar{x}_i - \bar{\bar{x}})}. For individual observations (\eqn{n = 1}),
-#' the centering is at zero rather than the grand mean: \eqn{T^2_i = x_i'
-#' \bar{S}^{-1} x_i}.
+#' \strong{Key differences between Theorem 3 and \code{T2.1()}:}
+#' \itemize{
+#'   \item Theorem 3 uses the \emph{true} null mean \eqn{\mu};
+#'         \code{T2.1()} uses the \emph{estimated} grand mean
+#'         \eqn{\bar{\bar{x}}} from Phase I data.
+#'   \item Theorem 3 uses the covariance of the \emph{same} sample;
+#'         \code{T2.1()} uses the \emph{pooled} covariance from
+#'         multiple Phase I subgroups.
+#'   \item Theorem 3 is asymptotic as \eqn{n \to \infty} for a
+#'         single sample; \code{T2.1()} has \eqn{m} correlated
+#'         statistics (one per subgroup) with finite-sample F/beta
+#'         distributions under normality.
+#' }
 #'
 #' The control limits in \code{cchart.T2.1()} and \code{cchart.T2.2()} are
 #' based on exact finite-sample distributions under multivariate normality
 #' (F and beta distributions). These limits are \strong{not} justified by
 #' Theorem 3 for non-normal data in finite samples. The theorem only
-#' guarantees that as \eqn{n \to \infty}, the T² statistic approaches a
-#' \eqn{\chi^2_p} distribution regardless of the underlying continuous
-#' distribution (provided the moment conditions hold).
+#' guarantees that as the subgroup size \eqn{n \to \infty}, a \emph{single}
+#' T² statistic approaches a \eqn{\chi^2_p} distribution regardless of the
+#' underlying continuous distribution (provided the moment conditions hold).
 #'
 #' @references
 #' Gneri, M. A. and Barbosa, E. P. (2006). "Robustez Asintótica de la

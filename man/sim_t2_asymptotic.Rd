@@ -15,7 +15,8 @@ sim_t2_asymptotic(
 )
 }
 \arguments{
-\item{n}{Integer vector of sample sizes to evaluate. Default is
+\item{n}{Integer vector of sample sizes to evaluate. Each element must
+satisfy \eqn{n > p} for the corresponding dimension. Default is
 \code{c(10, 30, 100, 500)}.}
 
 \item{p}{Integer vector of dimensions to evaluate. Default is
@@ -26,30 +27,33 @@ Available options:
 \describe{
   \item{\code{"normal"}}{Multivariate normal \eqn{N(0, \Sigma)}.
     All moments finite. Baseline case.}
-  \item{\code{"t5"}}{Multivariate t with 5 degrees of freedom,
-    scaled to covariance \eqn{\Sigma}. Symmetric, heavy-tailed,
-    finite fourth moment (\eqn{4 < 5}).}
+  \item{\code{"t5"}}{Elliptical multivariate t with 5 degrees of
+    freedom, scaled to covariance \eqn{\Sigma}. Symmetric,
+    heavy-tailed, finite fourth moment (\eqn{4 < 5}).}
   \item{\code{"gamma2"}}{Independent Gamma(2, 1) margins,
     centered and scaled to covariance \eqn{\Sigma}. Asymmetric,
     all moments finite.}
-  \item{\code{"t4"}}{Multivariate t with 4 degrees of freedom
-    (stress test). Has infinite fourth moment, violating the
+  \item{\code{"t4"}}{Elliptical multivariate t with 4 degrees of
+    freedom (stress test). Has infinite fourth moment, violating the
     formal condition of Theorem 3.}
 }}
 
-\item{nsim}{Number of Monte Carlo replications. Default is 10000.}
+\item{nsim}{Number of Monte Carlo replications. A single positive
+integer. Default is 10000.}
 
-\item{sig_levels}{Numeric vector of significance levels (quantiles)
+\item{sig_levels}{Numeric vector of quantile levels in \eqn{(0, 1)}
 to compare. Default is \code{c(0.90, 0.95, 0.99)}.}
 
-\item{seed}{Random seed for reproducibility. Default is \code{42}.}
+\item{seed}{Random seed for reproducibility. A single integer.
+Default is \code{42}.}
 
-\item{rho}{Correlation parameter for the covariance matrix
+\item{rho}{Correlation parameter for the equicorrelation matrix
 \eqn{\Sigma_{ij} = 1} if \eqn{i = j}, \eqn{\rho} otherwise.
-Default is \code{0.3}.}
+Must satisfy \eqn{\rho > -1/(p-1)} for each \eqn{p} to ensure
+positive definiteness. Default is \code{0.3}.}
 }
 \value{
-A data frame (invisible \code{\link[tibble]{tibble}}) with columns:
+A data frame with columns:
   \describe{
     \item{\code{n}}{Sample size.}
     \item{\code{p}}{Dimension.}
@@ -59,7 +63,8 @@ A data frame (invisible \code{\link[tibble]{tibble}}) with columns:
     \item{\code{chisq}}{Theoretical \eqn{\chi^2_p} quantile.}
     \item{\code{mcse}}{Monte Carlo standard error of the
       empirical quantile.}
-    \item{\code{nsim}}{Number of replications used.}
+    \item{\code{nsim}}{Number of valid replications (after
+      discarding singular covariance draws).}
   }
 }
 \description{
@@ -73,11 +78,28 @@ For each combination of sample size \eqn{n}, dimension \eqn{p}, and
 distribution, the function generates \code{nsim} samples, computes the
 Hotelling T² statistic, and compares empirical quantiles against the
 limiting \eqn{\chi^2_p} distribution.
+
+The T² statistic is computed from a single sample \eqn{X_1, \dots, X_n}
+as \eqn{T^2 = n (\bar{X} - \mu)' S^{-1} (\bar{X} - \mu)} where
+\eqn{\mu = 0} is the known null mean and \eqn{S} is the sample
+covariance. This matches the form in Theorem 3 of Gneri and Barbosa
+(2006). It does \strong{not} match the Phase I statistic
+\code{\link{T2.1}}, which uses estimated grand means and pooled
+covariance from multiple subgroups.
 }
 \section{RNG preservation}{
 
   The function saves and restores \code{.Random.seed} on exit, so it
   does not alter the global RNG state.
+}
+
+\section{Monte Carlo standard error}{
+
+  The MCSE of a sample quantile at level \eqn{q} is approximated as
+  \eqn{\sqrt{q(1-q) / (N f(q)^2)}} where \eqn{f} is the \eqn{\chi^2_p}
+  density. This approximation assumes the density of the T² statistic is
+  close to \eqn{\chi^2_p}, which is reasonable when the asymptotic
+  approximation holds. It is not a substitute for the true standard error.
 }
 
 \examples{

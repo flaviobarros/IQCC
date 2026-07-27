@@ -22,6 +22,29 @@ test_that("sim_t2_asymptotic validates rho parameter", {
   expect_error(sim_t2_asymptotic(rho = 2, nsim = 100), "in \\(-1, 1\\)")
 })
 
+test_that("sim_t2_asymptotic rejects n <= p", {
+  expect_error(sim_t2_asymptotic(n = 2, p = 3, nsim = 100), "n must be greater than p")
+  expect_error(sim_t2_asymptotic(n = 3, p = 3, nsim = 100), "n must be greater than p")
+})
+
+test_that("sim_t2_asymptotic validates rho > -1/(p-1)", {
+  expect_error(sim_t2_asymptotic(p = 3, rho = -0.6, nsim = 100),
+               "rho must be > -1/")
+  sim_t2_asymptotic(p = 3, rho = -0.4, n = 10, nsim = 10, seed = 42) |> expect_s3_class("data.frame")
+})
+
+test_that("sim_t2_asymptotic validates sig_levels", {
+  expect_error(sim_t2_asymptotic(sig_levels = 0, nsim = 100), "in \\(0, 1\\)")
+  expect_error(sim_t2_asymptotic(sig_levels = 1, nsim = 100), "in \\(0, 1\\)")
+  expect_error(sim_t2_asymptotic(sig_levels = -0.1, nsim = 100), "in \\(0, 1\\)")
+})
+
+test_that("sim_t2_asymptotic validates nsim and seed", {
+  expect_error(sim_t2_asymptotic(nsim = 0), "positive integer")
+  expect_error(sim_t2_asymptotic(nsim = 1.5), "positive integer")
+  expect_error(sim_t2_asymptotic(seed = 1.5), "single integer")
+})
+
 test_that("sim_t2_asymptotic validates distributions", {
   expect_error(sim_t2_asymptotic(distributions = "invalid", nsim = 100),
                "should be one of")
