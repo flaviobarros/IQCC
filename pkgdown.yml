@@ -6,9 +6,10 @@ articles:
   high-quality-processes: high-quality-processes.html
   iqcc-positioning: iqcc-positioning.html
   multivariate-monitoring: multivariate-monitoring.html
+  software-comparison: software-comparison.html
   statistical-foundations: statistical-foundations.html
   univariate-dispersion-monitoring: univariate-dispersion-monitoring.html
-last_built: 2026-07-26T23:14Z
+last_built: 2026-07-27T00:04Z
 urls:
   reference: https://flaviobarros.github.io/IQCC/reference
   article: https://flaviobarros.github.io/IQCC/articles

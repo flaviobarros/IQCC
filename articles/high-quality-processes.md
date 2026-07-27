@@ -22,16 +22,18 @@ UCL = \hat p + 3\sqrt{\hat p(1 - \hat p)/n},\qquad
 LCL = \hat p - 3\sqrt{\hat p(1 - \hat p)/n},
 ```
 
-rely on a normal approximation to the binomial. When the expected number
-of nonconformities $`np`$ is small, the binomial distribution is skewed
+rely on a normal approximation to the binomial. When $`n p(1-p)`$ is
+small, the binomial distribution is strongly discrete and asymmetric,
 and the actual false-alarm probability of the normal limits can be far
-from the nominal $`0.0027`$. The Cornish-Fisher expansion adjusts the
-quantile to account for skewness, yielding two corrected methods in
-IQCC:
+from the nominal $`0.0027`$. IQCC provides two Cornish–Fisher
+corrections:
 
-- `type = "cf1"` applies the first skewness correction;
-- `type = "cf2"` applies the two-adjustment operational limits from
-  Joekes and Barbosa (2013).
+- `type = "cf1"` applies the first correction term, driven by binomial
+  skewness;
+- `type = "cf2"` retains CF1 and adds the next terms of the
+  Cornish–Fisher expansion used by Joekes and Barbosa (2013), involving
+  the fourth standardized cumulant and the squared skewness
+  contribution.
 
 The following table compares the nominal and actual performance for
 $`p = 0.015`$ and $`n = 20`$:
@@ -54,16 +56,18 @@ p_results <- do.call(
       lcl = lim$lcl,
       center = lim$center,
       ucl = lim$ucl,
+      npq = lim$npq,
+      applicable = lim$applicable,
       actual_alpha = risk,
       arl0 = ifelse(risk == 0, Inf, 1 / risk)
     )
   })
 )
 p_results
-#>   method lcl center        ucl actual_alpha       arl0
-#> 1 normal   0  0.015 0.09653924 0.0357458712   27.97526
-#> 2    cf1   0  0.015 0.16120479 0.0002023458 4942.03542
-#> 3    cf2   0  0.015 0.13031923 0.0031780828  314.65511
+#>   method lcl center        ucl    npq applicable actual_alpha       arl0
+#> 1 normal   0  0.015 0.09653924 0.2955      FALSE 0.0357458712   27.97526
+#> 2    cf1   0  0.015 0.16120479 0.2955       TRUE 0.0002023458 4942.03542
+#> 3    cf2   0  0.015 0.13031923 0.2955       TRUE 0.0031780828  314.65511
 ```
 
 The normal limits produce an ARL0 of only about 28 subgroups, far below
@@ -86,24 +90,32 @@ cchart.p(
 
 ### Diagnosing p-chart applicability
 
-A useful diagnostic is the expected number of nonconformities per
-subgroup, $`n \hat p`$. When $`n \hat p < 5`$, the normal approximation
-is unreliable and corrected limits or a double-sampling plan should be
-considered.
+Joekes and Barbosa (2013) propose the following practical guidance based
+on $`n p(1-p)`$:
+
+- use the normal limits when $`n p(1-p) \ge 5`$;
+- CF1 is supported when $`n p(1-p) \ge 0.25`$;
+- CF2 extends the corrected chart to $`n p(1-p) \ge 0.08`$;
+- below $`0.08`$, another control-chart methodology is needed.
+
+This is practical guidance rather than an exact theorem. The
+`applicable` field returned by
+[`pchart_limits()`](https://flaviobarros.github.io/IQCC/reference/pchart_limits.md)
+implements these thresholds. For the example above:
 
 ``` r
 
-p_candidate <- 0.015
-n_candidate <- 20
-cat("n * p =", n_candidate * p_candidate, "\n")
-#> n * p = 0.3
-cat("Recommendation:",
-    ifelse(n_candidate * p_candidate < 5,
-           "use CF limits or consider DS-np",
-           "normal approximation may be adequate"),
-    "\n")
-#> Recommendation: use CF limits or consider DS-np
+p_results[, c("method", "npq", "applicable")]
+#>   method    npq applicable
+#> 1 normal 0.2955      FALSE
+#> 2    cf1 0.2955       TRUE
+#> 3    cf2 0.2955       TRUE
 ```
+
+When more than one method is applicable, the exact binomial false-alarm
+risk should still be inspected. A DS-np plan is not selected solely
+because a p-chart approximation is poor: its ARL and inspection effort
+must also be evaluated for the shifts that matter operationally.
 
 ## Double-sampling np charts
 
@@ -134,7 +146,7 @@ IQCC provides the complete DS-np workflow:
 
 ### Inspecting a published plan
 
-Joekes, Smrekar and Barbosa (2015, Table 5) report a DS-np plan for
+Joekes, Smrekar and Barbosa (2015, Table 2) report a DS-np plan for
 $`p_0 = 0.005`$ with $`n_1 = 34`$, $`n_2 = 162`$, $`WL = 1.5`$,
 $`UCL_1 = 2.5`$, and $`UCL_2 = 4.5`$:
 
@@ -274,18 +286,27 @@ design$best[, c("n1", "n2", "wl", "ucl1", "ucl2",
 The published tables in Joekes, Smrekar and Barbosa (2015) report
 selected plans but not the complete bounds used for the searches over
 $`n_1`$ and $`n_2`$ or every tie-breaking rule. IQCC tests recover a
-published Table 5 plan over an explicitly recorded local grid and
-validate the exhaustive algorithm independently on a small grid.
+published plan over an explicitly recorded local grid and validate the
+exhaustive algorithm independently on a small grid.
 
 ### Trade-off between detection and sampling effort
 
-Double sampling reduces the average inspection cost when the process is
-operating near $`p_0`$, because most first-stage samples lead to an
-immediate decision. The trade-off is operational complexity and a
-slightly larger first-stage sample than a single-stage plan would
-require for the same ARL0. The `ass0_max` constraint in
+Double sampling can reduce average inspection and improve sensitivity to
+small or moderate increases in the nonconforming proportion, at the cost
+of a variable workload and a more complex operating rule. In the
+published reference plan above, the corresponding single-sampling chart
+inspects 40 units every cycle. The DS-np chart starts with only 34 units
+and has complete-inspection $`ASS_0 = 35.94`$, below 40, because most
+decisions are made after the first sample. When the warning zone is
+reached, however, a second sample of 162 units is required, so the
+maximum workload in that cycle is much larger.
+
+The `ass0_max` constraint in
 [`dsnp_design()`](https://flaviobarros.github.io/IQCC/reference/dsnp_design.md)
-lets the practitioner balance these competing goals.
+lets the practitioner balance out-of-control detection against average
+inspection effort. Curtailed inspection can reduce the effective
+second-stage effort further without changing the signal probability or
+ARL for a fixed plan.
 
 ### Interpreting fractional limits
 
@@ -387,20 +408,23 @@ cat("<!-- IQCC_EXECUTED_HIGH_QUALITY -->\n")
 
 A practical high-quality-process workflow in IQCC is:
 
-1.  Diagnose applicability: compute $`n \hat p`$ and decide between
-    p-chart and DS-np.
+1.  Diagnose p-chart applicability with $`n \hat p(1-\hat p)`$ and the
+    `applicable` field returned by
+    [`pchart_limits()`](https://flaviobarros.github.io/IQCC/reference/pchart_limits.md).
 2.  Compare normal, CF1, and CF2 limits with
     [`pchart_limits()`](https://flaviobarros.github.io/IQCC/reference/pchart_limits.md).
 3.  Evaluate actual binomial risk with
     [`pchart_alpha_risk()`](https://flaviobarros.github.io/IQCC/reference/pchart_alpha_risk.md).
 4.  Use
     [`cchart.p()`](https://flaviobarros.github.io/IQCC/reference/cchart.p.md)
-    for routine p-chart monitoring.
-5.  Use
+    for routine p-chart monitoring when its calibration and sensitivity
+    are adequate for the application.
+5.  Evaluate DS-np with
     [`dsnp_limits()`](https://flaviobarros.github.io/IQCC/reference/dsnp_limits.md)
     or
     [`dsnp_design()`](https://flaviobarros.github.io/IQCC/reference/dsnp_design.md)
-    when inspection effort motivates a double-sampling plan.
+    when sensitivity to relevant shifts and inspection effort motivate
+    double sampling.
 6.  Evaluate ARL and ASS across the relevant $`p`$ range.
 7.  Optionally compare complete and curtailed ASS via
     `dsnp_ass(curtailed = TRUE)`.
@@ -411,9 +435,9 @@ A practical high-quality-process workflow in IQCC is:
 ## References
 
 Joekes, S. and Barbosa, E. P. (2013). An improved attribute control
-chart for monitoring the quality level in high quality processes.
-*Gestão & Produção*, 20, 331–344. doi:
-[10.1590/S0104-530X2013000200007](https://doi.org/10.1590/S0104-530X2013000200007).
+chart for monitoring non-conforming proportion in high quality
+processes. *Control Engineering Practice*, 21, 407–412. doi:
+[10.1016/j.conengprac.2012.12.005](https://doi.org/10.1016/j.conengprac.2012.12.005).
 
 Joekes, S., Smrekar, M. and Barbosa, E. P. (2015). Extending a double
 sampling control chart for non-conforming proportion in high quality

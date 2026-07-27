@@ -39,6 +39,7 @@
     <li><a class="dropdown-item" href="../articles/univariate-dispersion-monitoring.html">Univariate dispersion monitoring</a></li>
     <li><a class="dropdown-item" href="../articles/multivariate-monitoring.html">Multivariate process monitoring</a></li>
     <li><a class="dropdown-item" href="../articles/statistical-foundations.html">Statistical foundations</a></li>
+    <li><a class="dropdown-item" href="../articles/software-comparison.html">IQCC in the R SPC ecosystem</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
@@ -92,21 +93,22 @@ search, chart construction, and plotting.</p>
 UCL = \hat p + 3\sqrt{\hat p(1 - \hat p)/n},\qquad
 LCL = \hat p - 3\sqrt{\hat p(1 - \hat p)/n},
 </annotation></semantics></math></p>
-<p>rely on a normal approximation to the binomial. When the expected
-number of nonconformities
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mi>p</mi></mrow><annotation encoding="application/x-tex">np</annotation></semantics></math>
-is small, the binomial distribution is skewed and the actual false-alarm
-probability of the normal limits can be far from the nominal
+<p>rely on a normal approximation to the binomial. When
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mi>p</mi><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>p</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">n p(1-p)</annotation></semantics></math>
+is small, the binomial distribution is strongly discrete and asymmetric,
+and the actual false-alarm probability of the normal limits can be far
+from the nominal
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>0.0027</mn><annotation encoding="application/x-tex">0.0027</annotation></semantics></math>.
-The Cornish-Fisher expansion adjusts the quantile to account for
-skewness, yielding two corrected methods in IQCC:</p>
+IQCC provides two Cornish–Fisher corrections:</p>
 <ul>
 <li>
-<code>type = "cf1"</code> applies the first skewness
-correction;</li>
+<code>type = "cf1"</code> applies the first correction term, driven
+by binomial skewness;</li>
 <li>
-<code>type = "cf2"</code> applies the two-adjustment operational
-limits from Joekes and Barbosa (2013).</li>
+<code>type = "cf2"</code> retains CF1 and adds the next terms of the
+Cornish–Fisher expansion used by Joekes and Barbosa (2013), involving
+the fourth standardized cumulant and the squared skewness
+contribution.</li>
 </ul>
 <p>The following table compares the nominal and actual performance for
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mn>0.015</mn></mrow><annotation encoding="application/x-tex">p = 0.015</annotation></semantics></math>
@@ -129,16 +131,18 @@ and
 <span>      lcl <span class="op">=</span> <span class="va">lim</span><span class="op">$</span><span class="va">lcl</span>,</span>
 <span>      center <span class="op">=</span> <span class="va">lim</span><span class="op">$</span><span class="va">center</span>,</span>
 <span>      ucl <span class="op">=</span> <span class="va">lim</span><span class="op">$</span><span class="va">ucl</span>,</span>
+<span>      npq <span class="op">=</span> <span class="va">lim</span><span class="op">$</span><span class="va">npq</span>,</span>
+<span>      applicable <span class="op">=</span> <span class="va">lim</span><span class="op">$</span><span class="va">applicable</span>,</span>
 <span>      actual_alpha <span class="op">=</span> <span class="va">risk</span>,</span>
 <span>      arl0 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">risk</span> <span class="op">==</span> <span class="fl">0</span>, <span class="cn">Inf</span>, <span class="fl">1</span> <span class="op">/</span> <span class="va">risk</span><span class="op">)</span></span>
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">}</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">p_results</span></span>
-<span><span class="co">#&gt;   method lcl center        ucl actual_alpha       arl0</span></span>
-<span><span class="co">#&gt; 1 normal   0  0.015 0.09653924 0.0357458712   27.97526</span></span>
-<span><span class="co">#&gt; 2    cf1   0  0.015 0.16120479 0.0002023458 4942.03542</span></span>
-<span><span class="co">#&gt; 3    cf2   0  0.015 0.13031923 0.0031780828  314.65511</span></span></code></pre></div>
+<span><span class="co">#&gt;   method lcl center        ucl    npq applicable actual_alpha       arl0</span></span>
+<span><span class="co">#&gt; 1 normal   0  0.015 0.09653924 0.2955      FALSE 0.0357458712   27.97526</span></span>
+<span><span class="co">#&gt; 2    cf1   0  0.015 0.16120479 0.2955       TRUE 0.0002023458 4942.03542</span></span>
+<span><span class="co">#&gt; 3    cf2   0  0.015 0.13031923 0.2955       TRUE 0.0031780828  314.65511</span></span></code></pre></div>
 <p>The normal limits produce an ARL0 of only about 28 subgroups, far
 below the nominal 370. The CF2 correction brings the actual risk
 substantially closer to the target.</p>
@@ -155,24 +159,34 @@ substantially closer to the target.</p>
 <div class="section level3">
 <h3 id="diagnosing-p-chart-applicability">Diagnosing p-chart applicability<a class="anchor" aria-label="anchor" href="#diagnosing-p-chart-applicability"></a>
 </h3>
-<p>A useful diagnostic is the expected number of nonconformities per
-subgroup,
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mover><mi>p</mi><mo accent="true">̂</mo></mover></mrow><annotation encoding="application/x-tex">n \hat p</annotation></semantics></math>.
-When
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mover><mi>p</mi><mo accent="true">̂</mo></mover><mo>&lt;</mo><mn>5</mn></mrow><annotation encoding="application/x-tex">n \hat p &lt; 5</annotation></semantics></math>,
-the normal approximation is unreliable and corrected limits or a
-double-sampling plan should be considered.</p>
+<p>Joekes and Barbosa (2013) propose the following practical guidance
+based on
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mi>p</mi><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>p</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">n p(1-p)</annotation></semantics></math>:</p>
+<ul>
+<li>use the normal limits when
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mi>p</mi><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>p</mi><mo stretchy="false" form="postfix">)</mo><mo>≥</mo><mn>5</mn></mrow><annotation encoding="application/x-tex">n p(1-p) \ge 5</annotation></semantics></math>;</li>
+<li>CF1 is supported when
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mi>p</mi><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>p</mi><mo stretchy="false" form="postfix">)</mo><mo>≥</mo><mn>0.25</mn></mrow><annotation encoding="application/x-tex">n p(1-p) \ge 0.25</annotation></semantics></math>;</li>
+<li>CF2 extends the corrected chart to
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mi>p</mi><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>p</mi><mo stretchy="false" form="postfix">)</mo><mo>≥</mo><mn>0.08</mn></mrow><annotation encoding="application/x-tex">n p(1-p) \ge 0.08</annotation></semantics></math>;</li>
+<li>below
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>0.08</mn><annotation encoding="application/x-tex">0.08</annotation></semantics></math>,
+another control-chart methodology is needed.</li>
+</ul>
+<p>This is practical guidance rather than an exact theorem. The
+<code>applicable</code> field returned by <code><a href="../reference/pchart_limits.html">pchart_limits()</a></code>
+implements these thresholds. For the example above:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p_candidate</span> <span class="op">&lt;-</span> <span class="fl">0.015</span></span>
-<span><span class="va">n_candidate</span> <span class="op">&lt;-</span> <span class="fl">20</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"n * p ="</span>, <span class="va">n_candidate</span> <span class="op">*</span> <span class="va">p_candidate</span>, <span class="st">"\n"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; n * p = 0.3</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"Recommendation:"</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">n_candidate</span> <span class="op">*</span> <span class="va">p_candidate</span> <span class="op">&lt;</span> <span class="fl">5</span>,</span>
-<span>           <span class="st">"use CF limits or consider DS-np"</span>,</span>
-<span>           <span class="st">"normal approximation may be adequate"</span><span class="op">)</span>,</span>
-<span>    <span class="st">"\n"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Recommendation: use CF limits or consider DS-np</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">p_results</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"method"</span>, <span class="st">"npq"</span>, <span class="st">"applicable"</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="co">#&gt;   method    npq applicable</span></span>
+<span><span class="co">#&gt; 1 normal 0.2955      FALSE</span></span>
+<span><span class="co">#&gt; 2    cf1 0.2955       TRUE</span></span>
+<span><span class="co">#&gt; 3    cf2 0.2955       TRUE</span></span></code></pre></div>
+<p>When more than one method is applicable, the exact binomial
+false-alarm risk should still be inspected. A DS-np plan is not selected
+solely because a p-chart approximation is poor: its ARL and inspection
+effort must also be evaluated for the shifts that matter
+operationally.</p>
 </div>
 </div>
 <div class="section level2">
@@ -214,7 +228,7 @@ the chart.</li>
 <div class="section level3">
 <h3 id="inspecting-a-published-plan">Inspecting a published plan<a class="anchor" aria-label="anchor" href="#inspecting-a-published-plan"></a>
 </h3>
-<p>Joekes, Smrekar and Barbosa (2015, Table 5) report a DS-np plan for
+<p>Joekes, Smrekar and Barbosa (2015, Table 2) report a DS-np plan for
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mn>0</mn></msub><mo>=</mo><mn>0.005</mn></mrow><annotation encoding="application/x-tex">p_0 = 0.005</annotation></semantics></math>
 with
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>n</mi><mn>1</mn></msub><mo>=</mo><mn>34</mn></mrow><annotation encoding="application/x-tex">n_1 = 34</annotation></semantics></math>,
@@ -356,21 +370,28 @@ selected plans but not the complete bounds used for the searches over
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>n</mi><mn>1</mn></msub><annotation encoding="application/x-tex">n_1</annotation></semantics></math>
 and
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>n</mi><mn>2</mn></msub><annotation encoding="application/x-tex">n_2</annotation></semantics></math>
-or every tie-breaking rule. IQCC tests recover a published Table 5 plan
-over an explicitly recorded local grid and validate the exhaustive
-algorithm independently on a small grid.</p>
+or every tie-breaking rule. IQCC tests recover a published plan over an
+explicitly recorded local grid and validate the exhaustive algorithm
+independently on a small grid.</p>
 </div>
 <div class="section level3">
 <h3 id="trade-off-between-detection-and-sampling-effort">Trade-off between detection and sampling effort<a class="anchor" aria-label="anchor" href="#trade-off-between-detection-and-sampling-effort"></a>
 </h3>
-<p>Double sampling reduces the average inspection cost when the process
-is operating near
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>p</mi><mn>0</mn></msub><annotation encoding="application/x-tex">p_0</annotation></semantics></math>,
-because most first-stage samples lead to an immediate decision. The
-trade-off is operational complexity and a slightly larger first-stage
-sample than a single-stage plan would require for the same ARL0. The
-<code>ass0_max</code> constraint in <code><a href="../reference/dsnp_design.html">dsnp_design()</a></code> lets the
-practitioner balance these competing goals.</p>
+<p>Double sampling can reduce average inspection and improve sensitivity
+to small or moderate increases in the nonconforming proportion, at the
+cost of a variable workload and a more complex operating rule. In the
+published reference plan above, the corresponding single-sampling chart
+inspects 40 units every cycle. The DS-np chart starts with only 34 units
+and has complete-inspection
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mi>S</mi><msub><mi>S</mi><mn>0</mn></msub><mo>=</mo><mn>35.94</mn></mrow><annotation encoding="application/x-tex">ASS_0 = 35.94</annotation></semantics></math>,
+below 40, because most decisions are made after the first sample. When
+the warning zone is reached, however, a second sample of 162 units is
+required, so the maximum workload in that cycle is much larger.</p>
+<p>The <code>ass0_max</code> constraint in <code><a href="../reference/dsnp_design.html">dsnp_design()</a></code>
+lets the practitioner balance out-of-control detection against average
+inspection effort. Curtailed inspection can reduce the effective
+second-stage effort further without changing the signal probability or
+ARL for a fixed plan.</p>
 </div>
 <div class="section level3">
 <h3 id="interpreting-fractional-limits">Interpreting fractional limits<a class="anchor" aria-label="anchor" href="#interpreting-fractional-limits"></a>
@@ -473,16 +494,19 @@ are converted to the integer decision boundaries above.</p>
 </h2>
 <p>A practical high-quality-process workflow in IQCC is:</p>
 <ol style="list-style-type: decimal">
-<li>Diagnose applicability: compute
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mover><mi>p</mi><mo accent="true">̂</mo></mover></mrow><annotation encoding="application/x-tex">n \hat p</annotation></semantics></math>
-and decide between p-chart and DS-np.</li>
+<li>Diagnose p-chart applicability with
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mover><mi>p</mi><mo accent="true">̂</mo></mover><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><mover><mi>p</mi><mo accent="true">̂</mo></mover><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">n \hat p(1-\hat p)</annotation></semantics></math>
+and the <code>applicable</code> field returned by
+<code><a href="../reference/pchart_limits.html">pchart_limits()</a></code>.</li>
 <li>Compare normal, CF1, and CF2 limits with
 <code><a href="../reference/pchart_limits.html">pchart_limits()</a></code>.</li>
 <li>Evaluate actual binomial risk with
 <code><a href="../reference/pchart_alpha_risk.html">pchart_alpha_risk()</a></code>.</li>
-<li>Use <code><a href="../reference/cchart.p.html">cchart.p()</a></code> for routine p-chart monitoring.</li>
-<li>Use <code><a href="../reference/dsnp_limits.html">dsnp_limits()</a></code> or <code><a href="../reference/dsnp_design.html">dsnp_design()</a></code> when
-inspection effort motivates a double-sampling plan.</li>
+<li>Use <code><a href="../reference/cchart.p.html">cchart.p()</a></code> for routine p-chart monitoring when its
+calibration and sensitivity are adequate for the application.</li>
+<li>Evaluate DS-np with <code><a href="../reference/dsnp_limits.html">dsnp_limits()</a></code> or
+<code><a href="../reference/dsnp_design.html">dsnp_design()</a></code> when sensitivity to relevant shifts and
+inspection effort motivate double sampling.</li>
 <li>Evaluate ARL and ASS across the relevant
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math>
 range.</li>
@@ -496,8 +520,8 @@ operational monitoring.</li>
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
 <p>Joekes, S. and Barbosa, E. P. (2013). An improved attribute control
-chart for monitoring the quality level in high quality processes.
-<em>Gestão &amp; Produção</em>, 20, 331–344. doi: <a href="https://doi.org/10.1590/S0104-530X2013000200007" class="external-link">10.1590/S0104-530X2013000200007</a>.</p>
+chart for monitoring non-conforming proportion in high quality
+processes. <em>Control Engineering Practice</em>, 21, 407–412. doi: <a href="https://doi.org/10.1016/j.conengprac.2012.12.005" class="external-link">10.1016/j.conengprac.2012.12.005</a>.</p>
 <p>Joekes, S., Smrekar, M. and Barbosa, E. P. (2015). Extending a double
 sampling control chart for non-conforming proportion in high quality
 processes to the case of small samples. <em>Statistical
