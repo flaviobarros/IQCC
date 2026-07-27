@@ -10,7 +10,16 @@
 #' Hotelling T² statistic, and compares empirical quantiles against the
 #' limiting \eqn{\chi^2_p} distribution.
 #'
-#' @param n Integer vector of sample sizes to evaluate. Default is
+#' The T² statistic is computed from a single sample \eqn{X_1, \dots, X_n}
+#' as \eqn{T^2 = n (\bar{X} - \mu)' S^{-1} (\bar{X} - \mu)} where
+#' \eqn{\mu = 0} is the known null mean and \eqn{S} is the sample
+#' covariance. This matches the form in Theorem 3 of Gneri and Barbosa
+#' (2006). It does \strong{not} match the Phase I statistic
+#' \code{\link{T2.1}}, which uses estimated grand means and pooled
+#' covariance from multiple subgroups.
+#'
+#' @param n Integer vector of sample sizes to evaluate. Each element must
+#'   satisfy \eqn{n > p} for the corresponding dimension. Default is
 #'   \code{c(10, 30, 100, 500)}.
 #' @param p Integer vector of dimensions to evaluate. Default is
 #'   \code{c(2, 5)}.
@@ -19,24 +28,27 @@
 #'   \describe{
 #'     \item{\code{"normal"}}{Multivariate normal \eqn{N(0, \Sigma)}.
 #'       All moments finite. Baseline case.}
-#'     \item{\code{"t5"}}{Multivariate t with 5 degrees of freedom,
-#'       scaled to covariance \eqn{\Sigma}. Symmetric, heavy-tailed,
-#'       finite fourth moment (\eqn{4 < 5}).}
+#'     \item{\code{"t5"}}{Elliptical multivariate t with 5 degrees of
+#'       freedom, scaled to covariance \eqn{\Sigma}. Symmetric,
+#'       heavy-tailed, finite fourth moment (\eqn{4 < 5}).}
 #'     \item{\code{"gamma2"}}{Independent Gamma(2, 1) margins,
 #'       centered and scaled to covariance \eqn{\Sigma}. Asymmetric,
 #'       all moments finite.}
-#'     \item{\code{"t4"}}{Multivariate t with 4 degrees of freedom
-#'       (stress test). Has infinite fourth moment, violating the
+#'     \item{\code{"t4"}}{Elliptical multivariate t with 4 degrees of
+#'       freedom (stress test). Has infinite fourth moment, violating the
 #'       formal condition of Theorem 3.}
 #'   }
-#' @param nsim Number of Monte Carlo replications. Default is 10000.
-#' @param sig_levels Numeric vector of significance levels (quantiles)
+#' @param nsim Number of Monte Carlo replications. A single positive
+#'   integer. Default is 10000.
+#' @param sig_levels Numeric vector of quantile levels in \eqn{(0, 1)}
 #'   to compare. Default is \code{c(0.90, 0.95, 0.99)}.
-#' @param seed Random seed for reproducibility. Default is \code{42}.
-#' @param rho Correlation parameter for the covariance matrix
+#' @param seed Random seed for reproducibility. A single integer.
+#'   Default is \code{42}.
+#' @param rho Correlation parameter for the equicorrelation matrix
 #'   \eqn{\Sigma_{ij} = 1} if \eqn{i = j}, \eqn{\rho} otherwise.
-#'   Default is \code{0.3}.
-#' @return A data frame (invisible \code{\link[tibble]{tibble}}) with columns:
+#'   Must satisfy \eqn{\rho > -1/(p-1)} for each \eqn{p} to ensure
+#'   positive definiteness. Default is \code{0.3}.
+#' @return A data frame with columns:
 #'   \describe{
 #'     \item{\code{n}}{Sample size.}
 #'     \item{\code{p}}{Dimension.}
@@ -46,11 +58,18 @@
 #'     \item{\code{chisq}}{Theoretical \eqn{\chi^2_p} quantile.}
 #'     \item{\code{mcse}}{Monte Carlo standard error of the
 #'       empirical quantile.}
-#'     \item{\code{nsim}}{Number of replications used.}
+#'     \item{\code{nsim}}{Number of valid replications (after
+#'       discarding singular covariance draws).}
 #'   }
 #' @section RNG preservation:
 #'   The function saves and restores \code{.Random.seed} on exit, so it
 #'   does not alter the global RNG state.
+#' @section Monte Carlo standard error:
+#'   The MCSE of a sample quantile at level \eqn{q} is approximated as
+#'   \eqn{\sqrt{q(1-q) / (N f(q)^2)}} where \eqn{f} is the \eqn{\chi^2_p}
+#'   density. This approximation assumes the density of the T² statistic is
+#'   close to \eqn{\chi^2_p}, which is reasonable when the asymptotic
+#'   approximation holds. It is not a substitute for the true standard error.
 #' @examples
 #' # Quick test with few replications
 #' res <- sim_t2_asymptotic(
@@ -78,18 +97,42 @@ sim_t2_asymptotic <- function(
     rho = 0.3
 ) {
   # ── Input validation ──────────────────────────────────────────────────────
-  stopifnot(
-    "`n` must be a vector of positive integers" =
-      is.numeric(n) && all(n > 0 & n == as.integer(n)),
-    "`p` must be a vector of positive integers" =
-      is.numeric(p) && all(p > 0 & p == as.integer(p)),
-    "`nsim` must be a single positive integer" =
-      is.numeric(nsim) && length(nsim) == 1 && nsim > 0,
-    "`rho` must be in (-1, 1)" =
-      is.numeric(rho) && length(rho) == 1 && rho > -1 && rho < 1,
-    "`seed` must be a valid integer seed" =
-      is.numeric(seed) && length(seed) == 1
-  )
+  if(!is.numeric(n) || length(n) < 1 || any(!is.finite(n)) ||
+     any(n != as.integer(n)) || any(n < 1))
+    stop("n must be a vector of positive integers")
+
+  if(!is.numeric(p) || length(p) < 1 || any(!is.finite(p)) ||
+     any(p != as.integer(p)) || any(p < 1))
+    stop("p must be a vector of positive integers")
+
+  if(!is.numeric(nsim) || length(nsim) != 1 || !is.finite(nsim) ||
+     nsim < 1 || nsim != as.integer(nsim))
+    stop("nsim must be a single positive integer")
+
+  if(!is.numeric(sig_levels) || length(sig_levels) < 1 ||
+     any(!is.finite(sig_levels)) || any(sig_levels <= 0 | sig_levels >= 1))
+    stop("sig_levels must be a numeric vector with all entries in (0, 1)")
+
+  if(!is.numeric(seed) || length(seed) != 1 || !is.finite(seed) ||
+     seed != as.integer(seed))
+    stop("seed must be a single integer")
+
+  if(!is.numeric(rho) || length(rho) != 1 || !is.finite(rho) || rho <= -1 || rho >= 1)
+    stop("rho must be a finite scalar in (-1, 1)")
+
+  for (dim_p in p) {
+    if (rho <= -1 / (dim_p - 1))
+      stop(sprintf("rho must be > -1/(p-1) = %.4f for p = %d; got rho = %.4f",
+                   -1 / (dim_p - 1), dim_p, rho))
+  }
+
+  for (dim_p in p) {
+    for (sample_size in n) {
+      if (sample_size <= dim_p)
+        stop(sprintf("n must be greater than p for all combinations; got n = %d, p = %d",
+                     sample_size, dim_p))
+    }
+  }
 
   valid_dists <- c("normal", "t5", "gamma2", "t4")
   dist_names <- match.arg(distributions, choices = valid_dists, several.ok = TRUE)
@@ -103,7 +146,7 @@ sim_t2_asymptotic <- function(
   }
   set.seed(seed)
 
-  # ── Build covariance matrix ───────────────────────────────────────────────
+  # ── Build equicorrelation matrix ──────────────────────────────────────────
   build_sigma <- function(p, rho) {
     sigma <- matrix(rho, nrow = p, ncol = p)
     diag(sigma) <- 1
@@ -111,42 +154,38 @@ sim_t2_asymptotic <- function(
   }
 
   # ── Distribution samplers ─────────────────────────────────────────────────
-  # All return an n x p matrix with (approximately) mean 0 and covariance Sigma
+  # All return an n x p matrix with mean 0 and covariance Sigma
 
   rnormal <- function(n, p, sigma) {
     MASS::mvrnorm(n, mu = rep(0, p), Sigma = sigma)
   }
 
-  rt5 <- function(n, p, sigma) {
-    # Multivariate t with 5 df: covariance = (df/(df-2)) * scale
-    # So we set scale = sigma * (df-2)/df to get Cov = sigma
-    df <- 5
+  rt_elliptical <- function(n, p, sigma, df) {
+    # Elliptical multivariate t: X = Z / sqrt(U/df)
+    # where Z ~ N(0, Sigma), U ~ chi^2_df, independent.
+    # Cov(X) = Sigma * df/(df-2) for df > 2.
+    # We scale to get Cov(X) = Sigma.
     scale_mat <- sigma * (df - 2) / df
-    x <- matrix(rt(n * p, df = df), nrow = n, ncol = p)
-    # Apply covariance structure via Cholesky
     chol_scale <- chol(scale_mat)
-    x %*% chol_scale
+    z <- matrix(rnorm(n * p), nrow = n, ncol = p) %*% chol_scale
+    u <- rchisq(n, df = df)
+    z / sqrt(u / df)
+  }
+
+  rt5 <- function(n, p, sigma) {
+    rt_elliptical(n, p, sigma, df = 5)
   }
 
   rt4 <- function(n, p, sigma) {
-    # Multivariate t with 4 df: infinite 4th moment
-    # scale = sigma * (df-2)/df
-    df <- 4
-    scale_mat <- sigma * (df - 2) / df
-    x <- matrix(rt(n * p, df = df), nrow = n, ncol = p)
-    chol_scale <- chol(scale_mat)
-    x %*% chol_scale
+    rt_elliptical(n, p, sigma, df = 4)
   }
 
   rgamma2 <- function(n, p, sigma) {
-    # Independent Gamma(2, 1) margins, then centered and scaled
-    # Gamma(2,1) has mean 2, variance 2
+    # Independent Gamma(2, 1) margins, then centered and scaled.
+    # Gamma(2,1) has mean 2, variance 2.
     x <- matrix(rgamma(n * p, shape = 2, rate = 1), nrow = n, ncol = p)
-    # Center to mean 0
     x <- sweep(x, 2, 2, FUN = "-")
-    # Scale to have variance 1
     x <- sweep(x, 2, sqrt(2), FUN = "/")
-    # Apply correlation structure
     chol_sigma <- chol(sigma)
     x %*% chol_sigma
   }
@@ -155,11 +194,7 @@ sim_t2_asymptotic <- function(
   compute_t2 <- function(x) {
     n_obs <- nrow(x)
     xbar <- colMeans(x)
-    if (n_obs > 1) {
-      s <- cov(x)
-    } else {
-      return(NA_real_)
-    }
+    s <- cov(x)
     tryCatch(
       n_obs * t(xbar) %*% solve(s) %*% xbar,
       error = function(e) NA_real_
@@ -182,25 +217,17 @@ sim_t2_asymptotic <- function(
       )
 
       for (sample_size in n) {
-        # Generate nsim T² statistics
         t2_vals <- replicate(nsim, {
           x <- sampler(sample_size, dim_p, sigma)
           compute_t2(x)
         })
 
-        # Remove NAs (from singular covariance matrices)
         t2_vals <- t2_vals[!is.na(t2_vals)]
         n_valid <- length(t2_vals)
 
-        # Theoretical chi-squared quantiles
         chisq_quants <- qchisq(sig_levels, df = dim_p)
-
-        # Empirical quantiles
         emp_quants <- quantile(t2_vals, probs = sig_levels, names = FALSE)
 
-        # Monte Carlo standard error for quantile estimate
-        # For a p-quantile, MCSE = sqrt(p*(1-p) / (n * f(q)^2))
-        # Using the density of chi-squared as approximation
         mcse <- sqrt(sig_levels * (1 - sig_levels) /
                      (n_valid * dchisq(chisq_quants, df = dim_p)^2))
 
