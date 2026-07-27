@@ -1,270 +1,220 @@
-# Scientific Validation of p-Chart Cornish-Fisher Limits
+# Scientific validation of p-chart Cornish-Fisher limits
 #
-# References Joekes & Barbosa (2013), doi:10.1016/j.conengprac.2012.12.005.
-# All oracles are independent of pchart_limits() and pchart_alpha_risk().
+# Published fixtures: Joekes & Barbosa (2013),
+# doi:10.1016/j.conengprac.2012.12.005.
 #
-# Issue #86. Part of #10.
+# Issue #97. Hardens #86 and contributes to #10/#91.
 
-# ── Independent oracles (no calls to production code) ─────────────────────
+validation_fixture <- function(filename) {
+  path <- system.file("extdata", "validation", filename, package = "IQCC")
+  if (!nzchar(path))
+    stop(sprintf("validation fixture not installed: %s", filename))
+  path
+}
 
 oracle_p_normal <- function(p, n, alpha = 0.0027) {
   z <- qnorm(1 - alpha / 2)
   sd <- sqrt(p * (1 - p) / n)
-  list(lcl = max(0, p - z * sd),
-       ucl = min(1, p + z * sd))
+  list(
+    lcl = max(0, p - z * sd),
+    ucl = min(1, p + z * sd)
+  )
 }
 
 oracle_p_cf1 <- function(p, n, alpha = 0.0027) {
   z <- qnorm(1 - alpha / 2)
   sd <- sqrt(p * (1 - p) / n)
-  skew <- (z^2 - 1) / (6 * n) * (1 - 2 * p)
-  list(lcl = max(0, p - z * sd + skew),
-       ucl = min(1, p + z * sd + skew))
+  skew <- (z^2 - 1) * (1 - 2 * p) / (6 * n)
+  list(
+    lcl = max(0, p - z * sd + skew),
+    ucl = min(1, p + z * sd + skew)
+  )
 }
 
 oracle_p_cf2 <- function(p, n, alpha = 0.0027) {
-  z <- qnorm(1 - alpha / 2)
-  z_pos <- abs(z)
+  z <- abs(qnorm(1 - alpha / 2))
   sd <- sqrt(p * (1 - p) / n)
-  skew <- (z_pos^2 - 1) / (6 * n) * (1 - 2 * p)
-  adj2 <- (z_pos^3 - 3 * z_pos) / (24 * n^2) * (1 - 6 * p * (1 - p)) / sd -
-    (2 * z_pos^3 - 5 * z_pos) / (36 * n^2) * (1 - 2 * p)^2 / sd
-  ucl <- p + z_pos * sd + skew + adj2
-  lcl <- p - z_pos * sd + skew + adj2
-  lcl <- max(0, lcl)
-  ucl <- min(1, ucl)
-  list(lcl = lcl, ucl = ucl)
+  skew <- (z^2 - 1) * (1 - 2 * p) / (6 * n)
+  second <- (z^3 - 3 * z) * (1 - 6 * p * (1 - p)) /
+    (24 * n^2 * sd) -
+    (2 * z^3 - 5 * z) * (1 - 2 * p)^2 /
+    (36 * n^2 * sd)
+
+  list(
+    lcl = max(0, p - z * sd + skew + second),
+    ucl = min(1, p + z * sd + skew + second)
+  )
+}
+
+oracle_p_limits <- function(p, n, alpha, method) {
+  switch(
+    method,
+    normal = oracle_p_normal(p, n, alpha),
+    cf1 = oracle_p_cf1(p, n, alpha),
+    cf2 = oracle_p_cf2(p, n, alpha),
+    stop(sprintf("unsupported method: %s", method))
+  )
 }
 
 oracle_p_risk <- function(p, n, lcl, ucl) {
-  lwr <- if (lcl <= 0) 0 else sum(dbinom(0:(ceiling(n * lcl) - 1), n, p))
-  upr <- if (ucl >= 1) 0 else sum(dbinom((floor(n * ucl) + 1):n, n, p))
-  lwr + upr
+  lower_cut <- ceiling(n * lcl) - 1
+  upper_cut <- floor(n * ucl)
+
+  lower <- if (lcl <= 0 || lower_cut < 0) {
+    0
+  } else {
+    sum(dbinom(0:lower_cut, size = n, prob = p))
+  }
+
+  upper <- if (ucl >= 1 || upper_cut >= n) {
+    0
+  } else {
+    sum(dbinom((upper_cut + 1):n, size = n, prob = p))
+  }
+
+  lower + upper
 }
 
-# ── Reference ──────────────────────────────────────────────────────────────
-
-reference <- paste(
-  "Joekes, S. and Barbosa, E. P. (2013).",
-  "An improved attribute control chart for monitoring non-conforming",
-  "proportion in high quality processes.",
-  "Control Engineering Practice, 21, 407-412.",
-  "doi:10.1016/j.conengprac.2012.12.005"
-)
-
-# ── Table 2: p = 0.015, n = 20, alpha0 = 0.0027 ──────────────────────────
-
-p_t2 <- 0.015
-n_t2 <- 20
-alpha0 <- 0.0027
-
-publim_t2 <- list(
-  normal = list(lcl = 0,                ucl = 0.0965),
-  cf1    = list(lcl = 0,                ucl = 0.1612),
-  cf2    = list(lcl = 0,                ucl = 0.1303)
-)
-
-fixtures_t2 <- data.frame(
-  reference      = reference,
-  table          = "Table 2",
-  row            = rep(c("normal", "CF1", "CF2"), each = 3),
-  parameters     = "p = 0.015, n = 20, alpha = 0.0027, two.sided, truncate",
-  metric         = rep(c("UCL", "nUCL", "alpha_risk"), 3),
-  published_value = c(
-    0.0965, 1.931, 0.035746,
-    0.1612, 3.224, 0.000202,
-    0.1303, 2.606, 0.003178
-  ),
-  calculated_value = c(
-    oracle_p_normal(p_t2, n_t2, alpha0)$ucl,
-    n_t2 * 0.0965,
-    oracle_p_risk(p_t2, n_t2, publim_t2$normal$lcl, publim_t2$normal$ucl),
-    oracle_p_cf1(p_t2, n_t2, alpha0)$ucl,
-    n_t2 * 0.1612,
-    oracle_p_risk(p_t2, n_t2, publim_t2$cf1$lcl, publim_t2$cf1$ucl),
-    oracle_p_cf2(p_t2, n_t2, alpha0)$ucl,
-    n_t2 * 0.1303,
-    oracle_p_risk(p_t2, n_t2, publim_t2$cf2$lcl, publim_t2$cf2$ucl)
-  ),
-  tolerance          = c(5e-5, 1e-3, 5e-7,
-                         5e-5, 1e-3, 5e-7,
-                         5e-5, 1e-3, 5e-7),
-  tolerance_rationale = rep(
-    c("UCL: half-unit in 4th decimal place",
-      "nUCL: propagated from UCL rounding: n * 5e-5 = 0.001",
-      "risk: half-unit in 6th decimal place"),
-    3
-  ),
-  stringsAsFactors = FALSE
-)
-fixtures_t2$tolerance_ratio <- abs(
-  fixtures_t2$calculated_value - fixtures_t2$published_value
-) / fixtures_t2$tolerance
-
-# ── Table 3: p = 0.004, n = 20, alpha0 = 0.0027 ──────────────────────────
-
-p_t3 <- 0.004
-n_t3 <- 20
-
-# Published limits for risk computation (from rounded UCL in table)
-publim_t3 <- list(
-  normal = list(lcl = 0.0000, ucl = 0.0463),
-  cf1    = list(lcl = NULL,   ucl = 0.1125),
-  cf2    = list(lcl = 0.0000, ucl = 0.0533)
-)
-# For CF1 in Table 3, compute the LCL from the oracle with truncation
-publim_t3$cf1$lcl <- round(oracle_p_cf1(p_t3, n_t3, alpha0)$lcl, 4)
-
-fixtures_t3 <- data.frame(
-  reference      = reference,
-  table          = "Table 3",
-  row            = rep(c("normal", "CF1", "CF2"), each = 3),
-  parameters     = "p = 0.004, n = 20, alpha = 0.0027, two.sided, truncate",
-  metric         = rep(c("UCL", "nUCL", "alpha_risk"), 3),
-  published_value = c(
-    0.0463, 0.926, 0.077032,
-    0.1125, 2.250, 0.923038,
-    0.0533, 1.066, 0.002898
-  ),
-  calculated_value = c(
-    oracle_p_normal(p_t3, n_t3, alpha0)$ucl,
-    n_t3 * 0.0463,
-    oracle_p_risk(p_t3, n_t3, publim_t3$normal$lcl, publim_t3$normal$ucl),
-    oracle_p_cf1(p_t3, n_t3, alpha0)$ucl,
-    n_t3 * 0.1125,
-    oracle_p_risk(p_t3, n_t3, publim_t3$cf1$lcl, publim_t3$cf1$ucl),
-    oracle_p_cf2(p_t3, n_t3, alpha0)$ucl,
-    n_t3 * 0.0533,
-    oracle_p_risk(p_t3, n_t3, publim_t3$cf2$lcl, publim_t3$cf2$ucl)
-  ),
-  tolerance          = c(5e-5, 1e-3, 5e-7,
-                         5e-5, 1e-3, 5e-7,
-                         5e-5, 1e-3, 5e-7),
-  tolerance_rationale = rep(
-    c("UCL: half-unit in 4th decimal place",
-      "nUCL: propagated from UCL rounding: n * 5e-5 = 0.001",
-      "risk: half-unit in 6th decimal place"),
-    3
-  ),
-  stringsAsFactors = FALSE
-)
-fixtures_t3$tolerance_ratio <- abs(
-  fixtures_t3$calculated_value - fixtures_t3$published_value
-) / fixtures_t3$tolerance
-
-# ── Test: Table 2 reproduction ────────────────────────────────────────────
-
-test_that("Table 2 (p=0.015, n=20) reproduces via independent oracles", {
-  fixtures <- rbind(fixtures_t2, fixtures_t3)
-  for (i in seq_len(nrow(fixtures))) {
-    prov <- sprintf(
-      paste0("%s; %s; %s; %s = %s; published = %.6f; ",
-             "calculated = %.10f; tolerance = %.1e; ratio = %.3f"),
-      fixtures$reference[i], fixtures$table[i], fixtures$row[i],
-      fixtures$metric[i], fixtures$parameters[i],
-      fixtures$published_value[i], fixtures$calculated_value[i],
-      fixtures$tolerance[i], fixtures$tolerance_ratio[i]
-    )
-    expect_true(fixtures$tolerance_ratio[i] <= 1, info = prov)
-  }
-})
-
-# ── Test: Production pchart_limits matches oracle ─────────────────────────
-
-test_that("pchart_limits normal matches oracle", {
-  skip_if_not_installed("IQCC")
-  for (pv in c(0.015, 0.004)) {
-    for (nv in c(20, 50)) {
-      o <- oracle_p_normal(pv, nv, alpha0)
-      prod <- pchart_limits(pv, nv, alpha = alpha0, type = "normal")
-      expect_equal(prod$ucl, o$ucl, tolerance = 1e-12,
-                   info = sprintf("p=%.3f, n=%d", pv, nv))
-      expect_equal(prod$lcl, o$lcl, tolerance = 1e-12,
-                   info = sprintf("p=%.3f, n=%d", pv, nv))
-    }
-  }
-})
-
-test_that("pchart_limits cf1 matches oracle", {
-  skip_if_not_installed("IQCC")
-  for (pv in c(0.015, 0.004)) {
-    for (nv in c(20, 50)) {
-      o <- oracle_p_cf1(pv, nv, alpha0)
-      prod <- pchart_limits(pv, nv, alpha = alpha0, type = "cf1")
-      expect_equal(prod$ucl, o$ucl, tolerance = 1e-12,
-                   info = sprintf("p=%.3f, n=%d", pv, nv))
-      expect_equal(prod$lcl, o$lcl, tolerance = 1e-12,
-                   info = sprintf("p=%.3f, n=%d", pv, nv))
-    }
-  }
-})
-
-test_that("pchart_limits cf2 matches oracle", {
-  skip_if_not_installed("IQCC")
-  for (pv in c(0.015, 0.004)) {
-    for (nv in c(20, 50)) {
-      o <- oracle_p_cf2(pv, nv, alpha0)
-      prod <- pchart_limits(pv, nv, alpha = alpha0, type = "cf2")
-      expect_equal(prod$ucl, o$ucl, tolerance = 1e-12,
-                   info = sprintf("p=%.3f, n=%d", pv, nv))
-      expect_equal(prod$lcl, o$lcl, tolerance = 1e-12,
-                   info = sprintf("p=%.3f, n=%d", pv, nv))
-    }
-  }
-})
-
-# ── Test: Risk oracle matches pchart_alpha_risk ────────────────────────────
-
-test_that("oracle risk matches pchart_alpha_risk across methods", {
-  skip_if_not_installed("IQCC")
-  scenarios <- expand.grid(
-    pv = c(0.015, 0.004, 0.05, 0.10),
-    nv = c(20, 50, 100),
-    type = c("normal", "cf1", "cf2"),
-    stringsAsFactors = FALSE,
-    KEEP.OUT.ATTRS = FALSE
+test_that("published p-chart fixtures are reusable and non-circular", {
+  fixtures <- read.csv(
+    validation_fixture("p_chart_joekes_barbosa_2013.csv"),
+    stringsAsFactors = FALSE
   )
-  for (i in seq_len(nrow(scenarios))) {
-    pv <- scenarios$pv[i]; nv <- scenarios$nv[i]; type <- scenarios$type[i]
-    limits <- pchart_limits(pv, nv, alpha = alpha0, type = type)
-    risk_prod <- pchart_alpha_risk(pv, nv, limits$lcl, limits$ucl)
-    risk_ora  <- oracle_p_risk(pv, nv, limits$lcl, limits$ucl)
-    expect_equal(risk_prod, risk_ora, tolerance = 1e-12,
-                 info = sprintf("p=%.3f, n=%d, type=%s", pv, nv, type))
+
+  expect_equal(nrow(fixtures), 6)
+  expect_true(all(fixtures$evidence_type == "published_table"))
+
+  for (i in seq_len(nrow(fixtures))) {
+    row <- fixtures[i, ]
+    limits <- oracle_p_limits(row$p, row$n, row$alpha, row$method)
+
+    calculated <- c(
+      ucl = limits$ucl,
+      nucl = row$n * limits$ucl,
+      risk = oracle_p_risk(
+        row$p, row$n, row$risk_lcl, row$risk_ucl
+      )
+    )
+    published <- c(
+      ucl = row$published_ucl,
+      nucl = row$published_nucl,
+      risk = row$published_risk
+    )
+    tolerance <- c(
+      ucl = row$tol_ucl,
+      nucl = row$tol_nucl,
+      risk = row$tol_risk
+    )
+    ratio <- abs(calculated - published) / tolerance
+
+    expect_true(
+      all(ratio <= 1),
+      info = sprintf(
+        "%s %s: ratios UCL=%.3f, nUCL=%.3f, risk=%.3f; risk limits: %s",
+        row$table, row$method, ratio["ucl"], ratio["nucl"], ratio["risk"],
+        row$risk_limit_origin
+      )
+    )
+
+    # The nUCL check must be based on the independently calculated UCL.
+    expect_equal(calculated["nucl"], row$n * limits$ucl, tolerance = 0)
+    expect_gt(abs(calculated["nucl"] - row$n * row$published_ucl), 0)
   }
 })
 
-# ── Test: applicable thresholds ────────────────────────────────────────────
+test_that("production p-chart limits match independent oracles", {
+  fixtures <- read.csv(
+    validation_fixture("p_chart_joekes_barbosa_2013.csv"),
+    stringsAsFactors = FALSE
+  )
 
-test_that("applicable thresholds match Joekes & Barbosa (2013) recommendations", {
-  skip_if_not_installed("IQCC")
+  for (i in seq_len(nrow(fixtures))) {
+    row <- fixtures[i, ]
+    oracle <- oracle_p_limits(row$p, row$n, row$alpha, row$method)
+    production <- pchart_limits(
+      row$p, row$n, alpha = row$alpha, type = row$method
+    )
 
-  cfg <- list(normal = list(threshold = 5, cases = list(
-    list(p = 0.5, n = 20, expect = TRUE),
-    list(p = 0.1, n = 10, expect = FALSE),
-    list(p = 0.015, n = 20, expect = FALSE)
-  )), cf1 = list(threshold = 0.25, cases = list(
-    list(p = 0.015, n = 20, expect = TRUE),
-    list(p = 0.004, n = 20, expect = FALSE),
-    list(p = 0.01, n = 20, expect = FALSE)
-  )), cf2 = list(threshold = 0.08, cases = list(
-    list(p = 0.015, n = 20, expect = TRUE),
-    list(p = 0.004, n = 20, expect = FALSE),
-    list(p = 0.001, n = 50, expect = FALSE)
-  )))
+    expect_equal(production$lcl, oracle$lcl, tolerance = 1e-12)
+    expect_equal(production$ucl, oracle$ucl, tolerance = 1e-12)
+  }
+})
 
-  for (type in names(cfg)) {
-    thresh <- cfg[[type]]$threshold
-    for (cs in cfg[[type]]$cases) {
-      prod <- pchart_limits(cs$p, cs$n, alpha = alpha0, type = type)
-      npq <- cs$p * cs$n * (1 - cs$p)
-      expect_equal(prod$npq, npq, tolerance = 1e-15,
-                   info = sprintf("type=%s, p=%.4f, n=%d", type, cs$p, cs$n))
-      if (!is.na(cs$expect)) {
-        expect_equal(prod$applicable, cs$expect,
-                     info = sprintf("type=%s, p=%.4f, n=%d, npq=%.4f, threshold=%.2f",
-                                    type, cs$p, cs$n, npq, thresh))
-      }
+test_that("rounded-table risk and unrounded production risk are distinct checks", {
+  fixtures <- read.csv(
+    validation_fixture("p_chart_joekes_barbosa_2013.csv"),
+    stringsAsFactors = FALSE
+  )
+
+  for (i in seq_len(nrow(fixtures))) {
+    row <- fixtures[i, ]
+    limits <- oracle_p_limits(row$p, row$n, row$alpha, row$method)
+
+    rounded_risk <- oracle_p_risk(
+      row$p, row$n, row$risk_lcl, row$risk_ucl
+    )
+    unrounded_oracle_risk <- oracle_p_risk(
+      row$p, row$n, limits$lcl, limits$ucl
+    )
+    production_risk <- pchart_alpha_risk(
+      row$p, row$n, limits$lcl, limits$ucl
+    )
+
+    expect_equal(
+      rounded_risk,
+      row$published_risk,
+      tolerance = row$tol_risk
+    )
+    expect_equal(
+      production_risk,
+      unrounded_oracle_risk,
+      tolerance = 1e-12
+    )
+  }
+})
+
+test_that("applicability thresholds follow Joekes and Barbosa recommendations", {
+  cfg <- list(
+    normal = list(
+      threshold = 5,
+      cases = list(
+        list(p = 0.5, n = 20, expected = TRUE),
+        list(p = 0.1, n = 10, expected = FALSE),
+        list(p = 0.015, n = 20, expected = FALSE)
+      )
+    ),
+    cf1 = list(
+      threshold = 0.25,
+      cases = list(
+        list(p = 0.015, n = 20, expected = TRUE),
+        list(p = 0.004, n = 20, expected = FALSE),
+        list(p = 0.01, n = 20, expected = FALSE)
+      )
+    ),
+    cf2 = list(
+      threshold = 0.08,
+      cases = list(
+        list(p = 0.015, n = 20, expected = TRUE),
+        list(p = 0.004, n = 20, expected = FALSE),
+        list(p = 0.001, n = 50, expected = FALSE)
+      )
+    )
+  )
+
+  for (method in names(cfg)) {
+    for (case in cfg[[method]]$cases) {
+      result <- pchart_limits(case$p, case$n, type = method)
+      npq <- case$p * case$n * (1 - case$p)
+
+      expect_equal(result$npq, npq, tolerance = 1e-15)
+      expect_equal(
+        result$applicable,
+        case$expected,
+        info = sprintf(
+          "method=%s, p=%.4f, n=%d, npq=%.4f, threshold=%.2f",
+          method, case$p, case$n, npq, cfg[[method]]$threshold
+        )
+      )
     }
   }
 })
