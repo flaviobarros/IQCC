@@ -107,7 +107,6 @@ best feasible candidates across all pairs.
 The search is discrete and exhaustive within the supplied ranges; it
 is not a continuous optimization. The cost grows with the number of
 (n1, n2) pairs and the number of limit candidates evaluated per pair.
-This function does not implement curtailed inspection.
 
 When \code{alpha} is \code{NULL} and \code{arl0_min} is provided, an
 effective alpha of \code{1 / arl0_min} is used to guide

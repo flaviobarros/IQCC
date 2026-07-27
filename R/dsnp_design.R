@@ -34,7 +34,6 @@
 #' The search is discrete and exhaustive within the supplied ranges; it
 #' is not a continuous optimization. The cost grows with the number of
 #' (n1, n2) pairs and the number of limit candidates evaluated per pair.
-#' This function does not implement curtailed inspection.
 #'
 #' When \code{alpha} is \code{NULL} and \code{arl0_min} is provided, an
 #' effective alpha of \code{1 / arl0_min} is used to guide
@@ -431,6 +430,8 @@ print.dsnp_design <- function(x, ...)
         if(is.null(x$parameters$ass0_max)) "NULL" else x$parameters$ass0_max,
         "\n")
     cat("  objective =", x$parameters$objective, "\n")
+    ass_type <- if(isTRUE(x$parameters$curtailed)) "curtailed" else "complete"
+    cat("  ASS convention:", ass_type, "\n")
     cat("  n1_range:", min(x$parameters$n1_range), "-",
         max(x$parameters$n1_range), "\n")
     cat("  n2_range:", min(x$parameters$n2_range), "-",

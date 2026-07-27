@@ -174,6 +174,8 @@ print.summary.cchart.DSnp <- function(x,
     cat("  Observations:", x$observations, "\n")
     cat("  Sample sizes: n1 =", x$parameters$n1,
         "; n2 =", x$parameters$n2, "\n")
+    ass_type <- if(isTRUE(x$parameters$curtailed)) "curtailed" else "complete"
+    cat("  ASS convention:", ass_type, "\n")
     cat("  In-control proportion p0 =",
         format(x$parameters$p0, digits = digits))
     if(!is.null(x$parameters$p1))

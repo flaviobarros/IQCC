@@ -53,7 +53,8 @@ A list with the following elements:
   \code{p1} is supplied, \code{pt1}, \code{p_signal1}, \code{arl1}, and
   \code{ass1} are also included.}
   \item{p0, p1, n1, n2, alpha}{The validated input parameters.}
-  \item{conservative, allow_empty_warning}{The validated input flags.}
+  \item{conservative, allow_empty_warning, curtailed}{The validated input
+  flags.}
 }
 }
 \description{

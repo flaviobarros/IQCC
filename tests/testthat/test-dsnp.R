@@ -1,3 +1,24 @@
+# --- cchart.DSnp regression tests ---
+
+test_that("cchart.DSnp positional plot=FALSE works", {
+  x1 <- c(0, 1, 2, 3, 1, 0)
+  x2 <- c(NA, NA, 2, NA, NA, NA)
+  res <- cchart.DSnp(x1, n1 = 10, n2 = 20, p0 = 0.05,
+                     x2 = x2, wl = 1.5, ucl1 = 2.5, ucl2 = 4.5,
+                     plot = FALSE)
+  expect_s3_class(res, "cchart.DSnp")
+  expect_false(res$parameters$curtailed)
+  expect_true(is.list(res$performance))
+})
+
+test_that("cchart.DSnp auto limits propagate curtailed", {
+  res <- cchart.DSnp(c(0, 1), n1 = 5, n2 = 10, p0 = 0.05,
+                     x2 = c(NA, 2), alpha = 0.05, plot = FALSE,
+                     curtailed = TRUE)
+  expect_s3_class(res, "cchart.DSnp")
+  expect_true(res$parameters$curtailed)
+})
+
 # --- dsnp_prob_accept tests ---
 
 test_that("dsnp_prob_accept returns structured list", {
