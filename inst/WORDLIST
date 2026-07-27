@@ -4,7 +4,9 @@ ARL
 Asintótica
 ASS
 asymptotic
+Barbosa
 catalogue
+chisq
 CMD
 Codecov
 conformances
@@ -25,6 +27,9 @@ Estadística
 et
 finitos
 frac
+gamma
+Gamma
+gamma2
 ge
 geq
 Gneri
@@ -49,6 +54,7 @@ Meneguetti
 momentos
 moonroof
 Moonroof
+multivariate
 nd
 non
 nonconforming
@@ -58,6 +64,7 @@ nondegenerate
 nonpositive
 nonsingular
 np
+nsim
 operatorname
 orden
 overset
@@ -65,10 +72,14 @@ packageversion
 Phase
 Pimentel
 pkgdown
+Poisson
 pre
 Pre
 qcc
 qquad
+quantile
+quantiles
+radial
 README
 rfloor
 roadmap
@@ -79,13 +90,16 @@ Schwarz
 Sección
 Shewhart
 sidedness
+sig
 Slutsky
 Smrekar
 SPC
 stamet
+studentized
 subgroup
 subgrouping
 subgroups
+tailed
 Technometrics
 Teorema
 testthat
