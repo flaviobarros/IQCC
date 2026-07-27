@@ -100,7 +100,9 @@ Poisson
 pre
 Pre
 qcc
+qcr
 qicharts
+qicharts2
 qquad
 quantile
 quantiles
@@ -123,6 +125,7 @@ sig
 SixSigma
 Slutsky
 Smrekar
+spc
 SPC
 stamet
 studentized
