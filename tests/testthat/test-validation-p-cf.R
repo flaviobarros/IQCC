@@ -117,7 +117,7 @@ test_that("published p-chart fixtures are reusable and non-circular", {
     )
 
     # The nUCL check must be based on the independently calculated UCL.
-    expect_equal(calculated["nucl"], row$n * limits$ucl, tolerance = 0)
+    expect_equal(unname(calculated["nucl"]), row$n * limits$ucl, tolerance = 0)
     expect_gt(abs(calculated["nucl"] - row$n * row$published_ucl), 0)
   }
 })
@@ -160,10 +160,9 @@ test_that("rounded-table risk and unrounded production risk are distinct checks"
       row$p, row$n, limits$lcl, limits$ucl
     )
 
-    expect_equal(
-      rounded_risk,
-      row$published_risk,
-      tolerance = row$tol_risk
+    expect_lte(
+      abs(rounded_risk - row$published_risk),
+      row$tol_risk
     )
     expect_equal(
       production_risk,
