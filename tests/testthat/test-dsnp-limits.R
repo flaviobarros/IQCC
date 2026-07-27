@@ -4,7 +4,8 @@ test_that("dsnp_limits returns structured list", {
   res <- dsnp_limits(p0 = 0.05, n1 = 3, n2 = 5, alpha = 0.05)
   expect_type(res, "list")
   expect_named(res, c("best", "candidates", "p0", "p1", "n1", "n2",
-                       "alpha", "conservative", "allow_empty_warning"))
+                       "alpha", "conservative", "allow_empty_warning",
+                       "curtailed"))
 })
 
 test_that("dsnp_limits candidates is a data.frame", {

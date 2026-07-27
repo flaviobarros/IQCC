@@ -46,10 +46,10 @@
 #'   only when limits need to be computed via \code{dsnp_limits()}.
 #' @param p1 Optional out-of-control proportion. When provided, performance
 #'   metrics at \code{p1} are included in the returned object.
-#' @param curtailed Logical. If \code{TRUE}, use curtailed (truncated)
-#'   inspection ASS in the performance summary. Default \code{FALSE}.
 #' @param plot Logical. If \code{TRUE} (default), draws the control chart.
 #'   If \code{FALSE}, only returns the result object.
+#' @param curtailed Logical. If \code{TRUE}, use curtailed (truncated)
+#'   inspection ASS in the performance summary. Default \code{FALSE}.
 #' @param ... Additional arguments passed to \code{plot()}.
 #'
 #' @return An object of class \code{"cchart.DSnp"}, which is a list with the
@@ -95,8 +95,8 @@ cchart.DSnp <- function(x1, n1, n2, p0,
                         limits = NULL,
                         alpha = 0.0027,
                         p1 = NULL,
-                        curtailed = FALSE,
                         plot = TRUE,
+                        curtailed = FALSE,
                         ...)
 {
     cl <- match.call()
@@ -144,7 +144,7 @@ cchart.DSnp <- function(x1, n1, n2, p0,
     if(have_none)
     {
         lim <- dsnp_limits(p0, n1, n2, alpha = alpha, p1 = p1,
-                           max_results = 1)
+                           max_results = 1, curtailed = curtailed)
         wl <- lim$best$wl
         ucl1 <- lim$best$ucl1
         ucl2 <- lim$best$ucl2
