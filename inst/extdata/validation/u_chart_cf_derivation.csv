@@ -1,0 +1,13 @@
+reference,evidence_type,method,lambda,n,alpha,sides,expected_lcl,expected_ucl,expected_risk,tolerance
+Independent derivation from Poisson cumulants and Cornish-Fisher expansion,independent_derivation,normal,0.05,5,0.0027,two.sided,0,0.34999769927034,0.0264990211607439,1e-10
+Independent derivation from Poisson cumulants and Cornish-Fisher expansion,independent_derivation,cf1,0.05,5,0.0027,two.sided,0.0166643659546514,0.616659764495332,0.778934152721919,1e-10
+Independent derivation from Poisson cumulants and Cornish-Fisher expansion,independent_derivation,cf2,0.05,5,0.0027,two.sided,0.149994376038276,0.483329754411707,0.780962279761167,1e-10
+Independent derivation from Poisson cumulants and Cornish-Fisher expansion,independent_derivation,normal,0.1,10,0.0027,two.sided,0,0.39999769927034,0.0189881568761538,1e-10
+Independent derivation from Poisson cumulants and Cornish-Fisher expansion,independent_derivation,cf1,0.1,10,0.0027,two.sided,0,0.533328731882836,0.000594184817581693,1e-10
+Independent derivation from Poisson cumulants and Cornish-Fisher expansion,independent_derivation,cf2,0.1,10,0.0027,two.sided,0,0.49999622936193,0.00365984682734371,1e-10
+Independent derivation from Poisson cumulants and Cornish-Fisher expansion,independent_derivation,normal,0.5,20,0.0027,two.sided,0.0256619887477458,0.974338011252254,0.00349974190561932,1e-10
+Independent derivation from Poisson cumulants and Cornish-Fisher expansion,independent_derivation,cf1,0.5,20,0.0027,two.sided,0.0923275050539937,1.0410035275585,0.00208765988924539,1e-10
+Independent derivation from Poisson cumulants and Cornish-Fisher expansion,independent_derivation,cf2,0.5,20,0.0027,two.sided,0.0975978364579621,1.03573319615453,0.00208765988924539,1e-10
+Independent derivation from Poisson cumulants and Cornish-Fisher expansion,independent_derivation,normal,1.4,50,0.0027,two.sided,0.898007833936631,1.90199216606337,0.00241854571657881,1e-10
+Independent derivation from Poisson cumulants and Cornish-Fisher expansion,independent_derivation,cf1,1.4,50,0.0027,two.sided,0.92467404045913,1.92865837258587,0.00277528474357936,1e-10
+Independent derivation from Poisson cumulants and Cornish-Fisher expansion,independent_derivation,cf2,1.4,50,0.0027,two.sided,0.925470839671804,1.92786157337319,0.00277528474357936,1e-10

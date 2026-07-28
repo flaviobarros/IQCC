@@ -1,0 +1,7 @@
+reference,evidence_type,table,method,p,n,alpha,published_ucl,published_nucl,published_risk,risk_lcl,risk_ucl,tol_ucl,tol_nucl,tol_risk,risk_limit_origin
+"Joekes and Barbosa (2013), doi:10.1016/j.conengprac.2012.12.005",published_table,Table 2,normal,0.015,20,0.0027,0.0965,1.931,0.035746,0,0.0965,5e-05,0.001,5e-07,published rounded limits
+"Joekes and Barbosa (2013), doi:10.1016/j.conengprac.2012.12.005",published_table,Table 2,cf1,0.015,20,0.0027,0.1612,3.224,0.000202,0,0.1612,5e-05,0.001,5e-07,published rounded limits
+"Joekes and Barbosa (2013), doi:10.1016/j.conengprac.2012.12.005",published_table,Table 2,cf2,0.015,20,0.0027,0.1303,2.606,0.003178,0,0.1303,5e-05,0.001,5e-07,published rounded limits
+"Joekes and Barbosa (2013), doi:10.1016/j.conengprac.2012.12.005",published_table,Table 3,normal,0.004,20,0.0027,0.0463,0.926,0.077032,0,0.0463,5e-05,0.001,5e-07,published rounded limits
+"Joekes and Barbosa (2013), doi:10.1016/j.conengprac.2012.12.005",published_table,Table 3,cf1,0.004,20,0.0027,0.1125,2.25,0.923038,0.0278,0.1125,5e-05,0.001,5e-07,LCL reconstructed from CF1 oracle rounded to 4 decimals; UCL published
+"Joekes and Barbosa (2013), doi:10.1016/j.conengprac.2012.12.005",published_table,Table 3,cf2,0.004,20,0.0027,0.0533,1.066,0.002898,0,0.0533,5e-05,0.001,5e-07,published rounded limits

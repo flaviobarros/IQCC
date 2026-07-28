@@ -50,8 +50,21 @@ jobs:
       - name: Check package spelling
         run: |
           misspellings <- spelling::spell_check_package()
+          utils::write.csv(
+            misspellings,
+            "spelling-misspellings.csv",
+            row.names = FALSE
+          )
           if (nrow(misspellings) > 0) {
             print(misspellings)
             quit(status = 1)
           }
         shell: Rscript {0}
+
+      - name: Upload spelling report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: spelling-misspellings
+          path: spelling-misspellings.csv
+          if-no-files-found: ignore

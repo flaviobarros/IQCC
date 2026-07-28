@@ -56,8 +56,8 @@
 #'     \item{\code{level}}{Quantile level (e.g., 0.95).}
 #'     \item{\code{empirical}}{Empirical quantile of simulated T².}
 #'     \item{\code{chisq}}{Theoretical \eqn{\chi^2_p} quantile.}
-#'     \item{\code{mcse}}{Monte Carlo standard error of the
-#'       empirical quantile.}
+#'     \item{\code{mcse}}{Empirical Monte Carlo standard error estimate for
+#'       the simulated quantile.}
 #'     \item{\code{nsim}}{Number of valid replications (after
 #'       discarding singular covariance draws).}
 #'   }
@@ -65,11 +65,13 @@
 #'   The function saves and restores \code{.Random.seed} on exit, so it
 #'   does not alter the global RNG state.
 #' @section Monte Carlo standard error:
-#'   The MCSE of a sample quantile at level \eqn{q} is approximated as
-#'   \eqn{\sqrt{q(1-q) / (N f(q)^2)}} where \eqn{f} is the \eqn{\chi^2_p}
-#'   density. This approximation assumes the density of the T² statistic is
-#'   close to \eqn{\chi^2_p}, which is reasonable when the asymptotic
-#'   approximation holds. It is not a substitute for the true standard error.
+#'   The MCSE is estimated from the spacing of simulated order statistics.
+#'   For probability \eqn{q}, an approximate 95 percent binomial interval
+#'   for the quantile rank is mapped back to the ordered simulated T² values;
+#'   the interval width divided by \eqn{2 z_{0.975}} estimates the standard
+#'   error. This calculation is distribution-free at the rank level and does
+#'   not assume that the simulated statistic already follows
+#'   \eqn{\chi^2_p}.
 #' @examples
 #' # Quick test with few replications
 #' res <- sim_t2_asymptotic(
@@ -86,7 +88,7 @@
 #' Estadística de Hotelling". Sección 4.2, Teorema 3, pp. 34-36.
 #'
 #' @export
-#' @importFrom stats cov dchisq quantile rchisq rgamma rnorm rt
+#' @importFrom stats cov dchisq quantile qchisq qnorm rchisq rgamma rnorm rt
 sim_t2_asymptotic <- function(
     n = c(10, 30, 100, 500),
     p = c(2, 5),
@@ -96,48 +98,58 @@ sim_t2_asymptotic <- function(
     seed = 42,
     rho = 0.3
 ) {
-  # ── Input validation ──────────────────────────────────────────────────────
-  if(!is.numeric(n) || length(n) < 1 || any(!is.finite(n)) ||
-     any(n != as.integer(n)) || any(n < 1))
+  if (!is.numeric(n) || length(n) < 1 || any(!is.finite(n)) ||
+      any(n != as.integer(n)) || any(n < 1))
     stop("n must be a vector of positive integers")
 
-  if(!is.numeric(p) || length(p) < 1 || any(!is.finite(p)) ||
-     any(p != as.integer(p)) || any(p < 1))
+  if (!is.numeric(p) || length(p) < 1 || any(!is.finite(p)) ||
+      any(p != as.integer(p)) || any(p < 1))
     stop("p must be a vector of positive integers")
 
-  if(!is.numeric(nsim) || length(nsim) != 1 || !is.finite(nsim) ||
-     nsim < 1 || nsim != as.integer(nsim))
+  if (!is.numeric(nsim) || length(nsim) != 1 || !is.finite(nsim) ||
+      nsim < 1 || nsim != as.integer(nsim))
     stop("nsim must be a single positive integer")
 
-  if(!is.numeric(sig_levels) || length(sig_levels) < 1 ||
-     any(!is.finite(sig_levels)) || any(sig_levels <= 0 | sig_levels >= 1))
+  if (!is.numeric(sig_levels) || length(sig_levels) < 1 ||
+      any(!is.finite(sig_levels)) ||
+      any(sig_levels <= 0 | sig_levels >= 1))
     stop("sig_levels must be a numeric vector with all entries in (0, 1)")
 
-  if(!is.numeric(seed) || length(seed) != 1 || !is.finite(seed) ||
-     seed != as.integer(seed))
+  if (!is.numeric(seed) || length(seed) != 1 || !is.finite(seed) ||
+      seed != as.integer(seed))
     stop("seed must be a single integer")
 
-  if(!is.numeric(rho) || length(rho) != 1 || !is.finite(rho) || rho <= -1 || rho >= 1)
+  if (!is.numeric(rho) || length(rho) != 1 || !is.finite(rho) ||
+      rho <= -1 || rho >= 1)
     stop("rho must be a finite scalar in (-1, 1)")
 
   for (dim_p in p) {
-    if (rho <= -1 / (dim_p - 1))
-      stop(sprintf("rho must be > -1/(p-1) = %.4f for p = %d; got rho = %.4f",
-                   -1 / (dim_p - 1), dim_p, rho))
+    if (rho <= -1 / (dim_p - 1)) {
+      stop(sprintf(
+        "rho must be > -1/(p-1) = %.4f for p = %d; got rho = %.4f",
+        -1 / (dim_p - 1), dim_p, rho
+      ))
+    }
   }
 
   for (dim_p in p) {
     for (sample_size in n) {
-      if (sample_size <= dim_p)
-        stop(sprintf("n must be greater than p for all combinations; got n = %d, p = %d",
-                     sample_size, dim_p))
+      if (sample_size <= dim_p) {
+        stop(sprintf(
+          "n must be greater than p for all combinations; got n = %d, p = %d",
+          sample_size, dim_p
+        ))
+      }
     }
   }
 
   valid_dists <- c("normal", "t5", "gamma2", "t4")
-  dist_names <- match.arg(distributions, choices = valid_dists, several.ok = TRUE)
+  dist_names <- match.arg(
+    distributions,
+    choices = valid_dists,
+    several.ok = TRUE
+  )
 
-  # ── RNG preservation ──────────────────────────────────────────────────────
   if (exists(".Random.seed", envir = .GlobalEnv, inherits = FALSE)) {
     old_seed <- .GlobalEnv$.Random.seed
     on.exit(.GlobalEnv$.Random.seed <- old_seed)
@@ -146,62 +158,46 @@ sim_t2_asymptotic <- function(
   }
   set.seed(seed)
 
-  # ── Build equicorrelation matrix ──────────────────────────────────────────
   build_sigma <- function(p, rho) {
     sigma <- matrix(rho, nrow = p, ncol = p)
     diag(sigma) <- 1
     sigma
   }
 
-  # ── Distribution samplers ─────────────────────────────────────────────────
-  # All return an n x p matrix with mean 0 and covariance Sigma
-
   rnormal <- function(n, p, sigma) {
     MASS::mvrnorm(n, mu = rep(0, p), Sigma = sigma)
   }
 
-  rt_elliptical <- function(n, p, sigma, df) {
-    # Elliptical multivariate t: X = Z / sqrt(U/df)
-    # where Z ~ N(0, Sigma), U ~ chi^2_df, independent.
-    # Cov(X) = Sigma * df/(df-2) for df > 2.
-    # We scale to get Cov(X) = Sigma.
-    scale_mat <- sigma * (df - 2) / df
-    chol_scale <- chol(scale_mat)
-    z <- matrix(rnorm(n * p), nrow = n, ncol = p) %*% chol_scale
-    u <- rchisq(n, df = df)
-    z / sqrt(u / df)
-  }
-
   rt5 <- function(n, p, sigma) {
-    rt_elliptical(n, p, sigma, df = 5)
+    .rt_elliptical_cov(n, p, sigma, df = 5)
   }
 
   rt4 <- function(n, p, sigma) {
-    rt_elliptical(n, p, sigma, df = 4)
+    .rt_elliptical_cov(n, p, sigma, df = 4)
   }
 
   rgamma2 <- function(n, p, sigma) {
-    # Independent Gamma(2, 1) margins, then centered and scaled.
-    # Gamma(2,1) has mean 2, variance 2.
-    x <- matrix(rgamma(n * p, shape = 2, rate = 1), nrow = n, ncol = p)
+    x <- matrix(
+      rgamma(n * p, shape = 2, rate = 1),
+      nrow = n,
+      ncol = p
+    )
     x <- sweep(x, 2, 2, FUN = "-")
     x <- sweep(x, 2, sqrt(2), FUN = "/")
-    chol_sigma <- chol(sigma)
-    x %*% chol_sigma
+    x %*% chol(sigma)
   }
 
-  # ── Single T² computation ─────────────────────────────────────────────────
   compute_t2 <- function(x) {
     n_obs <- nrow(x)
     xbar <- colMeans(x)
     s <- cov(x)
+
     tryCatch(
-      n_obs * t(xbar) %*% solve(s) %*% xbar,
+      as.numeric(n_obs * t(xbar) %*% solve(s) %*% xbar),
       error = function(e) NA_real_
     )
   }
 
-  # ── Main simulation loop ──────────────────────────────────────────────────
   results_list <- list()
   row_idx <- 1
 
@@ -209,10 +205,11 @@ sim_t2_asymptotic <- function(
     sigma <- build_sigma(dim_p, rho)
 
     for (dist_name in dist_names) {
-      sampler <- switch(dist_name,
+      sampler <- switch(
+        dist_name,
         normal = rnormal,
-        t5     = rt5,
-        t4     = rt4,
+        t5 = rt5,
+        t4 = rt4,
         gamma2 = rgamma2
       )
 
@@ -221,26 +218,30 @@ sim_t2_asymptotic <- function(
           x <- sampler(sample_size, dim_p, sigma)
           compute_t2(x)
         })
-
-        t2_vals <- t2_vals[!is.na(t2_vals)]
+        t2_vals <- t2_vals[is.finite(t2_vals)]
         n_valid <- length(t2_vals)
 
-        chisq_quants <- qchisq(sig_levels, df = dim_p)
-        emp_quants <- quantile(t2_vals, probs = sig_levels, names = FALSE)
+        if (n_valid < 2)
+          stop("fewer than two valid Monte Carlo replications were produced")
 
-        mcse <- sqrt(sig_levels * (1 - sig_levels) /
-                     (n_valid * dchisq(chisq_quants, df = dim_p)^2))
+        chisq_quants <- qchisq(sig_levels, df = dim_p)
+        emp_quants <- quantile(
+          t2_vals,
+          probs = sig_levels,
+          names = FALSE
+        )
+        mcse <- .quantile_mcse_spacing(t2_vals, sig_levels)
 
         for (k in seq_along(sig_levels)) {
           results_list[[row_idx]] <- data.frame(
-            n            = sample_size,
-            p            = dim_p,
+            n = sample_size,
+            p = dim_p,
             distribution = dist_name,
-            level        = sig_levels[k],
-            empirical    = emp_quants[k],
-            chisq        = chisq_quants[k],
-            mcse         = mcse[k],
-            nsim         = n_valid,
+            level = sig_levels[k],
+            empirical = emp_quants[k],
+            chisq = chisq_quants[k],
+            mcse = mcse[k],
+            nsim = n_valid,
             stringsAsFactors = FALSE
           )
           row_idx <- row_idx + 1
@@ -252,4 +253,33 @@ sim_t2_asymptotic <- function(
   result <- do.call(rbind, results_list)
   rownames(result) <- NULL
   result
+}
+
+.rt_elliptical_cov <- function(n, p, sigma, df) {
+  scale_mat <- sigma * (df - 2) / df
+  z <- matrix(rnorm(n * p), nrow = n, ncol = p) %*% chol(scale_mat)
+  radial_scale <- sqrt(rchisq(n, df = df) / df)
+  z / radial_scale
+}
+
+.quantile_mcse_spacing <- function(x, probs, conf = 0.95) {
+  x <- sort(x[is.finite(x)])
+  n <- length(x)
+
+  if (n < 2)
+    return(rep(NA_real_, length(probs)))
+
+  z <- qnorm(1 - (1 - conf) / 2)
+
+  vapply(probs, function(prob) {
+    rank_center <- (n + 1) * prob
+    rank_sd <- sqrt(n * prob * (1 - prob))
+    lower_rank <- max(1L, floor(rank_center - z * rank_sd))
+    upper_rank <- min(n, ceiling(rank_center + z * rank_sd))
+
+    if (upper_rank <= lower_rank)
+      return(NA_real_)
+
+    (x[upper_rank] - x[lower_rank]) / (2 * z)
+  }, numeric(1))
 }

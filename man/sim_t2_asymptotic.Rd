@@ -61,8 +61,8 @@ A data frame with columns:
     \item{\code{level}}{Quantile level (e.g., 0.95).}
     \item{\code{empirical}}{Empirical quantile of simulated T².}
     \item{\code{chisq}}{Theoretical \eqn{\chi^2_p} quantile.}
-    \item{\code{mcse}}{Monte Carlo standard error of the
-      empirical quantile.}
+    \item{\code{mcse}}{Empirical Monte Carlo standard error estimate for
+      the simulated quantile.}
     \item{\code{nsim}}{Number of valid replications (after
       discarding singular covariance draws).}
   }
@@ -95,11 +95,13 @@ covariance from multiple subgroups.
 
 \section{Monte Carlo standard error}{
 
-  The MCSE of a sample quantile at level \eqn{q} is approximated as
-  \eqn{\sqrt{q(1-q) / (N f(q)^2)}} where \eqn{f} is the \eqn{\chi^2_p}
-  density. This approximation assumes the density of the T² statistic is
-  close to \eqn{\chi^2_p}, which is reasonable when the asymptotic
-  approximation holds. It is not a substitute for the true standard error.
+  The MCSE is estimated from the spacing of simulated order statistics.
+  For probability \eqn{q}, an approximate 95 percent binomial interval
+  for the quantile rank is mapped back to the ordered simulated T² values;
+  the interval width divided by \eqn{2 z_{0.975}} estimates the standard
+  error. This calculation is distribution-free at the rank level and does
+  not assume that the simulated statistic already follows
+  \eqn{\chi^2_p}.
 }
 
 \examples{
