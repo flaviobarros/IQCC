@@ -108,7 +108,8 @@ A data frame with columns:
 
 - `mcse`:
 
-  Monte Carlo standard error of the empirical quantile.
+  Empirical Monte Carlo standard error estimate for the simulated
+  quantile.
 
 - `nsim`:
 
@@ -138,11 +139,12 @@ alter the global RNG state.
 
 ## Monte Carlo standard error
 
-The MCSE of a sample quantile at level \\q\\ is approximated as
-\\\sqrt{q(1-q) / (N f(q)^2)}\\ where \\f\\ is the \\\chi^2_p\\ density.
-This approximation assumes the density of the T² statistic is close to
-\\\chi^2_p\\, which is reasonable when the asymptotic approximation
-holds. It is not a substitute for the true standard error.
+The MCSE is estimated from the spacing of simulated order statistics.
+For probability \\q\\, an approximate 95 percent binomial interval for
+the quantile rank is mapped back to the ordered simulated T² values; the
+interval width divided by \\2 z\_{0.975}\\ estimates the standard error.
+This calculation is distribution-free at the rank level and does not
+assume that the simulated statistic already follows \\\chi^2_p\\.
 
 ## References
 
@@ -162,16 +164,16 @@ res <- sim_t2_asymptotic(
 )
 res
 #>      n p distribution level empirical    chisq      mcse nsim
-#> 1   30 2       normal  0.90  5.644723 4.605170 0.2683282  500
-#> 2   30 2       normal  0.95  6.889938 5.991465 0.3898718  500
-#> 3   30 2       normal  0.99 11.751425 9.210340 0.8899438  500
-#> 4  100 2       normal  0.90  4.695593 4.605170 0.2683282  500
-#> 5  100 2       normal  0.95  5.968509 5.991465 0.3898718  500
-#> 6  100 2       normal  0.99  9.551809 9.210340 0.8899438  500
-#> 7   30 2           t5  0.90  5.390198 4.605170 0.2683282  500
-#> 8   30 2           t5  0.95  6.625412 5.991465 0.3898718  500
-#> 9   30 2           t5  0.99  9.992108 9.210340 0.8899438  500
-#> 10 100 2           t5  0.90  4.677420 4.605170 0.2683282  500
-#> 11 100 2           t5  0.95  5.903337 5.991465 0.3898718  500
-#> 12 100 2           t5  0.99  9.244146 9.210340 0.8899438  500
+#> 1   30 2       normal  0.90  5.644723 4.605170 0.3652191  500
+#> 2   30 2       normal  0.95  6.889938 5.991465 0.4538720  500
+#> 3   30 2       normal  0.99 11.751425 9.210340 1.7531364  500
+#> 4  100 2       normal  0.90  4.695593 4.605170 0.3561347  500
+#> 5  100 2       normal  0.95  5.968509 5.991465 0.3796920  500
+#> 6  100 2       normal  0.99  9.551809 9.210340 0.9505626  500
+#> 7   30 2           t5  0.90  5.390198 4.605170 0.2639283  500
+#> 8   30 2           t5  0.95  6.625412 5.991465 0.5094818  500
+#> 9   30 2           t5  0.99  9.992108 9.210340 1.2439591  500
+#> 10 100 2           t5  0.90  4.677420 4.605170 0.2575835  500
+#> 11 100 2           t5  0.95  5.903337 5.991465 0.4466490  500
+#> 12 100 2           t5  0.99  9.244146 9.210340 0.8981321  500
 ```
