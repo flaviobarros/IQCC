@@ -13,3 +13,5 @@
 ^sources$
 ^\.opencode$
 ^AGENTS\.md$
+^doc$
+^Meta$

@@ -43,17 +43,19 @@ jobs:
         run: |
           set -euo pipefail
 
-          for article in iqcc-positioning high-quality-processes statistical-foundations; do
+          for article in iqcc-positioning high-quality-processes statistical-foundations numerical-validation; do
             test -s "docs/articles/${article}.html"
           done
 
           grep -q "IQCC_EXECUTED_POSITIONING" docs/articles/iqcc-positioning.html
           grep -q "IQCC_EXECUTED_HIGH_QUALITY" docs/articles/high-quality-processes.html
           grep -q "IQCC_EXECUTED_FOUNDATIONS" docs/articles/statistical-foundations.html
+          grep -q "IQCC_EXECUTED_NUMERICAL_VALIDATION" docs/articles/numerical-validation.html
 
           grep -q "actual_alpha" docs/articles/iqcc-positioning.html
           grep -q "ARL0" docs/articles/high-quality-processes.html
           grep -q "gv_table" docs/articles/statistical-foundations.html
+          grep -q "max_tolerance_ratio" docs/articles/numerical-validation.html
 
           figure_count=$(find docs/articles -type f \( -name '*.png' -o -name '*.svg' \) | wc -l)
           if [ "$figure_count" -lt 3 ]; then

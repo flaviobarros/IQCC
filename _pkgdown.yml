@@ -30,6 +30,8 @@ navbar:
         href: articles/multivariate-monitoring.html
       - text: Statistical foundations
         href: articles/statistical-foundations.html
+      - text: Numerical validation against the methodological literature
+        href: articles/numerical-validation.html
       - text: IQCC in the R SPC ecosystem
         href: articles/software-comparison.html
     reference:
@@ -55,6 +57,7 @@ articles:
   - univariate-dispersion-monitoring
   - multivariate-monitoring
   - statistical-foundations
+  - numerical-validation
   - software-comparison
 
 reference:
