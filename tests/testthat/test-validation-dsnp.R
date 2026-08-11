@@ -112,15 +112,22 @@ fixtures$arl1_ratio <- abs(fixtures$calc_arl1 - fixtures$published_arl1) / toler
 # Test: Published Tables 2-4
 # ══════════════════════════════════════════════════════════════════════════
 
-# Known borderline rounding cases where tolerance_ratio slightly exceeds 1.
-# These differ by 0.01 (one unit in the last published decimal place), which
-# is consistent with independent rounding of the published and calculated
-# values.  All 9 × 3 = 27 published cells otherwise match exactly within
-# half-unit rounding tolerance.
+# Known borderline rounding cases where tolerance_ratio slightly exceeds 1
+# at the default half-unit tolerance.  These differ by 0.01 (one unit in the
+# last published decimal place), which is consistent with independent rounding
+# of the published and calculated values.  Under the harmonized tolerance
+# policy, such cells are allowed a one-unit-in-last-decimal exception of 0.01.
+# All 9 x 3 = 27 published cells otherwise match exactly within half-unit
+# rounding tolerance.
 known_borderline <- list(
   "Table 2 p0=2%, n=20 arl0"  = TRUE,
   "Table 3 p0=0.5%, n=80 ass0" = TRUE
 )
+
+# One unit in the last published decimal (0.01), plus a tiny relative margin
+# to absorb floating-point rounding: the ratio is 1.0000 exactly up to ~1e-12,
+# which would otherwise fail by 4e-14.
+tolerance_borderline <- 0.01 * (1 + 1e-10)
 
 test_that("Joekes et al. (2015) Tables 2-4 are reproduced within tolerance", {
   for (i in seq_len(nrow(fixtures))) {
@@ -130,7 +137,7 @@ test_that("Joekes et al. (2015) Tables 2-4 are reproduced within tolerance", {
       cal <- f[[paste0("calc_", metric)]]
       ratio <- f[[paste0(metric, "_ratio")]]
       key <- sprintf("Table %d %s %s", f$table, f$row, metric)
-      tol <- if (key %in% names(known_borderline)) 0.015 else tolerance_pub
+      tol <- if (key %in% names(known_borderline)) tolerance_borderline else tolerance_pub
       prov <- sprintf(
         "%s; Table %d; %s; %s; published = %.2f; calculated = %.2f; tolerance = %.4f; ratio = %.3f",
         f$reference, f$table, f$row, metric,
