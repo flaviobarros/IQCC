@@ -17,5 +17,7 @@
   IQCC](https://flaviobarros.github.io/IQCC/articles/multivariate-monitoring.md):
 - [Statistical Foundations of
   IQCC](https://flaviobarros.github.io/IQCC/articles/statistical-foundations.md):
+- [Numerical validation against the methodological
+  literature](https://flaviobarros.github.io/IQCC/articles/numerical-validation.md):
 - [IQCC in the R SPC Ecosystem: A
   Comparison](https://flaviobarros.github.io/IQCC/articles/software-comparison.md):
