@@ -206,13 +206,18 @@ test_that("Table 4 normal two-sided risk is reproduced", {
   }
 })
 
-# The published two-sided CF column (order 2) is not reproduced by either the
-# production implementation or the independent order-2 oracle of the paper's
-# own expansion: the calculated risk is systematically smaller than the
-# published value for every n.  This is a genuine discrepancy in the source
-# table.  It is documented below rather than forced; the production keeps the
-# paper's documented order-2 expansion, which the independent oracle confirms.
-t4_cf_prod <- vapply(t4_n, function(n) {
+# The published two-sided CF risk column of Table 4 is not reproduced by either
+# the first-order or the second-order Cornish-Fisher expansion, and the source
+# does not state unambiguously which order generated the column.  We therefore
+# record the order as an unresolved parametrization rather than impute an error
+# to the source: the two orders are compared explicitly against the published
+# values below, and neither reproduces them within tolerance.  The production
+# expansion matches the corresponding independent oracle.
+t4_cf_order1 <- vapply(t4_n, function(n) {
+  gv_alpha_risk(n, 2, det_sigma = 1, type = "cf", side = "two.sided",
+                cf_order = 1)$alpha
+}, numeric(1))
+t4_cf_order2 <- vapply(t4_n, function(n) {
   gv_alpha_risk(n, 2, det_sigma = 1, type = "cf", side = "two.sided",
                 cf_order = 2)$alpha
 }, numeric(1))
@@ -226,24 +231,28 @@ test_that("Table 4 CF two-sided: production matches the independent order-2 orac
     cf1 <- m$mean + q_lo * m$sd
     cf2 <- m$mean + q_hi * m$sd
     risk_oracle <- 1 - (oracle_p2_cdf(cf2, n) - oracle_p2_cdf(cf1, n))
-    expect_equal(risk_oracle, t4_cf_prod[i], tolerance = 1e-12,
+    expect_equal(risk_oracle, t4_cf_order2[i], tolerance = 1e-12,
                  info = sprintf("independent order-2 CF risk, n = %d", n))
   }
 })
 
-test_that("Table 4 CF two-sided published column differs from production (documented)", {
-  # The published two-sided CF column is NOT reproduced.  The mismatch is
-  # systematic (production lower than published for every n), so it is not a
-  # rounding artifact.  This test records the discrepancy instead of forcing
-  # equality; the production and the independent oracle agree with each other.
+test_that("Table 4 CF two-sided: order is unresolved, neither expansion reproduces the published column", {
+  # Compare first- and second-order expansions explicitly with the published
+  # two-sided CF column.  Order 1 overshoots for small n; order 2 undershoots
+  # for every n.  Because neither order reproduces the published value and the
+  # source does not disambiguate the order used, the column is left as an
+  # unresolved parametrization, not classified as a source error.
   for (i in seq_along(t4_n)) {
     n <- t4_n[i]
-    ratio <- abs(t4_cf_prod[i] - t4_cf[i]) / 5e-6
+    r1 <- abs(t4_cf_order1[i] - t4_cf[i])
+    r2 <- abs(t4_cf_order2[i] - t4_cf[i])
     prov <- sprintf(
-      "%s; Table 4; n = %d; CF two-sided order 2; KNOWN DISCREPANCY (source table); published = %.5f; calculated = %.8f; tolerance = 5e-6; ratio = %.3f",
-      reference, n, t4_cf[i], t4_cf_prod[i], ratio
+      "%s; Table 4; n = %d; CF two-sided; order UNRESOLVED (matches neither order 1 nor order 2); published = %.5f; order1 = %.8f (ratio %.2f); order2 = %.8f (ratio %.2f)",
+      reference, n, t4_cf[i],
+      t4_cf_order1[i], r1 / 5e-6,
+      t4_cf_order2[i], r2 / 5e-6
     )
-    expect_true(ratio > 1, info = prov)
+    expect_true(r1 > 1e-4 && r2 > 1e-4, info = prov)
   }
 })
 
@@ -310,34 +319,32 @@ t6_normal <- c(1.03849, 1.23081, 1.29575, 1.31462, 1.31384, 1.30405,
 t6_cf <- c(5.50433, 4.23237, 3.54973, 3.11760, 2.81575, 2.59090,
            2.41570, 1.90241, 1.64311, 1.37043)
 
-test_that("Table 6 published values equal production limits scaled by 1/2 (documented)", {
-  # Every published Table 6 normal and CF value equals gv_limits(...) / 2
-  # within the printed precision (half a unit of the last printed decimal,
-  # 5e-6).  The source table is therefore on a scale that is exactly half the
-  # production convention.  This is a genuine scale discrepancy in the source
-  # table, recorded here rather than silently stretched: production limits are
-  # authoritative and the source column is half of them.  The comparison is
-  # production/2 against the printed value (not production against twice the
-  # printed value), because the printed value carries its own rounding error.
+test_that("Table 6 published values are consistent with det_sigma = 0.5 (unresolved scale)", {
+  # Every published Table 6 normal and CF value equals gv_limits(...) computed
+  # at det_sigma = 0.5 within the printed precision (half a unit of the last
+  # printed decimal, 5e-6; a few cells at one unit, 1e-5).  The source that
+  # introduces Table 6 does not state which |Sigma| was used in that simulation,
+  # so the scale is an implicit/resolved convention numerically consistent with
+  # det_sigma = 0.5.  We record it as such rather than impute an error to the
+  # source: no conclusion is drawn that production limits are "authoritative".
+  # The comparison uses production det_sigma = 0.5 (equivalently production/2
+  # at det_sigma = 1) against the printed value.
   for (i in seq_along(t6_n)) {
     n <- t6_n[i]
-    rn <- gv_limits(n, 3, det_sigma = 1, alpha = 0.0027,
+    rn <- gv_limits(n, 3, det_sigma = 0.5, alpha = 0.0027,
                     type = "normal", side = "upper")$ucl
-    rc <- gv_limits(n, 3, det_sigma = 1, alpha = 0.0027,
+    rc <- gv_limits(n, 3, det_sigma = 0.5, alpha = 0.0027,
                     type = "cf", side = "upper", cf_order = 1)$ucl
-    # A few cells differ by one unit in the last printed decimal (CF rows
-    # n = 8 and 30), consistent with independent rounding of the source value;
-    # they are allowed a one-unit-in-last-decimal tolerance of 1e-5.
     tol_c <- if (n %in% c(8L, 30L)) 1e-5 else 5e-6
-    ratio_n <- abs(rn / 2 - t6_normal[i]) / 5e-6
-    ratio_c <- abs(rc / 2 - t6_cf[i]) / tol_c
+    ratio_n <- abs(rn - t6_normal[i]) / 5e-6
+    ratio_c <- abs(rc - t6_cf[i]) / tol_c
     prov_n <- sprintf(
-      "%s; Table 6; n = %d; normal; KNOWN SCALE 1/2 (source table); published = %.5f; production/2 = %.8f; tolerance = 5e-6; ratio = %.3f",
-      reference, n, t6_normal[i], rn / 2, ratio_n
+      "%s; Table 6; n = %d; normal; UNRESOLVED SCALE consistent with det_sigma = 0.5; published = %.5f; det0.5 = %.8f; tolerance = 5e-6; ratio = %.3f",
+      reference, n, t6_normal[i], rn, ratio_n
     )
     prov_c <- sprintf(
-      "%s; Table 6; n = %d; CF order 1; KNOWN SCALE 1/2 (source table); published = %.5f; production/2 = %.8f; tolerance = %.1e; ratio = %.3f",
-      reference, n, t6_cf[i], rc / 2, tol_c, ratio_c
+      "%s; Table 6; n = %d; CF order 1; UNRESOLVED SCALE consistent with det_sigma = 0.5; published = %.5f; det0.5 = %.8f; tolerance = %.1e; ratio = %.3f",
+      reference, n, t6_cf[i], rc, tol_c, ratio_c
     )
     expect_true(ratio_n <= 1, info = prov_n)
     expect_true(ratio_c <= 1, info = prov_c)
@@ -346,21 +353,21 @@ test_that("Table 6 published values equal production limits scaled by 1/2 (docum
 
 test_that("Table 6 Exact(sim.) column is Monte Carlo, treated as order-of-magnitude only", {
   # The Exact(sim.) column used ~1e6 Wishart simulations without a documented
-  # seed, so it is not a deterministic five-decimal fixture.  Like the other
-  # Table 6 columns, the published values are on the half-scale of the
-  # production convention (see the scale-1/2 test above).  We only check that
-  # a reproducible small simulation, divided by 2 to the source scale, is
-  # within an order of magnitude of the published statistic, and that RNG
-  # state is preserved.
+  # seed, so it is not a deterministic five-decimal fixture.  Consistent with
+  # the unresolved-scale reading of Table 6, the published values are compared
+  # against a simulation on the same det_sigma = 0.5 scale (equivalently
+  # production/2 at det_sigma = 1).  We only check that a reproducible small
+  # simulation is within an order of magnitude of the published statistic and
+  # that RNG state is preserved.
   set.seed(99)
   before <- .Random.seed
-  sim <- gv_limits(4, 3, det_sigma = 1, alpha = 0.0027, type = "simulation",
+  sim <- gv_limits(4, 3, det_sigma = 0.5, alpha = 0.0027, type = "simulation",
                    nsim = 20000, seed = 2026)$ucl
   after <- .Random.seed
   expect_identical(before, after)
-  expect_true(sim / 2 > 0.5 * t6_exact_sim[1] && sim / 2 < 2 * t6_exact_sim[1],
-              info = sprintf("Exact(sim.) order of magnitude, n = 4: %.4f/2 = %.4f vs published %.5f",
-                             sim, sim / 2, t6_exact_sim[1]))
+  expect_true(sim > 0.5 * t6_exact_sim[1] && sim < 2 * t6_exact_sim[1],
+              info = sprintf("Exact(sim.) order of magnitude, n = 4: %.4f vs published %.5f",
+                             sim, t6_exact_sim[1]))
 })
 
 # ══════════════════════════════════════════════════════════════════════════
