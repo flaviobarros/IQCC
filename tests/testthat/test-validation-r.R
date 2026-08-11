@@ -63,10 +63,23 @@ fixtures_t2$tolerance_ratio <- abs(
   fixtures_t2$calculated_value - fixtures_t2$published_value
 ) / fixtures_t2$tolerance
 
+# Harmonized tolerance policy: half a unit in the last published decimal
+# (5e-6) by default.  A few cells differ by one unit in the last decimal
+# (within 1e-5) through independent rounding of the source; each is given an
+# explicit one-unit-in-last-decimal exception.  These cells are:
+#   n = 3, q(0.99865); n = 6, q(0.00135) and q(0.99865);
+#   n = 8, q(0.00135); n = 9, q(0.9973).
+one_unit_exception_t2 <- c(
+  "n = 3||q(0.99865)", "n = 6||q(0.00135)", "n = 6||q(0.99865)",
+  "n = 8||q(0.00135)", "n = 9||q(0.9973)"
+)
+
 test_that("Table 2 quantiles reproduce for n = 2:10", {
   for (i in seq_len(nrow(fixtures_t2))) {
     f <- fixtures_t2[i, ]
-    tol <- 1e-5  # one full unit of 5th decimal (published to 5 decimals)
+    key <- paste(f$row, f$prob_label, sep = "||")
+    # Half-unit by default; one-unit exception for the documented cells above.
+    tol <- if (key %in% one_unit_exception_t2) 1e-5 else 5e-6
     ratio <- abs(f$calculated_value - f$published_value) / tol
     prov <- sprintf(
       "%s; %s; %s; %s; published = %.5f; calculated = %.10f; tolerance = %.1e; ratio = %.3f",
@@ -154,10 +167,28 @@ build_risk_fixture <- function(z, pub_total, pub_upper, pub_arl,
     results$calc_upper_risk[i] <- orc$upper
     results$calc_upper_arl[i] <- round(1 / orc$upper)
   }
-  # Risk published to 5 decimals; tolerance = 1 full unit of the last digit.
-  # ARL published as integer; tolerance = 1.
-  results$total_tolerance <- 1e-5
-  results$upper_tolerance <- 1e-5
+  # Harmonized tolerance policy: half a unit in the last published decimal
+  # (5e-6) by default.  The published values are printed to 5 decimals; the
+  # subset of cells below differs by up to one unit in the last decimal
+  # through independent rounding and is given an explicit one-unit
+  # (1e-5) exception.  ARL is published as an integer; tolerance = 1.
+  # Table 1a exception cells (n, metric): (10, upper_risk).
+  # Table 1b exception cells (n, metric): (4, total_risk), (4, upper_risk),
+  #   (8, total_risk), (8, upper_risk), (9, total_risk), (10, total_risk).
+  results$total_tolerance <- ifelse(
+    results$table == "Table 1a" & results$n == 10,
+    1e-5, 5e-6
+  )
+  results$upper_tolerance <- ifelse(
+    (results$table == "Table 1a" & results$n == 10) |
+      (results$table == "Table 1b" & results$n %in% c(4, 8)),
+    1e-5, 5e-6
+  )
+  # total_risk exceptions for Table 1b: n = 4, 8, 9, 10.
+  results$total_tolerance <- ifelse(
+    results$table == "Table 1b" & results$n %in% c(4, 8, 9, 10),
+    1e-5, results$total_tolerance
+  )
   results$arl_tolerance <- 1
   results$total_ratio <- abs(results$calc_total_risk - results$published_total_risk) /
     results$total_tolerance
