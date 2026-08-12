@@ -17,26 +17,26 @@ The package is motivated by a recurring practical problem in classical Shewhart-
 - **Univariate control charts**: X-bar, R, S, p, and u charts.
 - **Improved probability limits**: exact, Cornish-Fisher corrected, standardized, and simulation-based limits.
 - **High-quality processes**: corrected p charts and double-sampling np charts for rare nonconformities.
-- **Multivariate monitoring**: Hotelling T² charts, generalized variance
-  charts, and auxiliary `tr(V)` variability charts.
-- **False-alarm diagnostics**: exact binomial, Poisson, range-chart, and generalized variance risk calculations where available.
-- **Phase I and Phase II support**: retrospective estimation and prospective monitoring.
+- **Multivariate monitoring**: Hotelling T² charts, generalized variance charts, and auxiliary `tr(V)` variability charts.
+- **False-alarm diagnostics**: exact binomial, Poisson, range-chart, and generalized-variance risk calculations where available.
+- **Phase I and Phase II support**: retrospective estimation and prospective monitoring where supported by the chart family.
 - **Research-oriented numerical layer**: pure functions separated from plotting interfaces for validation and simulation studies.
+- **Scientific validation catalogue**: executable reproductions, independent derivations, exact-distribution checks, Monte Carlo studies, and property tests with explicit provenance and tolerances.
 
 ## Implemented methods
 
 | Monitoring problem | Function(s) | Implemented methods | Notes |
 |---|---|---|---|
 | Mean of a univariate process | `cchart.Xbar()`, `cchart.Xbar1()`, `cchart.Xbar2()`, `cchart.Xbar_R()` | Shewhart-type X-bar charts | Includes X-bar/R workflows. |
-| Range / process dispersion | `cchart.R()` | Shewhart R chart; exact Tukey-based R chart | Exact limits use the relative range distribution. |
-| Standard deviation | `cchart.S()` | Normalized S chart; exact chi-square-based S chart | Exact limits use the sample-variance distribution. |
+| Range / process dispersion | `r_shewhart_limits()`, `r_exact_limits()`, `cchart.R()` | Shewhart R chart; exact Tukey-based R chart | Exact limits use the relative-range distribution. |
+| Standard deviation | `s_shewhart_limits()`, `s_exact_limits()`, `cchart.S()` | Conventional S chart; exact chi-square-based S chart | Exact limits use the sample-variance distribution; the wrapper preserves the historical qcc centering convention. |
 | Nonconforming proportion | `pchart_limits()`, `pchart_alpha_risk()`, `cchart.p()` | Normal, CF1, CF2, and standardized p charts | Includes exact binomial false-alarm evaluation and pooled estimation. |
-| Double-sampling np chart | `dsnp_prob_accept()`, `dsnp_arl()`, `dsnp_ass()`, `dsnp_limits()`, `cchart.DSnp()` | Exact-binomial DS-np performance, limit search, and chart | Two-stage sampling for high-quality processes with small samples. |
+| Double-sampling np chart | `dsnp_prob_accept()`, `dsnp_arl()`, `dsnp_ass()`, `dsnp_limits()`, `dsnp_design()`, `cchart.DSnp()` | Exact-binomial DS-np performance, design search, and chart | Two-stage sampling for high-quality processes with small samples; supports complete and curtailed inspection conventions. |
 | Nonconformities per unit | `uchart_limits()`, `uchart_alpha_risk()`, `cchart.u()` | Normal, CF1, CF2, and standardized u charts | Includes exact Poisson risk and pooled rate estimation. |
 | Multivariate mean vector | `T2.1()`, `T2.2()`, `cchart.T2.1()`, `cchart.T2.2()` | Hotelling T² charts for Phase I and Phase II | Supports individual and subgroup observations. |
 | Multivariate variability | `gv_stat()`, `gv_limits()`, `gv_alpha_risk()`, `cchart.GV()` | Normal, Cornish-Fisher, selected exact, and simulation-based generalized variance charts | Exact dimension-two limits and selected published dimension-three quantiles. |
 | Multivariate variability structure | `trv_stat()`, `trv_limits()`, `trv_alpha_risk()`, `cchart.trV()` | Exact chi-square and simulation-based trace-statistic charts | Complements `|S|` by detecting standardized trace changes that may preserve determinant. |
-| Relative range constants | `d2()`, `d3()` | Numerical integration using Tukey distribution functions | Used by exact R-chart calculations. |
+| Relative range constants | `d2()`, `d3()` | Numerical integration using Tukey distribution functions | Used by range-chart calculations and validation. |
 | False-alarm risk for R charts | `alpha.risk()` | Exact false-alarm probability for the classical three-sigma R chart | Diagnoses inflated false-alarm risk. |
 
 ## Installation
@@ -69,6 +69,10 @@ cchart.R(
   type = "tukey",
   y = pistonrings[1:25, ]
 )
+
+# Pure S-chart limits without plotting
+s_exact_limits(sigma = 1, n = 5)
+s_shewhart_limits(sigma = 1, n = 5)
 
 # p-chart limits and exact false-alarm risk
 p_limits <- pchart_limits(p = 0.015, n = 20, type = "cf2")
@@ -115,29 +119,40 @@ cchart.trV(phase1, Sigma0 = diag(2), plot = FALSE)
 
 ## Learning more
 
-The package includes three vignettes:
+The package includes executable articles covering use, theory, validation, and positioning:
 
 ```r
+vignette("getting-started-with-iqcc", package = "IQCC")
 vignette("iqcc-positioning", package = "IQCC")
 vignette("high-quality-processes", package = "IQCC")
+vignette("univariate-dispersion-monitoring", package = "IQCC")
+vignette("multivariate-monitoring", package = "IQCC")
 vignette("statistical-foundations", package = "IQCC")
+vignette("numerical-validation", package = "IQCC")
+vignette("software-comparison", package = "IQCC")
 ```
 
+- `getting-started-with-iqcc` introduces the package workflow and principal chart families.
 - `iqcc-positioning` explains where IQCC fits in the R/SPC ecosystem.
 - `high-quality-processes` focuses on rare nonconformities, Cornish-Fisher p charts, and DS-np monitoring.
-- `statistical-foundations` records the probability models, derivations, and validation strategy behind the audited methods.
+- `univariate-dispersion-monitoring` covers R and S charts, including distribution-aware limits.
+- `multivariate-monitoring` covers Hotelling T², generalized variance, and `tr(V)` monitoring.
+- `statistical-foundations` records the probability models and derivations behind the audited methods.
+- `numerical-validation` consolidates published reproductions, independent oracles, tolerances, and unresolved source conventions.
+- `software-comparison` places IQCC alongside related R statistical-process-control packages.
 
-A longer article-oriented technical document is available at `paper/statistical-foundations.md`.
+A longer article-oriented technical document is maintained at `paper/statistical-foundations.md` in the development repository.
 
 ## Research background
 
-IQCC was developed from research on improved statistical quality control charts, especially work associated with Emanuel Pimentel Barbosa and collaborators. The package emphasizes cases where classical Shewhart-type limits are simple and familiar but statistically inaccurate.
+IQCC grew from research on improved statistical quality control charts, particularly work led by Emanuel Pimentel Barbosa and collaborators. The package emphasizes cases where classical Shewhart-type limits remain operationally attractive but their usual normal approximations can be statistically inaccurate.
 
 Important methodological themes include:
 
 - Cornish-Fisher quantile correction for highly skewed attribute statistics;
 - exact discrete false-alarm evaluation for binomial and Poisson charts;
-- exact range-chart limits through the relative range distribution;
+- exact range-chart limits through the relative-range distribution;
+- exact chi-square probability limits for subgroup standard deviations;
 - double-sampling designs for rare nonconformities;
 - Hotelling T² monitoring for multivariate process means;
 - generalized variance monitoring through products of chi-square variables and Bartlett decomposition;
@@ -145,15 +160,14 @@ Important methodological themes include:
 
 ## Development roadmap
 
+Version 0.8.0 freezes the validated core described above. Extensions that remain outside the release scope are tracked separately so that experimental work does not blur the stable API.
+
 | Candidate extension | Statistical target | Possible function names | Status |
 |---|---|---|---|
-| Double-sampling np chart | Nonconforming proportion in high-quality processes | `dsnp_limits()`, `cchart.DSnp()` | Implemented and validated |
-| Generalized variance chart | Multivariate process variability using `|S|` | `gv_limits()`, `cchart.GV()` | Implemented and validated |
-| Cornish-Fisher generalized variance limits | Corrected limits for skewed `|S|` distribution | `gv_limits(type = "cf")` | Implemented |
-| Auxiliary trace chart | Complementary monitoring using `tr(V)` | `trv_limits()`, `cchart.trV()` | Implemented |
-| Full DS-np sample-size optimization | Joint design over sample sizes and limits | future API | Planned |
-| Generic exact generalized variance quantiles | Meijer-G or another validated numerical approach | future API | Research stage |
-| Numerical validation catalogue | Centralized published fixtures and metadata | `tests/testthat/` and documentation | In progress |
+| Full DS-np sample-size optimization | Joint design over sample sizes and limits | future API | Future work |
+| Generic exact generalized variance quantiles | Product-of-chi-squares / Meijer-G or another validated numerical approach | future API | Research stage |
+| Rare-defect and time-between-events families | Additional high-quality-process monitoring | future API | Post-0.8 research |
+| JSS replication package and manuscript | Fully reproducible software paper | `paper/` and replication scripts | Post-release work |
 
 ## References
 
