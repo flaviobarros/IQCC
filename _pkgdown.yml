@@ -76,6 +76,8 @@ reference:
   - r_shewhart_limits
   - r_exact_limits
   - cchart.S
+  - s_shewhart_limits
+  - s_exact_limits
   - alpha.risk
   - c4
   - d2
