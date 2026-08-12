@@ -78,7 +78,9 @@ cchart.S <- function(x, type = c("n", "e"), m = NULL)
             c(lims$lcl[1], lims$ucl[1])
         else
             cbind(lims$lcl, lims$ucl)
-        qcc(x, type = "S", limits = qcc_limits)
+        chart <- qcc(x, type = "S", limits = qcc_limits)
+        colnames(chart$limits) <- c("LCL", "UCL")
+        chart
     }
 
     if(type == "n")
