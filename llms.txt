@@ -229,6 +229,10 @@ measurements.
   : Exact Probability Limits for the R Chart
 - [`cchart.S()`](https://flaviobarros.github.io/IQCC/reference/cchart.S.md)
   : Standard-Deviation Control Chart
+- [`s_shewhart_limits()`](https://flaviobarros.github.io/IQCC/reference/s_shewhart_limits.md)
+  : Conventional Shewhart Limits for the S Chart
+- [`s_exact_limits()`](https://flaviobarros.github.io/IQCC/reference/s_exact_limits.md)
+  : Exact Probability Limits for the S Chart
 - [`alpha.risk()`](https://flaviobarros.github.io/IQCC/reference/alpha.risk.md)
   : False-Alarm Probability for the Three-Sigma R Chart
 - [`c4()`](https://flaviobarros.github.io/IQCC/reference/c4.md) : Bias
