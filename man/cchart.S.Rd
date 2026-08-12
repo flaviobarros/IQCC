@@ -10,12 +10,13 @@ cchart.S(x, type = c("n", "e"), m = NULL)
 \item{x}{Subgroup data accepted by \code{qcc::qcc()} for an \code{"S"}
 chart. Rows represent subgroups and columns observations within subgroups.}
 
-\item{type}{Either \code{"n"} for the normalized qcc limits or \code{"e"}
-for exact equal-tail probability limits.}
+\item{type}{Either \code{"n"} for the normalized qcc-compatible limits or
+\code{"e"} for exact equal-tail probability limits.}
 
 \item{m}{Integer subgroup size, at least 2. It is required when
 \code{type = "e"}. If omitted, a warning is issued and the normalized chart
-is drawn instead.}
+is drawn instead. This argument is retained unchanged for compatibility with
+historical positional calls.}
 }
 \value{
 Invisibly, the \code{"qcc"} object returned by \code{qcc::qcc()}.
@@ -23,24 +24,41 @@ The function also draws the chart.
 }
 \description{
 Build a control chart for subgroup standard deviations using either the
-normalized limits supplied by \code{qcc::qcc()} or exact probability limits
-derived from the chi-square distribution of the sample variance.
+conventional Shewhart limits used historically by \code{qcc} or exact
+probability limits derived from the chi-square distribution of the sample
+variance. Numerical limits are delegated to \code{\link{s_shewhart_limits}}
+and \code{\link{s_exact_limits}}.
 }
 \details{
-Under multivariate normal sampling reduced to a univariate subgroup,
-\eqn{(m-1)S^2/\sigma^2} follows a chi-square distribution with
-\eqn{m-1} degrees of freedom. The exact limits are therefore
-\deqn{\hat\sigma\sqrt{\chi^2_{0.00135,m-1}/(m-1)}}
-and
-\deqn{\hat\sigma\sqrt{\chi^2_{0.99865,m-1}/(m-1)},}
-where \eqn{\hat\sigma} is obtained with \code{qcc::sd.S(x)}.
+For exact limits, \eqn{(m-1)S^2/\sigma^2} follows a chi-square distribution
+with \eqn{m-1} degrees of freedom under normality. The historical wrapper
+estimates \eqn{\sigma} from \code{x} using \code{qcc::sd.S()} and supplies
+that estimate to \code{s_exact_limits()}; these are therefore plug-in
+probability limits.
+
+For \code{type = "n"}, the legacy qcc convention is deliberately preserved:
+the center is the weighted mean of the observed subgroup standard deviations,
+while \eqn{\sigma} is estimated separately by \code{qcc::sd.S()}. The
+resulting standard error is \eqn{\hat\sigma\sqrt{1-c_4(n)^2}}. This differs
+in finite Phase I samples from replacing the observed center by the
+theoretical \eqn{c_4(n)\hat\sigma}; \code{cchart.S()} does not make that
+replacement.
 }
+\section{Phase convention}{
+
+The existing API has no separate Phase I argument. Both the chart center and
+\eqn{\sigma} estimate are obtained from \code{x}; exact limits additionally
+use the supplied historical design size \code{m}. Thus both normalized and
+exact limits are plug-in limits when used through this wrapper.
+}
+
 \section{Errors and warnings}{
 
 An error is raised for an unsupported \code{type} or an invalid supplied
 \code{m}. If exact limits are requested without \code{m}, the function
 warns and falls back to the normalized chart. Additional data validation is
-performed by \code{qcc::qcc()} and \code{qcc::sd.S()}.
+performed by \code{qcc::qcc()}, \code{qcc::stats.S()}, and
+\code{qcc::sd.S()}.
 }
 
 \examples{
@@ -53,7 +71,8 @@ Montgomery, D. C. (2009). \emph{Introduction to Statistical Quality
 Control}, 6th ed. Wiley.
 }
 \seealso{
-\code{\link{cchart.R}}, \code{\link{c4}}
+\code{\link{s_shewhart_limits}}, \code{\link{s_exact_limits}},
+  \code{\link{cchart.R}}, \code{\link{c4}}
 }
 \author{
 Daniela R. Recchia, Emanuel P. Barbosa
