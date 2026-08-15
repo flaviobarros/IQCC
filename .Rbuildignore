@@ -5,6 +5,7 @@
 ^CHANGELOG\.md$
 ^badgecreatr4.jpg$
 ^cran-comments\.md$
+^RELEASE-CHECKLIST\.md$
 ^\.mimocode$
 ^\.github$
 ^paper$

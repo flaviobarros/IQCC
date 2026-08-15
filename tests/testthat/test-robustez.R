@@ -30,7 +30,8 @@ test_that("sim_t2_asymptotic rejects n <= p", {
 test_that("sim_t2_asymptotic validates rho > -1/(p-1)", {
   expect_error(sim_t2_asymptotic(p = 3, rho = -0.6, nsim = 100),
                "rho must be > -1/")
-  sim_t2_asymptotic(p = 3, rho = -0.4, n = 10, nsim = 10, seed = 42) |> expect_s3_class("data.frame")
+  res <- sim_t2_asymptotic(p = 3, rho = -0.4, n = 10, nsim = 10, seed = 42)
+  expect_s3_class(res, "data.frame")
 })
 
 test_that("sim_t2_asymptotic validates sig_levels", {
