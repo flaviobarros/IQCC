@@ -47,54 +47,49 @@
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.8.0" id="iqcc-080">IQCC 0.8.0<a class="anchor" aria-label="anchor" href="#iqcc-080"></a></h2>
 <div class="section level3">
-<h3 id="new-statistical-methods-0-8-0">New statistical methods<a class="anchor" aria-label="anchor" href="#new-statistical-methods-0-8-0"></a></h3>
-<ul><li>Add the double-sampling np chart family for high-quality processes: <code><a href="../reference/dsnp_prob_accept.html">dsnp_prob_accept()</a></code>, <code><a href="../reference/dsnp_arl.html">dsnp_arl()</a></code>, <code><a href="../reference/dsnp_ass.html">dsnp_ass()</a></code>, <code><a href="../reference/dsnp_limits.html">dsnp_limits()</a></code>, and <code><a href="../reference/cchart.DSnp.html">cchart.DSnp()</a></code>.</li>
-<li>Add generalized variance monitoring through <code><a href="../reference/gv_stat.html">gv_stat()</a></code>, <code><a href="../reference/gv_limits.html">gv_limits()</a></code>, <code><a href="../reference/gv_alpha_risk.html">gv_alpha_risk()</a></code>, and <code><a href="../reference/cchart.GV.html">cchart.GV()</a></code>.</li>
-<li>Support normal, Cornish-Fisher, selected exact, and simulation-based limits for generalized variance charts.</li>
+<h3 id="new-and-expanded-statistical-methods-0-8-0">New and expanded statistical methods<a class="anchor" aria-label="anchor" href="#new-and-expanded-statistical-methods-0-8-0"></a></h3>
+<ul><li>Add the double-sampling np chart family for high-quality processes: <code><a href="../reference/dsnp_prob_accept.html">dsnp_prob_accept()</a></code>, <code><a href="../reference/dsnp_arl.html">dsnp_arl()</a></code>, <code><a href="../reference/dsnp_ass.html">dsnp_ass()</a></code>, <code><a href="../reference/dsnp_limits.html">dsnp_limits()</a></code>, <code><a href="../reference/dsnp_design.html">dsnp_design()</a></code>, and <code><a href="../reference/cchart.DSnp.html">cchart.DSnp()</a></code>.</li>
+<li>Add generalized variance monitoring through <code><a href="../reference/gv_stat.html">gv_stat()</a></code>, <code><a href="../reference/gv_limits.html">gv_limits()</a></code>, <code><a href="../reference/gv_alpha_risk.html">gv_alpha_risk()</a></code>, and <code><a href="../reference/cchart.GV.html">cchart.GV()</a></code>, including normal, Cornish-Fisher, selected exact, and simulation-based limits.</li>
 <li>Add auxiliary multivariate variability monitoring based on <code>tr(V)</code> through <code><a href="../reference/trv_stat.html">trv_stat()</a></code>, <code><a href="../reference/trv_limits.html">trv_limits()</a></code>, <code><a href="../reference/trv_alpha_risk.html">trv_alpha_risk()</a></code>, and <code><a href="../reference/cchart.trV.html">cchart.trV()</a></code>.</li>
-<li>Add pure numerical u-chart functions <code><a href="../reference/uchart_limits.html">uchart_limits()</a></code> and <code><a href="../reference/uchart_alpha_risk.html">uchart_alpha_risk()</a></code>.</li>
-<li>Add pure numerical p-chart functions <code><a href="../reference/pchart_limits.html">pchart_limits()</a></code> and <code><a href="../reference/pchart_alpha_risk.html">pchart_alpha_risk()</a></code>.</li>
+<li>Add pure numerical limit and risk functions for p and u charts: <code><a href="../reference/pchart_limits.html">pchart_limits()</a></code>, <code><a href="../reference/pchart_alpha_risk.html">pchart_alpha_risk()</a></code>, <code><a href="../reference/uchart_limits.html">uchart_limits()</a></code>, and <code><a href="../reference/uchart_alpha_risk.html">uchart_alpha_risk()</a></code>.</li>
+<li>Add pure numerical functions for exact and conventional range-chart limits: <code><a href="../reference/r_exact_limits.html">r_exact_limits()</a></code> and <code><a href="../reference/r_shewhart_limits.html">r_shewhart_limits()</a></code>.</li>
+<li>Add pure numerical functions for exact and conventional S-chart limits: <code><a href="../reference/s_exact_limits.html">s_exact_limits()</a></code> and <code><a href="../reference/s_shewhart_limits.html">s_shewhart_limits()</a></code>.</li>
 </ul></div>
 <div class="section level3">
-<h3 id="statistical-corrections-0-8-0">Statistical corrections<a class="anchor" aria-label="anchor" href="#statistical-corrections-0-8-0"></a></h3>
+<h3 id="statistical-corrections-and-compatibility-0-8-0">Statistical corrections and compatibility<a class="anchor" aria-label="anchor" href="#statistical-corrections-and-compatibility-0-8-0"></a></h3>
 <ul><li>Replace the unweighted mean of subgroup proportions with the pooled binomial estimator in <code><a href="../reference/cchart.p.html">cchart.p()</a></code>.</li>
 <li>Replace the unweighted mean of subgroup rates with the pooled Poisson estimator in <code><a href="../reference/cchart.u.html">cchart.u()</a></code>.</li>
 <li>Correct standardized p and u charts so standardized statistics are not divided by subgroup size a second time.</li>
-<li>Audit the Cornish-Fisher p-chart implementation against the operational formulas and published numerical examples.</li>
-<li>Derive and validate CF1 and CF2 u-chart limits from Poisson cumulants.</li>
-<li>Correct the DS-np limit search so every candidate second-stage threshold is evaluated independently.</li>
-<li>Harden DS-np decision regions, probability calculations, ARL, ASS, and plotting.</li>
+<li>Correct and harden Cornish-Fisher p- and u-chart implementations and their exact binomial/Poisson false-alarm calculations.</li>
+<li>Correct the DS-np limit search so every candidate second-stage threshold is evaluated independently; harden decision regions, ARL, ASS, curtailed inspection, and plotting.</li>
+<li>Correct the Hotelling T-squared robustness simulation so the documented multivariate-t scenario uses the intended elliptical construction, validates admissible dimensions/correlation, preserves RNG state, and reports Monte Carlo uncertainty explicitly.</li>
+<li>Preserve the historical qcc-compatible center convention for normalized S charts while separating its numerical limits from plotting.</li>
+<li>Preserve documented legacy aliases and positional calls for existing chart wrappers.</li>
 </ul></div>
 <div class="section level3">
 <h3 id="scientific-validation-0-8-0">Scientific validation<a class="anchor" aria-label="anchor" href="#scientific-validation-0-8-0"></a></h3>
-<ul><li>Reproduce published p-chart false-alarm examples from Joekes and Barbosa (2013).</li>
-<li>Reproduce published DS-np ARL and ASS values from Joekes, Smrekar, and Barbosa (2015).</li>
-<li>Reproduce published generalized variance limits for dimensions two and three.</li>
-<li>Add independent numerical oracles for discrete DS-np probabilities and exact dimension-two generalized variance risk.</li>
-<li>Add property tests for <code>tr(V)</code>, including its exact chi-square distribution, false-alarm risk, RNG preservation, linear-transformation invariance, and a same-determinant covariance change that is visible to the trace statistic.</li>
-<li>Add regression tests for scaling, monotonicity, boundary cases, invalid inputs, random-number-state preservation, and legacy aliases.</li>
+<ul><li>Reproduce published p-chart values from Joekes and Barbosa (2013) with explicit provenance, tolerances, and independent binomial-risk oracles.</li>
+<li>Reproduce the published R-chart quantiles, false-alarm risks, ARLs, and <code><a href="../reference/d2.html">d2()</a></code>/<code><a href="../reference/d3.html">d3()</a></code> constants from Barbosa, Gneri, and Meneguetti (2013), including independent Tippett-distribution integration checks.</li>
+<li>Reproduce published DS-np ARL and ASS values from Joekes, Smrekar, and Barbosa (2015), with independent probability and small-sample enumeration checks.</li>
+<li>Validate the u-chart Cornish-Fisher expansion independently from Poisson cumulants and exact Poisson false-alarm probabilities.</li>
+<li>Reproduce published generalized-variance tables where the source parametrization is identifiable; record unresolved source conventions explicitly rather than treating them as implementation errors.</li>
+<li>Add a consolidated executable numerical-validation vignette that classifies evidence as published reproduction, independent derivation, exact discrete calculation, numerical evaluation of an exact distribution, Monte Carlo, property testing, or partial reproduction.</li>
+<li>Expand regression and property tests for scaling, monotonicity, boundary cases, invalid inputs, random-number-state preservation, and wrapper/core equivalence.</li>
 </ul></div>
 <div class="section level3">
 <h3 id="documentation-0-8-0">Documentation<a class="anchor" aria-label="anchor" href="#documentation-0-8-0"></a></h3>
-<ul><li>Add package vignettes on IQCC positioning, high-quality processes, and the statistical foundations of the audited methods.</li>
-<li>Add <code>paper/statistical-foundations.md</code> as article-oriented technical source material.</li>
-<li>Expand the README with scientific positioning, implemented methods, references, and development roadmap.</li>
-<li>Add documentation for all new public functions and S3 plotting methods.</li>
+<ul><li>Add executable vignettes for getting started, package positioning, high-quality processes, univariate dispersion, multivariate monitoring, statistical foundations, numerical validation, and comparison with the R statistical-process-control ecosystem.</li>
+<li>Add <code>paper/statistical-foundations.md</code> as article-oriented technical source material for future manuscript development.</li>
+<li>Expand the README and pkgdown reference index to reflect the public numerical API and validated methods.</li>
+<li>Add or revise documentation for public functions, Phase I/Phase II conventions, exact-versus-approximate terminology, and S3 methods.</li>
 </ul></div>
 <div class="section level3">
-<h3 id="engineering-and-infrastructure-0-8-0">Engineering and infrastructure<a class="anchor" aria-label="anchor" href="#engineering-and-infrastructure-0-8-0"></a></h3>
-<ul><li>Add GitHub Actions workflows for R CMD check, pkgdown, and test coverage.</li>
-<li>Add Codecov reporting and README badge.</li>
-<li>Expand automated tests substantially across legacy and new functionality.</li>
-<li>Separate numerical kernels from chart construction and plotting where audited.</li>
-<li>Improve input validation and replace silent string returns with errors.</li>
-<li>Remove examples based on <code><a href="https://rdrr.io/r/base/attach.html" class="external-link">attach()</a></code> from audited interfaces.</li>
-</ul></div>
-<div class="section level3">
-<h3 id="compatibility-0-8-0">Compatibility<a class="anchor" aria-label="anchor" href="#compatibility-0-8-0"></a></h3>
-<ul><li>Preserve legacy p-chart aliases <code>norm</code>, <code>CF</code>, and <code>std</code>.</li>
-<li>Preserve legacy u-chart aliases <code>norm</code>, <code>CF</code>, and <code>std</code>; historical <code>CF</code> maps to the two-term Cornish-Fisher formula.</li>
-<li>Existing chart wrappers remain available while exposing new pure numerical APIs for reproducible calculations.</li>
+<h3 id="engineering-and-release-quality-0-8-0">Engineering and release quality<a class="anchor" aria-label="anchor" href="#engineering-and-release-quality-0-8-0"></a></h3>
+<ul><li>Separate numerical kernels from chart construction and plotting across the audited p, u, R, S, DS-np, generalized-variance, and <code>tr(V)</code> families.</li>
+<li>Add GitHub Actions for R CMD check on Linux (R-devel, release, oldrel), Windows, and macOS, plus pkgdown, URL, spelling/documentation-quality, and test-coverage checks.</li>
+<li>Add Codecov reporting and substantially expand the automated test suite.</li>
+<li>Improve input validation and replace silent error-like return values with explicit errors where audited.</li>
+<li>Remove <code><a href="https://rdrr.io/r/base/attach.html" class="external-link">attach()</a></code>-based examples from audited interfaces and keep vignettes executable in the documentation build.</li>
 </ul></div>
 </div>
     <div class="section level2">

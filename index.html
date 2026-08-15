@@ -79,11 +79,13 @@
 <li>
 <strong>Multivariate monitoring</strong>: Hotelling T² charts, generalized variance charts, and auxiliary <code>tr(V)</code> variability charts.</li>
 <li>
-<strong>False-alarm diagnostics</strong>: exact binomial, Poisson, range-chart, and generalized variance risk calculations where available.</li>
+<strong>False-alarm diagnostics</strong>: exact binomial, Poisson, range-chart, and generalized-variance risk calculations where available.</li>
 <li>
-<strong>Phase I and Phase II support</strong>: retrospective estimation and prospective monitoring.</li>
+<strong>Phase I and Phase II support</strong>: retrospective estimation and prospective monitoring where supported by the chart family.</li>
 <li>
 <strong>Research-oriented numerical layer</strong>: pure functions separated from plotting interfaces for validation and simulation studies.</li>
+<li>
+<strong>Scientific validation catalogue</strong>: executable reproductions, independent derivations, exact-distribution checks, Monte Carlo studies, and property tests with explicit provenance and tolerances.</li>
 </ul>
 </div>
 <div class="section level2">
@@ -113,15 +115,19 @@
 </tr>
 <tr>
 <td>Range / process dispersion</td>
-<td><code><a href="reference/cchart.R.html">cchart.R()</a></code></td>
+<td>
+<code><a href="reference/r_shewhart_limits.html">r_shewhart_limits()</a></code>, <code><a href="reference/r_exact_limits.html">r_exact_limits()</a></code>, <code><a href="reference/cchart.R.html">cchart.R()</a></code>
+</td>
 <td>Shewhart R chart; exact Tukey-based R chart</td>
-<td>Exact limits use the relative range distribution.</td>
+<td>Exact limits use the relative-range distribution.</td>
 </tr>
 <tr>
 <td>Standard deviation</td>
-<td><code><a href="reference/cchart.S.html">cchart.S()</a></code></td>
-<td>Normalized S chart; exact chi-square-based S chart</td>
-<td>Exact limits use the sample-variance distribution.</td>
+<td>
+<code><a href="reference/s_shewhart_limits.html">s_shewhart_limits()</a></code>, <code><a href="reference/s_exact_limits.html">s_exact_limits()</a></code>, <code><a href="reference/cchart.S.html">cchart.S()</a></code>
+</td>
+<td>Conventional S chart; exact chi-square-based S chart</td>
+<td>Exact limits use the sample-variance distribution; the wrapper preserves the historical qcc centering convention.</td>
 </tr>
 <tr>
 <td>Nonconforming proportion</td>
@@ -134,10 +140,10 @@
 <tr>
 <td>Double-sampling np chart</td>
 <td>
-<code><a href="reference/dsnp_prob_accept.html">dsnp_prob_accept()</a></code>, <code><a href="reference/dsnp_arl.html">dsnp_arl()</a></code>, <code><a href="reference/dsnp_ass.html">dsnp_ass()</a></code>, <code><a href="reference/dsnp_limits.html">dsnp_limits()</a></code>, <code><a href="reference/cchart.DSnp.html">cchart.DSnp()</a></code>
+<code><a href="reference/dsnp_prob_accept.html">dsnp_prob_accept()</a></code>, <code><a href="reference/dsnp_arl.html">dsnp_arl()</a></code>, <code><a href="reference/dsnp_ass.html">dsnp_ass()</a></code>, <code><a href="reference/dsnp_limits.html">dsnp_limits()</a></code>, <code><a href="reference/dsnp_design.html">dsnp_design()</a></code>, <code><a href="reference/cchart.DSnp.html">cchart.DSnp()</a></code>
 </td>
-<td>Exact-binomial DS-np performance, limit search, and chart</td>
-<td>Two-stage sampling for high-quality processes with small samples.</td>
+<td>Exact-binomial DS-np performance, design search, and chart</td>
+<td>Two-stage sampling for high-quality processes with small samples; supports complete and curtailed inspection conventions.</td>
 </tr>
 <tr>
 <td>Nonconformities per unit</td>
@@ -177,7 +183,7 @@
 <code><a href="reference/d2.html">d2()</a></code>, <code><a href="reference/d3.html">d3()</a></code>
 </td>
 <td>Numerical integration using Tukey distribution functions</td>
-<td>Used by exact R-chart calculations.</td>
+<td>Used by range-chart calculations and validation.</td>
 </tr>
 <tr>
 <td>False-alarm risk for R charts</td>
@@ -215,6 +221,10 @@
 <span>  type <span class="op">=</span> <span class="st">"tukey"</span>,</span>
 <span>  y <span class="op">=</span> <span class="va">pistonrings</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">25</span>, <span class="op">]</span></span>
 <span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Pure S-chart limits without plotting</span></span>
+<span><span class="fu"><a href="reference/s_exact_limits.html">s_exact_limits</a></span><span class="op">(</span>sigma <span class="op">=</span> <span class="fl">1</span>, n <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/s_shewhart_limits.html">s_shewhart_limits</a></span><span class="op">(</span>sigma <span class="op">=</span> <span class="fl">1</span>, n <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># p-chart limits and exact false-alarm risk</span></span>
 <span><span class="va">p_limits</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/pchart_limits.html">pchart_limits</a></span><span class="op">(</span>p <span class="op">=</span> <span class="fl">0.015</span>, n <span class="op">=</span> <span class="fl">20</span>, type <span class="op">=</span> <span class="st">"cf2"</span><span class="op">)</span></span>
@@ -261,30 +271,46 @@
 <div class="section level2">
 <h2 id="learning-more">Learning more<a class="anchor" aria-label="anchor" href="#learning-more"></a>
 </h2>
-<p>The package includes three vignettes:</p>
+<p>The package includes executable articles covering use, theory, validation, and positioning:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/vignette.html" class="external-link">vignette</a></span><span class="op">(</span><span class="st">"iqcc-positioning"</span>, package <span class="op">=</span> <span class="st">"IQCC"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/vignette.html" class="external-link">vignette</a></span><span class="op">(</span><span class="st">"getting-started-with-iqcc"</span>, package <span class="op">=</span> <span class="st">"IQCC"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/vignette.html" class="external-link">vignette</a></span><span class="op">(</span><span class="st">"iqcc-positioning"</span>, package <span class="op">=</span> <span class="st">"IQCC"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/vignette.html" class="external-link">vignette</a></span><span class="op">(</span><span class="st">"high-quality-processes"</span>, package <span class="op">=</span> <span class="st">"IQCC"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/vignette.html" class="external-link">vignette</a></span><span class="op">(</span><span class="st">"statistical-foundations"</span>, package <span class="op">=</span> <span class="st">"IQCC"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/vignette.html" class="external-link">vignette</a></span><span class="op">(</span><span class="st">"univariate-dispersion-monitoring"</span>, package <span class="op">=</span> <span class="st">"IQCC"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/vignette.html" class="external-link">vignette</a></span><span class="op">(</span><span class="st">"multivariate-monitoring"</span>, package <span class="op">=</span> <span class="st">"IQCC"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/vignette.html" class="external-link">vignette</a></span><span class="op">(</span><span class="st">"statistical-foundations"</span>, package <span class="op">=</span> <span class="st">"IQCC"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/vignette.html" class="external-link">vignette</a></span><span class="op">(</span><span class="st">"numerical-validation"</span>, package <span class="op">=</span> <span class="st">"IQCC"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/vignette.html" class="external-link">vignette</a></span><span class="op">(</span><span class="st">"software-comparison"</span>, package <span class="op">=</span> <span class="st">"IQCC"</span><span class="op">)</span></span></code></pre></div>
 <ul>
+<li>
+<code>getting-started-with-iqcc</code> introduces the package workflow and principal chart families.</li>
 <li>
 <code>iqcc-positioning</code> explains where IQCC fits in the R/SPC ecosystem.</li>
 <li>
 <code>high-quality-processes</code> focuses on rare nonconformities, Cornish-Fisher p charts, and DS-np monitoring.</li>
 <li>
-<code>statistical-foundations</code> records the probability models, derivations, and validation strategy behind the audited methods.</li>
+<code>univariate-dispersion-monitoring</code> covers R and S charts, including distribution-aware limits.</li>
+<li>
+<code>multivariate-monitoring</code> covers Hotelling T², generalized variance, and <code>tr(V)</code> monitoring.</li>
+<li>
+<code>statistical-foundations</code> records the probability models and derivations behind the audited methods.</li>
+<li>
+<code>numerical-validation</code> consolidates published reproductions, independent oracles, tolerances, and unresolved source conventions.</li>
+<li>
+<code>software-comparison</code> places IQCC alongside related R statistical-process-control packages.</li>
 </ul>
-<p>A longer article-oriented technical document is available at <code>paper/statistical-foundations.md</code>.</p>
+<p>A longer article-oriented technical document is maintained at <code>paper/statistical-foundations.md</code> in the development repository.</p>
 </div>
 <div class="section level2">
 <h2 id="research-background">Research background<a class="anchor" aria-label="anchor" href="#research-background"></a>
 </h2>
-<p>IQCC was developed from research on improved statistical quality control charts, especially work associated with Emanuel Pimentel Barbosa and collaborators. The package emphasizes cases where classical Shewhart-type limits are simple and familiar but statistically inaccurate.</p>
+<p>IQCC grew from research on improved statistical quality control charts, particularly work led by Emanuel Pimentel Barbosa and collaborators. The package emphasizes cases where classical Shewhart-type limits remain operationally attractive but their usual normal approximations can be statistically inaccurate.</p>
 <p>Important methodological themes include:</p>
 <ul>
 <li>Cornish-Fisher quantile correction for highly skewed attribute statistics;</li>
 <li>exact discrete false-alarm evaluation for binomial and Poisson charts;</li>
-<li>exact range-chart limits through the relative range distribution;</li>
+<li>exact range-chart limits through the relative-range distribution;</li>
+<li>exact chi-square probability limits for subgroup standard deviations;</li>
 <li>double-sampling designs for rare nonconformities;</li>
 <li>Hotelling T² monitoring for multivariate process means;</li>
 <li>generalized variance monitoring through products of chi-square variables and Bartlett decomposition;</li>
@@ -294,6 +320,7 @@
 <div class="section level2">
 <h2 id="development-roadmap">Development roadmap<a class="anchor" aria-label="anchor" href="#development-roadmap"></a>
 </h2>
+<p>Version 0.8.0 freezes the validated core described above. Extensions that remain outside the release scope are tracked separately so that experimental work does not blur the stable API.</p>
 <table class="table">
 <colgroup>
 <col width="25%">
@@ -309,55 +336,29 @@
 </tr></thead>
 <tbody>
 <tr>
-<td>Double-sampling np chart</td>
-<td>Nonconforming proportion in high-quality processes</td>
-<td>
-<code><a href="reference/dsnp_limits.html">dsnp_limits()</a></code>, <code><a href="reference/cchart.DSnp.html">cchart.DSnp()</a></code>
-</td>
-<td>Implemented and validated</td>
-</tr>
-<tr>
-<td>Generalized variance chart</td>
-<td>Multivariate process variability using <code>|S|</code>
-</td>
-<td>
-<code><a href="reference/gv_limits.html">gv_limits()</a></code>, <code><a href="reference/cchart.GV.html">cchart.GV()</a></code>
-</td>
-<td>Implemented and validated</td>
-</tr>
-<tr>
-<td>Cornish-Fisher generalized variance limits</td>
-<td>Corrected limits for skewed <code>|S|</code> distribution</td>
-<td><code>gv_limits(type = "cf")</code></td>
-<td>Implemented</td>
-</tr>
-<tr>
-<td>Auxiliary trace chart</td>
-<td>Complementary monitoring using <code>tr(V)</code>
-</td>
-<td>
-<code><a href="reference/trv_limits.html">trv_limits()</a></code>, <code><a href="reference/cchart.trV.html">cchart.trV()</a></code>
-</td>
-<td>Implemented</td>
-</tr>
-<tr>
 <td>Full DS-np sample-size optimization</td>
 <td>Joint design over sample sizes and limits</td>
 <td>future API</td>
-<td>Planned</td>
+<td>Future work</td>
 </tr>
 <tr>
 <td>Generic exact generalized variance quantiles</td>
-<td>Meijer-G or another validated numerical approach</td>
+<td>Product-of-chi-squares / Meijer-G or another validated numerical approach</td>
 <td>future API</td>
 <td>Research stage</td>
 </tr>
 <tr>
-<td>Numerical validation catalogue</td>
-<td>Centralized published fixtures and metadata</td>
+<td>Rare-defect and time-between-events families</td>
+<td>Additional high-quality-process monitoring</td>
+<td>future API</td>
+<td>Post-0.8 research</td>
+</tr>
+<tr>
+<td>JSS replication package and manuscript</td>
+<td>Fully reproducible software paper</td>
 <td>
-<code>tests/testthat/</code> and documentation</td>
-<td>In progress</td>
+<code>paper/</code> and replication scripts</td>
+<td>Post-release work</td>
 </tr>
 </tbody>
 </table>

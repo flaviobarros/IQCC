@@ -2,13 +2,14 @@
 
 ## IQCC 0.8.0
 
-### New statistical methods
+### New and expanded statistical methods
 
 - Add the double-sampling np chart family for high-quality processes:
   [`dsnp_prob_accept()`](https://flaviobarros.github.io/IQCC/reference/dsnp_prob_accept.md),
   [`dsnp_arl()`](https://flaviobarros.github.io/IQCC/reference/dsnp_arl.md),
   [`dsnp_ass()`](https://flaviobarros.github.io/IQCC/reference/dsnp_ass.md),
   [`dsnp_limits()`](https://flaviobarros.github.io/IQCC/reference/dsnp_limits.md),
+  [`dsnp_design()`](https://flaviobarros.github.io/IQCC/reference/dsnp_design.md),
   and
   [`cchart.DSnp()`](https://flaviobarros.github.io/IQCC/reference/cchart.DSnp.md).
 - Add generalized variance monitoring through
@@ -16,9 +17,9 @@
   [`gv_limits()`](https://flaviobarros.github.io/IQCC/reference/gv_limits.md),
   [`gv_alpha_risk()`](https://flaviobarros.github.io/IQCC/reference/gv_alpha_risk.md),
   and
-  [`cchart.GV()`](https://flaviobarros.github.io/IQCC/reference/cchart.GV.md).
-- Support normal, Cornish-Fisher, selected exact, and simulation-based
-  limits for generalized variance charts.
+  [`cchart.GV()`](https://flaviobarros.github.io/IQCC/reference/cchart.GV.md),
+  including normal, Cornish-Fisher, selected exact, and simulation-based
+  limits.
 - Add auxiliary multivariate variability monitoring based on `tr(V)`
   through
   [`trv_stat()`](https://flaviobarros.github.io/IQCC/reference/trv_stat.md),
@@ -26,16 +27,24 @@
   [`trv_alpha_risk()`](https://flaviobarros.github.io/IQCC/reference/trv_alpha_risk.md),
   and
   [`cchart.trV()`](https://flaviobarros.github.io/IQCC/reference/cchart.trV.md).
-- Add pure numerical u-chart functions
-  [`uchart_limits()`](https://flaviobarros.github.io/IQCC/reference/uchart_limits.md)
+- Add pure numerical limit and risk functions for p and u charts:
+  [`pchart_limits()`](https://flaviobarros.github.io/IQCC/reference/pchart_limits.md),
+  [`pchart_alpha_risk()`](https://flaviobarros.github.io/IQCC/reference/pchart_alpha_risk.md),
+  [`uchart_limits()`](https://flaviobarros.github.io/IQCC/reference/uchart_limits.md),
   and
   [`uchart_alpha_risk()`](https://flaviobarros.github.io/IQCC/reference/uchart_alpha_risk.md).
-- Add pure numerical p-chart functions
-  [`pchart_limits()`](https://flaviobarros.github.io/IQCC/reference/pchart_limits.md)
+- Add pure numerical functions for exact and conventional range-chart
+  limits:
+  [`r_exact_limits()`](https://flaviobarros.github.io/IQCC/reference/r_exact_limits.md)
   and
-  [`pchart_alpha_risk()`](https://flaviobarros.github.io/IQCC/reference/pchart_alpha_risk.md).
+  [`r_shewhart_limits()`](https://flaviobarros.github.io/IQCC/reference/r_shewhart_limits.md).
+- Add pure numerical functions for exact and conventional S-chart
+  limits:
+  [`s_exact_limits()`](https://flaviobarros.github.io/IQCC/reference/s_exact_limits.md)
+  and
+  [`s_shewhart_limits()`](https://flaviobarros.github.io/IQCC/reference/s_shewhart_limits.md).
 
-### Statistical corrections
+### Statistical corrections and compatibility
 
 - Replace the unweighted mean of subgroup proportions with the pooled
   binomial estimator in
@@ -45,64 +54,75 @@
   [`cchart.u()`](https://flaviobarros.github.io/IQCC/reference/cchart.u.md).
 - Correct standardized p and u charts so standardized statistics are not
   divided by subgroup size a second time.
-- Audit the Cornish-Fisher p-chart implementation against the
-  operational formulas and published numerical examples.
-- Derive and validate CF1 and CF2 u-chart limits from Poisson cumulants.
+- Correct and harden Cornish-Fisher p- and u-chart implementations and
+  their exact binomial/Poisson false-alarm calculations.
 - Correct the DS-np limit search so every candidate second-stage
-  threshold is evaluated independently.
-- Harden DS-np decision regions, probability calculations, ARL, ASS, and
+  threshold is evaluated independently; harden decision regions, ARL,
+  ASS, curtailed inspection, and plotting.
+- Correct the Hotelling T-squared robustness simulation so the
+  documented multivariate-t scenario uses the intended elliptical
+  construction, validates admissible dimensions/correlation, preserves
+  RNG state, and reports Monte Carlo uncertainty explicitly.
+- Preserve the historical qcc-compatible center convention for
+  normalized S charts while separating its numerical limits from
   plotting.
+- Preserve documented legacy aliases and positional calls for existing
+  chart wrappers.
 
 ### Scientific validation
 
-- Reproduce published p-chart false-alarm examples from Joekes and
-  Barbosa (2013).
+- Reproduce published p-chart values from Joekes and Barbosa (2013) with
+  explicit provenance, tolerances, and independent binomial-risk
+  oracles.
+- Reproduce the published R-chart quantiles, false-alarm risks, ARLs,
+  and
+  [`d2()`](https://flaviobarros.github.io/IQCC/reference/d2.md)/[`d3()`](https://flaviobarros.github.io/IQCC/reference/d3.md)
+  constants from Barbosa, Gneri, and Meneguetti (2013), including
+  independent Tippett-distribution integration checks.
 - Reproduce published DS-np ARL and ASS values from Joekes, Smrekar, and
-  Barbosa (2015).
-- Reproduce published generalized variance limits for dimensions two and
-  three.
-- Add independent numerical oracles for discrete DS-np probabilities and
-  exact dimension-two generalized variance risk.
-- Add property tests for `tr(V)`, including its exact chi-square
-  distribution, false-alarm risk, RNG preservation,
-  linear-transformation invariance, and a same-determinant covariance
-  change that is visible to the trace statistic.
-- Add regression tests for scaling, monotonicity, boundary cases,
-  invalid inputs, random-number-state preservation, and legacy aliases.
+  Barbosa (2015), with independent probability and small-sample
+  enumeration checks.
+- Validate the u-chart Cornish-Fisher expansion independently from
+  Poisson cumulants and exact Poisson false-alarm probabilities.
+- Reproduce published generalized-variance tables where the source
+  parametrization is identifiable; record unresolved source conventions
+  explicitly rather than treating them as implementation errors.
+- Add a consolidated executable numerical-validation vignette that
+  classifies evidence as published reproduction, independent derivation,
+  exact discrete calculation, numerical evaluation of an exact
+  distribution, Monte Carlo, property testing, or partial reproduction.
+- Expand regression and property tests for scaling, monotonicity,
+  boundary cases, invalid inputs, random-number-state preservation, and
+  wrapper/core equivalence.
 
 ### Documentation
 
-- Add package vignettes on IQCC positioning, high-quality processes, and
-  the statistical foundations of the audited methods.
+- Add executable vignettes for getting started, package positioning,
+  high-quality processes, univariate dispersion, multivariate
+  monitoring, statistical foundations, numerical validation, and
+  comparison with the R statistical-process-control ecosystem.
 - Add `paper/statistical-foundations.md` as article-oriented technical
-  source material.
-- Expand the README with scientific positioning, implemented methods,
-  references, and development roadmap.
-- Add documentation for all new public functions and S3 plotting
-  methods.
+  source material for future manuscript development.
+- Expand the README and pkgdown reference index to reflect the public
+  numerical API and validated methods.
+- Add or revise documentation for public functions, Phase I/Phase II
+  conventions, exact-versus-approximate terminology, and S3 methods.
 
-### Engineering and infrastructure
+### Engineering and release quality
 
-- Add GitHub Actions workflows for R CMD check, pkgdown, and test
-  coverage.
-- Add Codecov reporting and README badge.
-- Expand automated tests substantially across legacy and new
-  functionality.
-- Separate numerical kernels from chart construction and plotting where
-  audited.
-- Improve input validation and replace silent string returns with
-  errors.
-- Remove examples based on
-  [`attach()`](https://rdrr.io/r/base/attach.html) from audited
-  interfaces.
-
-### Compatibility
-
-- Preserve legacy p-chart aliases `norm`, `CF`, and `std`.
-- Preserve legacy u-chart aliases `norm`, `CF`, and `std`; historical
-  `CF` maps to the two-term Cornish-Fisher formula.
-- Existing chart wrappers remain available while exposing new pure
-  numerical APIs for reproducible calculations.
+- Separate numerical kernels from chart construction and plotting across
+  the audited p, u, R, S, DS-np, generalized-variance, and `tr(V)`
+  families.
+- Add GitHub Actions for R CMD check on Linux (R-devel, release,
+  oldrel), Windows, and macOS, plus pkgdown, URL,
+  spelling/documentation-quality, and test-coverage checks.
+- Add Codecov reporting and substantially expand the automated test
+  suite.
+- Improve input validation and replace silent error-like return values
+  with explicit errors where audited.
+- Remove [`attach()`](https://rdrr.io/r/base/attach.html)-based examples
+  from audited interfaces and keep vignettes executable in the
+  documentation build.
 
 ## IQCC 0.7.1
 
